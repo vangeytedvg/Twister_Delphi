@@ -1,0 +1,122 @@
+unit main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList, Vcl.Menus,
+  Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
+  Vcl.ActnList, Vcl.ExtActns;
+
+type
+  TmainForm = class(TForm)
+    MainAppMenu: TMainMenu;
+    MyImages: TImageList;
+    Sb: TStatusBar;
+    myEditor: TRichEdit;
+    ToolBar1: TToolBar;
+    ToolButtonNew: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
+    ToolButton5: TToolButton;
+    ToolButton6: TToolButton;
+    ToolButton7: TToolButton;
+    ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
+    ToolButton10: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton12: TToolButton;
+    ToolButton13: TToolButton;
+    ToolButton14: TToolButton;
+    ToolButton15: TToolButton;
+    ToolButton18: TToolButton;
+    ToolButton19: TToolButton;
+    ToolButton20: TToolButton;
+    ToolButton21: TToolButton;
+    EditorActions: TActionList;
+    EditCut: TEditCut;
+    EditCopy: TEditCopy;
+    EditPaste: TEditPaste;
+    EditUndo: TEditUndo;
+    EditDelete: TEditDelete;
+    ToolButton17: TToolButton;
+    ToolButton16: TToolButton;
+    N1: TMenuItem;
+    Exit1: TMenuItem;
+    Edit1: TMenuItem;
+    Undo1: TMenuItem;
+    Cut1: TMenuItem;
+    Copy1: TMenuItem;
+    Paste1: TMenuItem;
+    Delete1: TMenuItem;
+    Format1: TMenuItem;
+    Format2: TMenuItem;
+    FormatRichEditBold1: TRichEditBold;
+    FormatRichEditItalic1: TRichEditItalic;
+    Italic1: TMenuItem;
+    FormatRichEditUnderline1: TRichEditUnderline;
+    Underline1: TMenuItem;
+    FormatRichEditStrikeOut1: TRichEditStrikeOut;
+    Strikeout1: TMenuItem;
+    FormatRichEditBullets1: TRichEditBullets;
+    Bullets1: TMenuItem;
+    N2: TMenuItem;
+    FormatRichEditAlignLeft1: TRichEditAlignLeft;
+    AlignLeft1: TMenuItem;
+    FormatRichEditAlignCenter1: TRichEditAlignCenter;
+    Center1: TMenuItem;
+    FormatRichEditAlignRight1: TRichEditAlignRight;
+    AlignRight1: TMenuItem;
+    procedure myEditorSelectionChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Exit1Click(Sender: TObject);
+    procedure ToolButtonNewClick(Sender: TObject);
+  private
+    { Private declarations }
+    IsDirty : Boolean;
+  public
+    { Public declarations }
+  end;
+
+var
+  mainForm: TmainForm;
+
+implementation
+
+{$R *.dfm}
+
+//
+//  Leave the application
+//
+procedure TmainForm.Exit1Click(Sender: TObject);
+begin
+  Application.Terminate;
+end;
+
+// When the application is started
+procedure TmainForm.FormCreate(Sender: TObject);
+begin
+  self.IsDirty := False;
+end;
+
+{
+  Keep track of the cursor position in TRichEdit
+}
+procedure TmainForm.myEditorSelectionChange(Sender: TObject);
+var
+  CursorPosition: TPoint;
+begin
+  CursorPosition := myEditor.CaretPos;
+  Sb.Panels[2].Text := IntToStr(CursorPosition.Y+1);
+  Sb.Panels[3].Text := IntToStr(CursorPosition.X+1);
+end;
+
+// Create a new file
+procedure TmainForm.ToolButtonNewClick(Sender: TObject);
+begin
+  writeln('Create new file');
+end;
+
+
+end.
