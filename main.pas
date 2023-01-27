@@ -77,6 +77,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure MyEditorChange(Sender: TObject);
     procedure ToolButtonNewClick(Sender: TObject);
+    procedure ToolButton3Click(Sender: TObject);
 
 
   private
@@ -135,6 +136,11 @@ begin
   Sb.Panels[3].Text := IntToStr(CursorPosition.X+1);
 end;
 
+
+procedure TmainForm.ToolButton3Click(Sender: TObject);
+begin
+  //
+end;
 
 procedure TmainForm.ToolButtonNewClick(Sender: TObject);
 begin

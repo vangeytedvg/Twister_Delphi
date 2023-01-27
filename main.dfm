@@ -37,9 +37,6 @@ object mainForm: TmainForm
       item
         Width = 50
       end>
-    ExplicitLeft = 8
-    ExplicitTop = 381
-    ExplicitWidth = 638
   end
   object MyEditor: TRichEdit
     Left = 0
@@ -58,8 +55,6 @@ object mainForm: TmainForm
     Zoom = 100
     OnChange = myEditorChange
     OnSelectionChange = MyEditorSelectionChange
-    ExplicitLeft = 8
-    ExplicitTop = 68
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -94,6 +89,7 @@ object mainForm: TmainForm
       Hint = 'Save File'
       Caption = 'ToolButtonSave'
       ImageIndex = 13
+      OnClick = ToolButton3Click
     end
     object ToolButton11: TToolButton
       Left = 144
