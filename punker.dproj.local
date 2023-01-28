@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2023/01/28 07:53:06.923,=rtl.dcp</Transaction>
+    <Transaction>2023/01/28 07:53:17.151,=C:\Development\Delphi\Twister\Ruler.pas</Transaction>
+    <Transaction>2023/01/28 07:53:17.190,=designide.dcp</Transaction>
+    <Transaction>2023/01/28 07:53:17.214,=vcl.dcp</Transaction>
+    <Transaction>2023/01/28 07:53:17.272,=vclactnband.dcp</Transaction>
+    <Transaction>2023/01/28 07:53:17.335,=vclx.dcp</Transaction>
+    <Transaction>2023/01/28 07:53:17.361,=xmlrtl.dcp</Transaction>
+  </Transactions>
+</BorlandProject>

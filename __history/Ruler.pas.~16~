@@ -1,0 +1,100 @@
+unit Ruler;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Vcl.Controls, Vcl.Graphics;
+
+type
+  TRuler = class(TCustomControl)
+  private
+    FRulerMeasure: Integer; // in pixels
+    FRulerColor: TColor;
+    FMyWidth: Integer;
+    FOnChange: TNotifyEvent;
+    procedure SetRulerMeasure(const Value: Integer);
+    procedure SetRulerColor(const Value: TColor);
+    procedure RulerResize(Sender: TObject);
+    procedure SetWidth(const Value: Integer);
+  protected
+    procedure CreateWnd; override;
+    procedure Paint; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    property RulerMeasure: Integer read FRulerMeasure write SetRulerMeasure;
+    property RulerColor: TColor read FRulerColor write SetRulerColor;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property MyWidth: Integer read FMyWidth write SetWidth;
+  end;
+
+procedure Register;
+
+implementation
+
+procedure Register;
+begin
+  RegisterComponents('DenkaTech', [TRuler]);
+end;
+
+constructor TRuler.Create(AOwner: TComponent);
+begin
+  inherited;
+  Width := 60;
+  Height := 20;
+  FRulerMeasure := 100;
+  FRulerColor := clBtnFace;
+  OnResize := RulerResize;
+end;
+
+procedure TRuler.CreateWnd;
+begin
+  inherited;
+  RulerResize(nil);
+end;
+
+procedure TRuler.Paint;
+var
+  i: Integer;
+begin
+  inherited;
+  Canvas.Brush.Color := FRulerColor;
+  Canvas.FillRect(ClientRect);
+  Canvas.Pen.Color := clBlack;
+  for i := 0 to (Width div FRulerMeasure) do
+  begin
+    Canvas.MoveTo(i * FRulerMeasure, 0);
+    Canvas.LineTo(i * FRulerMeasure, Height);
+    Canvas.TextOut(i * FRulerMeasure + 2, 2, IntToStr(i));
+  end;
+end;
+
+procedure TRuler.SetRulerMeasure(const Value: Integer);
+begin
+  if FRulerMeasure <> Value then
+  begin
+    FRulerMeasure := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TRuler.SetRulerColor(const Value: TColor);
+begin
+  if FRulerColor <> Value then
+  begin
+    FRulerColor := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TRuler.SetWidth(const Value: Integer);
+begin
+  FMyWidth := Value;
+end;
+
+procedure TRuler.RulerResize(Sender: TObject);
+begin
+  Invalidate;
+end;
+
+end.
+

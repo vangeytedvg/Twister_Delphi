@@ -5,8 +5,8 @@
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
-        <TargetedPlatforms>3</TargetedPlatforms>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>Twister.dpr</MainSource>
     </PropertyGroup>
@@ -132,6 +132,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Ruler.pas"/>
+        <DCCReference Include="NHunspell.pas"/>
+        <DCCReference Include="NHunXml.pas"/>
+        <DCCReference Include="PasZip.pas"/>
         <None Include="Twister.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -956,7 +959,7 @@
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>
-                <Platform value="Win64">True</Platform>
+                <Platform value="Win64">False</Platform>
             </Platforms>
             <ModelSupport>False</ModelSupport>
         </BorlandProject>

@@ -56,9 +56,6 @@ object mainForm: TmainForm
     Zoom = 100
     OnChange = myEditorChange
     OnSelectionChange = MyEditorSelectionChange
-    ExplicitLeft = -8
-    ExplicitTop = 89
-    ExplicitHeight = 495
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -222,9 +219,6 @@ object mainForm: TmainForm
     Align = alTop
     AutoSize = True
     TabOrder = 3
-    ExplicitLeft = 344
-    ExplicitTop = 55
-    ExplicitWidth = 185
   end
   object MainAppMenu: TMainMenu
     Left = 32

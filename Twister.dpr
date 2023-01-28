@@ -5,7 +5,10 @@ uses
   main in 'main.pas' {mainForm},
   Vcl.Themes,
   Vcl.Styles,
-  Ruler in 'Ruler.pas';
+  Ruler in 'Ruler.pas',
+  NHunspell in 'NHunspell.pas',
+  NHunXml in 'NHunXml.pas',
+  PasZip in 'PasZip.pas';
 
 {$R *.res}
 

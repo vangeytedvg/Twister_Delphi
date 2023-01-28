@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList, Vcl.Menus,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
-  Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler;
+  Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell;
 
 type
   TmainForm = class(TForm)
@@ -104,8 +104,8 @@ begin
   Application.Terminate;
 end;
 
-procedure TmainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 
+procedure TmainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   // If the form is dirty, ask the user if he wants to loose the changes
   if IsDirty then
@@ -147,18 +147,22 @@ procedure TmainForm.MyEditorSelectionChange(Sender: TObject);
 var
   CursorPosition: TPoint;
 begin
+  // Get the cursor position
   CursorPosition := myEditor.CaretPos;
+  // Show in the statusbar
   Sb.Panels[2].Text := IntToStr(CursorPosition.Y+1);
   Sb.Panels[3].Text := IntToStr(CursorPosition.X+1);
 end;
 
 
 procedure TmainForm.ToolButtonNewClick(Sender: TObject);
+// When a new document is created, set the dirty flag to false
 begin
   IsDirty := False;
 end;
 
 procedure TmainForm.ToolButtonSelectFontClick(Sender: TObject);
+// Let the user select a font
 begin
   if FontSelector.Execute() then
   begin

@@ -1,0 +1,108 @@
+unit Ruler;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Vcl.Controls, Vcl.ExtCtrls, Vcl.Graphics;
+
+type
+  TRuler = class(TPanel)
+  private
+    { Private declarations }
+    FRulerPanel: TPanel;
+    FRulerMeasure: Integer; // in pixels
+    FRulerColor: TColor;
+    FOnChange: TNotifyEvent;
+    Canvas: TCanvas;
+    procedure SetRulerMeasure(const Value: Integer);
+    procedure SetRulerColor(const Value: TColor);
+    procedure RulerPanelResize(Sender: TObject);
+  protected
+    { Protected declarations }
+    procedure CreateWnd; override;
+    procedure Paint; override;
+  public
+    { Public declarations }
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    property RulerMeasure: Integer read FRulerMeasure write SetRulerMeasure;
+    property RulerColor: TColor read FRulerColor write SetRulerColor;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+  published
+    { Published declarations }
+  end;
+
+procedure Register;
+
+implementation
+
+procedure Register;
+begin
+  RegisterComponents('Fun', [TRuler]);
+end;
+
+constructor TRuler.Create(AOwner: TComponent);
+begin
+  // This is like super()
+  inherited;
+  Width := 100;
+  Height := 20;
+  FRulerMeasure := 100;
+  FRulerColor := clBtnFace;
+  FRulerPanel := TPanel.Create(Self);
+  FRulerPanel.Parent := Self;
+  FRulerPanel.Align := alClient;
+  FRulerPanel.OnResize := RulerPanelResize;
+end;
+
+destructor TRuler.Destroy;
+begin
+  FRulerPanel.Free;
+  inherited;
+end;
+
+procedure TRuler.CreateWnd;
+begin
+inherited;
+  RulerPanelResize(nil);
+end;
+
+procedure TRuler.Paint;
+var
+i: Integer;
+begin
+inherited;
+  Canvas.Brush.Color := FRulerColor;
+  Canvas.FillRect(ClientRect);
+  Canvas.Pen.Color := clBlack;
+  for i := 0 to (FRulerPanel.Width div FRulerMeasure) do
+    Canvas.MoveTo(i * FRulerMeasure, 0);
+    Canvas.LineTo(i * FRulerMeasure, Height);
+    Canvas.TextOut(i * FRulerMeasure + 2, 2, IntToStr(i));
+end;
+
+procedure TRuler.SetRulerMeasure(const Value: Integer);
+begin
+  if FRulerMeasure <> Value then
+  begin
+    FRulerMeasure := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TRuler.SetRulerColor(const Value: TColor);
+begin
+  if FRulerColor <> Value then
+  begin
+    FRulerColor := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TRuler.RulerPanelResize(Sender: TObject);
+begin
+  Invalidate;
+end;
+
+end.
+
