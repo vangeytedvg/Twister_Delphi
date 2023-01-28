@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList, Vcl.Menus,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
-  Vcl.ActnList, Vcl.ExtActns;
+  Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler;
 
 type
   TmainForm = class(TForm)
@@ -69,6 +69,7 @@ type
     FormatRichEditAlignRight1: TRichEditAlignRight;
     AlignRight1: TMenuItem;
     FontSelector: TFontDialog;
+    RulerHolder: TPanel;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -77,7 +78,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure MyEditorChange(Sender: TObject);
     procedure ToolButtonNewClick(Sender: TObject);
-    procedure ToolButton3Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
 
 
   private
@@ -85,6 +86,7 @@ type
     IsDirty : Boolean;
   public
     { Public declarations }
+    MyRuler: TRuler;
   end;
 
 var
@@ -118,14 +120,28 @@ procedure TmainForm.FormCreate(Sender: TObject);
 // Executed when the application is started
 begin
   self.IsDirty := False;
+  // create an instance of the ruler
+  MyRuler:=TRuler.Create(Self);
+  MyRuler.Parent := RulerHolder;
+  MyRuler.Width:=RulerHolder.Width;
+  MyRuler.RulerMeasure := 10;
+  MyRuler.RulerColor := clWhite;
 end;
 
+{ Resizeing the windows also resizes the ruler }
+procedure TmainForm.FormResize(Sender: TObject);
+begin
+  MyRuler.Width:=RulerHolder.Width;
+end;
+
+{ Text changes }
 procedure TmainForm.MyEditorChange(Sender: TObject);
 // Set dirty flag
 begin
   IsDirty := true
 end;
 
+{ Selection changed, inform the position }
 procedure TmainForm.MyEditorSelectionChange(Sender: TObject);
 // Keep track of the cursor position
 var
@@ -136,11 +152,6 @@ begin
   Sb.Panels[3].Text := IntToStr(CursorPosition.X+1);
 end;
 
-
-procedure TmainForm.ToolButton3Click(Sender: TObject);
-begin
-  //
-end;
 
 procedure TmainForm.ToolButtonNewClick(Sender: TObject);
 begin

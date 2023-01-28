@@ -15,6 +15,7 @@ object mainForm: TmainForm
   Position = poDesigned
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object Sb: TStatusBar
@@ -40,9 +41,9 @@ object mainForm: TmainForm
   end
   object MyEditor: TRichEdit
     Left = 0
-    Top = 49
+    Top = 90
     Width = 1041
-    Height = 495
+    Height = 454
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -55,6 +56,9 @@ object mainForm: TmainForm
     Zoom = 100
     OnChange = myEditorChange
     OnSelectionChange = MyEditorSelectionChange
+    ExplicitLeft = -8
+    ExplicitTop = 89
+    ExplicitHeight = 495
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -89,7 +93,6 @@ object mainForm: TmainForm
       Hint = 'Save File'
       Caption = 'ToolButtonSave'
       ImageIndex = 13
-      OnClick = ToolButton3Click
     end
     object ToolButton11: TToolButton
       Left = 144
@@ -210,6 +213,18 @@ object mainForm: TmainForm
       Action = FormatRichEditAlignRight1
       ImageIndex = 1
     end
+  end
+  object RulerHolder: TPanel
+    Left = 0
+    Top = 49
+    Width = 1041
+    Height = 41
+    Align = alTop
+    AutoSize = True
+    TabOrder = 3
+    ExplicitLeft = 344
+    ExplicitTop = 55
+    ExplicitWidth = 185
   end
   object MainAppMenu: TMainMenu
     Left = 32
