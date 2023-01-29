@@ -2,7 +2,7 @@ program Twister;
 
 uses
   Vcl.Forms,
-  main in 'main.pas' {mainForm},
+  main in 'main.pas' {mainForm} ,
   Vcl.Themes,
   Vcl.Styles,
   Ruler in 'Ruler.pas',
@@ -18,4 +18,5 @@ begin
   TStyleManager.TrySetStyle('Obsidian');
   Application.CreateForm(TmainForm, mainForm);
   Application.Run;
+
 end.

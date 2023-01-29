@@ -197,8 +197,8 @@ begin
     Result := UTF8Decode(AValue)
   else
   begin
-    l := MultiByteToWideChar(FReader.FCodepage, 0, PAnsiChar(AValue), -1, Nil,
-      0);
+    l := MultiByteToWideChar(FReader.FCodepage, 0, PAnsiChar(AValue),
+      -1, Nil, 0);
     if l > 1 then
     begin
       SetLength(Result, l - 1);
@@ -233,7 +233,7 @@ var
 begin
   tmpStr := TStringlist.Create;
   try
-    tmpStr.Text := FAttr;                   { implcit conversion }
+    tmpStr.Text := FAttr; { implcit conversion }
     Result := Decode(tmpStr.Values[AName]); { implcit conversion }
   finally
     FreeAndNil(tmpStr);
@@ -401,7 +401,8 @@ begin
   { Detect encoding }
   if (Root.FItems.Count > 0) then
   begin
-    tmpEncoding := LowerCase(TOxtNode(Root.FItems[0]).Attrib('encoding')); { implcit conversion }
+    tmpEncoding := LowerCase(TOxtNode(Root.FItems[0]).Attrib('encoding'));
+    { implcit conversion }
     if Copy(tmpEncoding, 1, 3) = 'iso' then
     begin
       if (tmpEncoding = 'iso-8859-1') or (tmpEncoding = 'iso8859-1') then
@@ -431,7 +432,8 @@ begin
       FCodepage := 20866
     else if (Copy(tmpEncoding, 1, 7) = 'windows') or
       (Copy(tmpEncoding, 1, 9) = 'microsoft') then
-      FCodepage := StrToIntDef(Copy(tmpEncoding, 4, Length(tmpEncoding) - 3), FCodepage);  { implcit conversion }
+      FCodepage := StrToIntDef(Copy(tmpEncoding, 4, Length(tmpEncoding) - 3),
+        FCodepage); { implcit conversion }
   end;
 
 end;
@@ -475,7 +477,8 @@ begin
   while Node <> nil do
   begin
     Result := Result + Copy('                                ', 1,
-      Node.FLevel * 4) + 'NODE: ' + Node.Name + ' VALUE: ' + Node.Value + #13#10;
+      Node.FLevel * 4) + 'NODE: ' + Node.Name + ' VALUE: ' + Node.Value
+      + #13#10;
     str := TStringlist.Create;
     str.Text := Node.FAttr;
     for i := 0 to str.Count - 1 do

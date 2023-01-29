@@ -1,35 +1,34 @@
 { ************************************************************************************** }
-{                                                                                        }
-{ Wrapper for NHunspell for Delphi 2007+                                                 }
-{ Version 1.1.0                                                                          }
-{                                                                                        }
-{ The contents of this file are subject to the Mozilla Public License Version 1.1        }
-{ (the "License"); you may not use this file except in compliance with the License.      }
-{ You may obtain a copy of the License at http://www.mozilla.org/MPL/                    }
-{                                                                                        }
-{ Software distributed under the License is distributed on an "AS IS" basis, WITHOUT     }
-{ WARRANTY OF ANY KIND, either express or implied. See the License for the specific      }
-{ language governing rights and limitations under the License.                           }
-{                                                                                        }
-{ History:                                                                               }
-{                                                                                        }
-{ Version 1.1.0 (2011-03-18)                                                             }
-{ Complete rewrite of the TNHunspell class to cover the fact that OXT containers         }
-{ often contain more than one dictionary (e.g. English UK, USA, Australian in one OXT).  }
-{ Support for older dictionaries (OpenOffice 2, uncompressed dictionary files) has       }
-{ been dropped.                                                                          }
-{                                                                                        }
-{ Version 1.0.0 (2010-08-09)                                                             }
-{ Initial release.                                                                       }
-{                                                                                        }
-{ Acknowledgments:                                                                       }
-{                                                                                        }
-{ NHunspell Copyright (C) Thomas Maierhofer (http://nhunspell.sourceforge.net)           }
-{ PasZip Copyright (C) 2010 Arnaud Bouchez (http://synopse.info)                         }
-{ Delphi implementation Copyright (C) Alexander Halser (http://www.ec-software.com)      }
-{                                                                                        }
+{ }
+{ Wrapper for NHunspell for Delphi 2007+ }
+{ Version 1.1.0 }
+{ }
+{ The contents of this file are subject to the Mozilla Public License Version 1.1 }
+{ (the "License"); you may not use this file except in compliance with the License. }
+{ You may obtain a copy of the License at http://www.mozilla.org/MPL/ }
+{ }
+{ Software distributed under the License is distributed on an "AS IS" basis, WITHOUT }
+{ WARRANTY OF ANY KIND, either express or implied. See the License for the specific }
+{ language governing rights and limitations under the License. }
+{ }
+{ History: }
+{ }
+{ Version 1.1.0 (2011-03-18) }
+{ Complete rewrite of the TNHunspell class to cover the fact that OXT containers }
+{ often contain more than one dictionary (e.g. English UK, USA, Australian in one OXT). }
+{ Support for older dictionaries (OpenOffice 2, uncompressed dictionary files) has }
+{ been dropped. }
+{ }
+{ Version 1.0.0 (2010-08-09) }
+{ Initial release. }
+{ }
+{ Acknowledgments: }
+{ }
+{ NHunspell Copyright (C) Thomas Maierhofer (http://nhunspell.sourceforge.net) }
+{ PasZip Copyright (C) 2010 Arnaud Bouchez (http://synopse.info) }
+{ Delphi implementation Copyright (C) Alexander Halser (http://www.ec-software.com) }
+{ }
 { ************************************************************************************** }
-
 
 unit NHunspell;
 
@@ -61,27 +60,27 @@ unit NHunspell;
   Usage example:
 
   var
-    spell: TNHunspell;
-    tmpStr: TWidestrings;
+  spell: TNHunspell;
+  tmpStr: TWidestrings;
   begin
-    spell := TNHunspell.Create;
-    spell.Load(<OXTfilename>, [dtSpelling, dtHyphenation]);
-    if spell.Active then
-    begin
-     if spell.Spell('Abracadabra') then
-       Showmessage('correctly spelt')
-     else
-       begin
-         tmpStr := TWidestringlist.create;
-         spell.Suggest('Abracadabra', tmpStr);
-         if tmpStr.count = 0 then
-           showmessage('No suggestions')
-         else
-           showmessage('Suggestions: ' + tmpStr.Text);
-         FreeAndNil(tmpStr);
-       end;
-     end;
-     spell.free;
+  spell := TNHunspell.Create;
+  spell.Load(<OXTfilename>, [dtSpelling, dtHyphenation]);
+  if spell.Active then
+  begin
+  if spell.Spell('Abracadabra') then
+  Showmessage('correctly spelt')
+  else
+  begin
+  tmpStr := TWidestringlist.create;
+  spell.Suggest('Abracadabra', tmpStr);
+  if tmpStr.count = 0 then
+  showmessage('No suggestions')
+  else
+  showmessage('Suggestions: ' + tmpStr.Text);
+  FreeAndNil(tmpStr);
+  end;
+  end;
+  spell.free;
   end;
 
 
@@ -90,7 +89,7 @@ unit NHunspell;
 interface
 
 uses
-  Types, Classes, Windows, SysUtils, {$IFNDEF UNICODE}Widestrings,{$ENDIF}
+  Types, Classes, Windows, SysUtils, {$IFNDEF UNICODE}Widestrings, {$ENDIF}
   NHunXml;
 
 const
@@ -106,28 +105,39 @@ type
   end;
 
   PHyphenResult = ^HyphenResult;
-  {$IFDEF UNICODE}
+{$IFDEF UNICODE}
   TUnicodeStrings = TStrings;
   TUnicodeStringList = TStringList;
-  {$ELSE}
+{$ELSE}
   TUnicodeStrings = TWideStrings;
   TUnicodeStringList = TWideStringList;
   UnicodeString = Widestring;
-  {$ENDIF}
+{$ENDIF}
+
 var
   HunspellDll: HMODULE;
-  HunspellInit: function(const AffixBuffer: PAnsiChar; AffixBufferSize: Integer; const DictionaryBuffer: PAnsiChar; DictionaryBufferSize: Integer; key: PAnsiChar): Pointer; cdecl;
+  HunspellInit: function(const AffixBuffer: PAnsiChar; AffixBufferSize: Integer;
+    const DictionaryBuffer: PAnsiChar; DictionaryBufferSize: Integer;
+    key: PAnsiChar): Pointer; cdecl;
   HunspellFree: procedure(Handle: Pointer); cdecl;
-  HunspellSpell: function(Handle: Pointer; const Word: PWideChar): Integer; cdecl;
-  HunspellSuggest: function(Handle: Pointer; const Word: PWideChar): Pointer; cdecl;
-  HunspellAnalyze: function(Handle: Pointer; const Word: PWideChar): Pointer; cdecl;
-  HunspellStem: function(Handle: Pointer; const Word: PWideChar): Pointer; cdecl;
-  HunspellGenerate: function(Handle: Pointer; const Word: PWideChar; const SampleWord: PWideChar): Pointer; cdecl;
+  HunspellSpell: function(Handle: Pointer; const Word: PWideChar)
+    : Integer; cdecl;
+  HunspellSuggest: function(Handle: Pointer; const Word: PWideChar)
+    : Pointer; cdecl;
+  HunspellAnalyze: function(Handle: Pointer; const Word: PWideChar)
+    : Pointer; cdecl;
+  HunspellStem: function(Handle: Pointer; const Word: PWideChar)
+    : Pointer; cdecl;
+  HunspellGenerate: function(Handle: Pointer; const Word: PWideChar;
+    const SampleWord: PWideChar): Pointer; cdecl;
   HunspellAdd: function(Handle: Pointer; const Word: PWideChar): Integer; cdecl;
-  HunspellAddWithAffix: function(Handle: Pointer; const Word, Affix: PWideChar): Integer; cdecl;
-  HyphenInit: function(const DictionaryBuffer: PAnsiChar; DictionaryBufferSize: Integer): Pointer; cdecl;
+  HunspellAddWithAffix: function(Handle: Pointer; const Word, Affix: PWideChar)
+    : Integer; cdecl;
+  HyphenInit: function(const DictionaryBuffer: PAnsiChar;
+    DictionaryBufferSize: Integer): Pointer; cdecl;
   HyphenFree: procedure(Handle: Pointer); cdecl;
-  HyphenHyphenate: function(Handle: Pointer; const Word: PWideChar): PHyphenResult; cdecl;
+  HyphenHyphenate: function(Handle: Pointer; const Word: PWideChar)
+    : PHyphenResult; cdecl;
 
 type
   THunspellDictionaryType = (dtSpelling, dtHyphenation, dtThesaurus);
@@ -137,17 +147,17 @@ type
   private
     FActive: Boolean;
     FLoaded: Boolean;
-    FDictionaryFilename: String;   {OXT container}
+    FDictionaryFilename: String; { OXT container }
     FID: UnicodeString;
     FDisplayName: UnicodeString;
     FVersion: UnicodeString;
     FPublisher: UnicodeString;
-    FLangID: WORD;
+    FLangID: Word;
     FLanguageName: UnicodeString;
     FRefCount: Integer;
   protected
-    function  GetInternalFileID: String; virtual;
-    function  Load: Boolean; virtual;
+    function GetInternalFileID: String; virtual;
+    function Load: Boolean; virtual;
     procedure Unload; virtual;
   public
     constructor Create; virtual;
@@ -156,7 +166,7 @@ type
     property Loaded: Boolean read FLoaded;
     property DictionaryFileName: String read FDictionaryFilename;
     property DisplayName: UnicodeString read FDisplayName;
-    property LangID: WORD read FLangID;
+    property LangID: Word read FLangID;
     property LanguageName: UnicodeString read FLanguageName;
     property ID: UnicodeString read FID;
     property InternalFileID: String read GetInternalFileID;
@@ -169,19 +179,20 @@ type
     FHunspellHandle: Pointer;
     FInternalAffixPath: String;
     FInternalDictPath: String;
-    {DEPRICATED function InternalLoadSpellDirect(const AffixFileName, DictionaryFileName: String; const key: AnsiString = ''): Boolean;}
-    function InitSpelling(const AffixBuffer: PAnsiChar; AffixBufferSize: Integer; const DictionaryBuffer: PAnsiChar; DictionaryBufferSize: Integer;
-      key: PAnsiChar): Boolean;
+    { DEPRICATED function InternalLoadSpellDirect(const AffixFileName, DictionaryFileName: String; const key: AnsiString = ''): Boolean; }
+    function InitSpelling(const AffixBuffer: PAnsiChar;
+      AffixBufferSize: Integer; const DictionaryBuffer: PAnsiChar;
+      DictionaryBufferSize: Integer; key: PAnsiChar): Boolean;
   protected
   public
     constructor Create; override;
-    function  GetInternalFileID: String; override;
-    function  Load: Boolean; override;
+    function GetInternalFileID: String; override;
+    function Load: Boolean; override;
     procedure Unload; override;
 
-    function  Add(const Word: UnicodeString): Boolean;
-    function  AddWithAffix(const Word, AffixModel: UnicodeString): Boolean;
-    function  Spell(const Word: UnicodeString): Boolean;
+    function Add(const Word: UnicodeString): Boolean;
+    function AddWithAffix(const Word, AffixModel: UnicodeString): Boolean;
+    function Spell(const Word: UnicodeString): Boolean;
     procedure Suggest(const Word: UnicodeString; AWordList: TUnicodeStrings);
     procedure Analyze(const Word: UnicodeString; AWordList: TUnicodeStrings);
     procedure Stem(const Word: UnicodeString; AWordList: TUnicodeStrings);
@@ -192,12 +203,13 @@ type
     FHyphenHandle: Pointer;
     FInternalHyphenPath: String;
   protected
-    {DEPRICATED function InternalLoadHyphenDirect(const HyphenFileName: String): Boolean;}
-    function InitHyphenation(const hyphenBuffer: PAnsiChar; hyphenBufferSize: Integer): Boolean;
+    { DEPRICATED function InternalLoadHyphenDirect(const HyphenFileName: String): Boolean; }
+    function InitHyphenation(const hyphenBuffer: PAnsiChar;
+      hyphenBufferSize: Integer): Boolean;
   public
     constructor Create; override;
-    function  GetInternalFileID: String; override;
-    function  Load: Boolean; override;
+    function GetInternalFileID: String; override;
+    function Load: Boolean; override;
     procedure Unload; override;
 
     function Hyphenate(const Word: UnicodeString): UnicodeString; overload;
@@ -208,35 +220,38 @@ type
   private
     FSpellDictionaries: TStringList;
     FHyphenDictionaries: TStringList;
-    function  GetSpellDictionaryCount: Integer;
-    function  GetHyphenDictionaryCount: Integer;
-    function  GetSpellDictionary(Index: Integer): TNHSpellDictionary;
-    function  GetHyphenDictionary(Index: Integer): TNHHyphenDictionary;
+    function GetSpellDictionaryCount: Integer;
+    function GetHyphenDictionaryCount: Integer;
+    function GetSpellDictionary(Index: Integer): TNHSpellDictionary;
+    function GetHyphenDictionary(Index: Integer): TNHHyphenDictionary;
     procedure InternalReadDescription(const ADescription: RawByteString;
-                                      var AVersion, AID, ADisplayName, APublisher: Widestring;
-                                      const PreferLocalized: Boolean = False);
+      var AVersion, AID, ADisplayName, APublisher: Widestring;
+      const PreferLocalized: Boolean = False);
   protected
   public
     constructor Create;
     destructor Destroy; override;
 
-    function  ReadFolder(FolderName: String): Boolean;
-    function  ReadOXT(const FileName: String): Boolean;
-    function  FindSpellDictionary(const AInternalID: String): TNHSpellDictionary;
-    function  FindHyphenDictionary(const AInternalID: String): TNHHyphenDictionary;
+    function ReadFolder(FolderName: String): Boolean;
+    function ReadOXT(const FileName: String): Boolean;
+    function FindSpellDictionary(const AInternalID: String): TNHSpellDictionary;
+    function FindHyphenDictionary(const AInternalID: String)
+      : TNHHyphenDictionary;
 
     procedure Dictionary_Addref(const AInternalID: String);
     procedure Dictionary_Release(const AInternalID: String);
 
     procedure ClearDictionaries;
-    procedure RemoveSpellDictionary(index: integer);
-    procedure RemoveHyphenDictionary(index: integer);
+    procedure RemoveSpellDictionary(Index: Integer);
+    procedure RemoveHyphenDictionary(Index: Integer);
     procedure UpdateAndLoadDictionaries;
 
-    property  SpellDictionaryCount: Integer read GetSpellDictionaryCount;
-    property  HyphenDictionaryCount: Integer read GetHyphenDictionaryCount;
-    property  SpellDictionaries[Index: Integer]: TNHSpellDictionary read GetSpellDictionary;
-    property  HyphenDictionaries[Index: Integer]: TNHHyphenDictionary read GetHyphenDictionary;
+    property SpellDictionaryCount: Integer read GetSpellDictionaryCount;
+    property HyphenDictionaryCount: Integer read GetHyphenDictionaryCount;
+    property SpellDictionaries[Index: Integer]: TNHSpellDictionary
+      read GetSpellDictionary;
+    property HyphenDictionaries[Index: Integer]: TNHHyphenDictionary
+      read GetHyphenDictionary;
   end;
 
 var
@@ -289,7 +304,8 @@ begin
       @HunspellAdd := GetProcAddress(HunspellDll, 'HunspellAdd');
       if not Assigned(HunspellAdd) then
         Exit;
-      @HunspellAddWithAffix := GetProcAddress(HunspellDll, 'HunspellAddWithAffix');
+      @HunspellAddWithAffix := GetProcAddress(HunspellDll,
+        'HunspellAddWithAffix');
       if not Assigned(HunspellAddWithAffix) then
         Exit;
 
@@ -312,119 +328,92 @@ const
   LangCodes: array [0 .. 108] of Word = (
     { LANG_SYSTEM_DEFAULT,
       LANG_USER_DEFAULT, }
-    LANG_AFRIKAANS or SUBLANG_DEFAULT shl 10,
-    LANG_ALBANIAN or SUBLANG_DEFAULT shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_SAUDI_ARABIA shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_IRAQ shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_EGYPT shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_LIBYA shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_ALGERIA shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_MOROCCO shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_TUNISIA shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_OMAN shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_YEMEN shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_SYRIA shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_JORDAN shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_LEBANON shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_KUWAIT shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_UAE shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_BAHRAIN shl 10,
-    LANG_ARABIC or SUBLANG_ARABIC_QATAR shl 10,
-    LANG_BASQUE or SUBLANG_DEFAULT shl 10,
-    LANG_BELARUSIAN or SUBLANG_DEFAULT shl 10,
-    LANG_BULGARIAN or SUBLANG_DEFAULT shl 10,
-    LANG_CATALAN or SUBLANG_DEFAULT shl 10,
-    LANG_CHINESE or SUBLANG_DEFAULT shl 10,
-    LANG_CHINESE or SUBLANG_CHINESE_TRADITIONAL shl 10,
-    LANG_CHINESE or SUBLANG_CHINESE_SIMPLIFIED shl 10,
-    LANG_CHINESE or SUBLANG_CHINESE_HONGKONG shl 10,
-    LANG_CHINESE or SUBLANG_CHINESE_SINGAPORE shl 10,
-    LANG_CROATIAN or SUBLANG_DEFAULT shl 10,
-    LANG_CZECH or SUBLANG_DEFAULT shl 10,
-    LANG_DANISH or SUBLANG_DEFAULT shl 10,
-    LANG_DUTCH or SUBLANG_DUTCH shl 10,
-    LANG_DUTCH or SUBLANG_DUTCH_BELGIAN shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_US shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_UK shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_UK shl 10,  //twice!
-    LANG_ENGLISH or SUBLANG_ENGLISH_AUS shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_CAN shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_NZ shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_EIRE shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_SOUTH_AFRICA shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_JAMAICA shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_CARIBBEAN shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_BELIZE shl 10,
-    LANG_ENGLISH or SUBLANG_ENGLISH_TRINIDAD shl 10,
-    LANG_ESTONIAN or SUBLANG_DEFAULT shl 10,
-    LANG_FAEROESE or SUBLANG_DEFAULT shl 10,
-    LANG_FARSI or SUBLANG_DEFAULT shl 10,
-    LANG_FINNISH or SUBLANG_DEFAULT shl 10,
-    LANG_FRENCH or SUBLANG_FRENCH shl 10,
-    LANG_FRENCH or SUBLANG_FRENCH_BELGIAN shl 10,
-    LANG_FRENCH or SUBLANG_FRENCH_CANADIAN shl 10,
-    LANG_FRENCH or SUBLANG_FRENCH_SWISS shl 10,
-    LANG_FRENCH or SUBLANG_FRENCH_LUXEMBOURG shl 10,
-    LANG_GERMAN or SUBLANG_GERMAN shl 10,
-    LANG_GERMAN or SUBLANG_GERMAN_SWISS shl 10,
-    LANG_GERMAN or SUBLANG_GERMAN_AUSTRIAN shl 10,
-    LANG_GERMAN or SUBLANG_GERMAN_LUXEMBOURG shl 10,
-    LANG_GERMAN or SUBLANG_GERMAN_LIECHTENSTEIN shl 10,
-    LANG_GREEK or SUBLANG_DEFAULT shl 10,
-    LANG_HEBREW or SUBLANG_DEFAULT shl 10,
-    LANG_HUNGARIAN or SUBLANG_DEFAULT shl 10,
-    LANG_ICELANDIC or SUBLANG_DEFAULT shl 10,
-    LANG_INDONESIAN or SUBLANG_DEFAULT shl 10,
-    LANG_ITALIAN or SUBLANG_ITALIAN shl 10,
-    LANG_ITALIAN or SUBLANG_ITALIAN_SWISS shl 10,
-    LANG_JAPANESE or SUBLANG_DEFAULT shl 10,
-    LANG_KOREAN or SUBLANG_KOREAN shl 10,
-    LANG_KOREAN or SUBLANG_KOREAN shl 10,
-    LANG_KOREAN or SUBLANG_KOREAN_JOHAB shl 10,
-    LANG_LATVIAN or SUBLANG_DEFAULT shl 10,
-    LANG_LITHUANIAN or SUBLANG_DEFAULT shl 10,
-    LANG_NORWEGIAN or SUBLANG_NORWEGIAN_BOKMAL shl 10,
-    LANG_NORWEGIAN or SUBLANG_NORWEGIAN_NYNORSK shl 10,
-    LANG_POLISH or SUBLANG_DEFAULT shl 10,
-    LANG_PORTUGUESE or SUBLANG_PORTUGUESE shl 10,
-    LANG_PORTUGUESE or SUBLANG_PORTUGUESE_BRAZILIAN shl 10,
-    LANG_ROMANIAN or SUBLANG_DEFAULT shl 10,
-    LANG_RUSSIAN or SUBLANG_DEFAULT shl 10,
-    LANG_SERBIAN or SUBLANG_DEFAULT shl 10,
-    LANG_SERBIAN or SUBLANG_SERBIAN_LATIN shl 10,
-    LANG_SERBIAN or SUBLANG_SERBIAN_CYRILLIC shl 10,
-    LANG_SLOVAK or SUBLANG_DEFAULT shl 10,
-    LANG_SLOVENIAN or SUBLANG_DEFAULT shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_MEXICAN shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_MODERN shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_GUATEMALA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_COSTA_RICA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_PANAMA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_DOMINICAN_REPUBLIC shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_VENEZUELA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_COLOMBIA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_PERU shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_ARGENTINA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_ECUADOR shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_CHILE shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_URUGUAY shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_PARAGUAY shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_BOLIVIA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_EL_SALVADOR shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_HONDURAS shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_NICARAGUA shl 10,
-    LANG_SPANISH or SUBLANG_SPANISH_PUERTO_RICO shl 10,
-    LANG_SWEDISH or SUBLANG_SWEDISH shl 10,
-    LANG_SWEDISH or SUBLANG_SWEDISH_FINLAND shl 10,
-    LANG_THAI or SUBLANG_DEFAULT shl 10,
-    LANG_TURKISH or SUBLANG_DEFAULT shl 10,
-    LANG_UKRAINIAN or SUBLANG_DEFAULT shl 10,
-    LANG_VIETNAMESE or SUBLANG_DEFAULT shl 10);
+    LANG_AFRIKAANS or SUBLANG_DEFAULT shl 10, LANG_ALBANIAN or
+    SUBLANG_DEFAULT shl 10, LANG_ARABIC or SUBLANG_ARABIC_SAUDI_ARABIA shl 10,
+    LANG_ARABIC or SUBLANG_ARABIC_IRAQ shl 10, LANG_ARABIC or
+    SUBLANG_ARABIC_EGYPT shl 10, LANG_ARABIC or SUBLANG_ARABIC_LIBYA shl 10,
+    LANG_ARABIC or SUBLANG_ARABIC_ALGERIA shl 10, LANG_ARABIC or
+    SUBLANG_ARABIC_MOROCCO shl 10, LANG_ARABIC or SUBLANG_ARABIC_TUNISIA shl 10,
+    LANG_ARABIC or SUBLANG_ARABIC_OMAN shl 10, LANG_ARABIC or
+    SUBLANG_ARABIC_YEMEN shl 10, LANG_ARABIC or SUBLANG_ARABIC_SYRIA shl 10,
+    LANG_ARABIC or SUBLANG_ARABIC_JORDAN shl 10, LANG_ARABIC or
+    SUBLANG_ARABIC_LEBANON shl 10, LANG_ARABIC or SUBLANG_ARABIC_KUWAIT shl 10,
+    LANG_ARABIC or SUBLANG_ARABIC_UAE shl 10, LANG_ARABIC or
+    SUBLANG_ARABIC_BAHRAIN shl 10, LANG_ARABIC or SUBLANG_ARABIC_QATAR shl 10,
+    LANG_BASQUE or SUBLANG_DEFAULT shl 10, LANG_BELARUSIAN or
+    SUBLANG_DEFAULT shl 10, LANG_BULGARIAN or SUBLANG_DEFAULT shl 10,
+    LANG_CATALAN or SUBLANG_DEFAULT shl 10, LANG_CHINESE or
+    SUBLANG_DEFAULT shl 10, LANG_CHINESE or SUBLANG_CHINESE_TRADITIONAL shl 10,
+    LANG_CHINESE or SUBLANG_CHINESE_SIMPLIFIED shl 10, LANG_CHINESE or
+    SUBLANG_CHINESE_HONGKONG shl 10, LANG_CHINESE or
+    SUBLANG_CHINESE_SINGAPORE shl 10, LANG_CROATIAN or SUBLANG_DEFAULT shl 10,
+    LANG_CZECH or SUBLANG_DEFAULT shl 10, LANG_DANISH or SUBLANG_DEFAULT shl 10,
+    LANG_DUTCH or SUBLANG_DUTCH shl 10, LANG_DUTCH or
+    SUBLANG_DUTCH_BELGIAN shl 10, LANG_ENGLISH or SUBLANG_ENGLISH_US shl 10,
+    LANG_ENGLISH or SUBLANG_ENGLISH_UK shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_UK shl 10, // twice!
+    LANG_ENGLISH or SUBLANG_ENGLISH_AUS shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_CAN shl 10, LANG_ENGLISH or SUBLANG_ENGLISH_NZ shl 10,
+    LANG_ENGLISH or SUBLANG_ENGLISH_EIRE shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_SOUTH_AFRICA shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_JAMAICA shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_CARIBBEAN shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_BELIZE shl 10, LANG_ENGLISH or
+    SUBLANG_ENGLISH_TRINIDAD shl 10, LANG_ESTONIAN or SUBLANG_DEFAULT shl 10,
+    LANG_FAEROESE or SUBLANG_DEFAULT shl 10, LANG_FARSI or
+    SUBLANG_DEFAULT shl 10, LANG_FINNISH or SUBLANG_DEFAULT shl 10,
+    LANG_FRENCH or SUBLANG_FRENCH shl 10, LANG_FRENCH or
+    SUBLANG_FRENCH_BELGIAN shl 10, LANG_FRENCH or
+    SUBLANG_FRENCH_CANADIAN shl 10, LANG_FRENCH or SUBLANG_FRENCH_SWISS shl 10,
+    LANG_FRENCH or SUBLANG_FRENCH_LUXEMBOURG shl 10, LANG_GERMAN or
+    SUBLANG_GERMAN shl 10, LANG_GERMAN or SUBLANG_GERMAN_SWISS shl 10,
+    LANG_GERMAN or SUBLANG_GERMAN_AUSTRIAN shl 10, LANG_GERMAN or
+    SUBLANG_GERMAN_LUXEMBOURG shl 10, LANG_GERMAN or
+    SUBLANG_GERMAN_LIECHTENSTEIN shl 10, LANG_GREEK or SUBLANG_DEFAULT shl 10,
+    LANG_HEBREW or SUBLANG_DEFAULT shl 10, LANG_HUNGARIAN or
+    SUBLANG_DEFAULT shl 10, LANG_ICELANDIC or SUBLANG_DEFAULT shl 10,
+    LANG_INDONESIAN or SUBLANG_DEFAULT shl 10, LANG_ITALIAN or
+    SUBLANG_ITALIAN shl 10, LANG_ITALIAN or SUBLANG_ITALIAN_SWISS shl 10,
+    LANG_JAPANESE or SUBLANG_DEFAULT shl 10, LANG_KOREAN or
+    SUBLANG_KOREAN shl 10, LANG_KOREAN or SUBLANG_KOREAN shl 10,
+    LANG_KOREAN or SUBLANG_KOREAN_JOHAB shl 10, LANG_LATVIAN or
+    SUBLANG_DEFAULT shl 10, LANG_LITHUANIAN or SUBLANG_DEFAULT shl 10,
+    LANG_NORWEGIAN or SUBLANG_NORWEGIAN_BOKMAL shl 10, LANG_NORWEGIAN or
+    SUBLANG_NORWEGIAN_NYNORSK shl 10, LANG_POLISH or SUBLANG_DEFAULT shl 10,
+    LANG_PORTUGUESE or SUBLANG_PORTUGUESE shl 10, LANG_PORTUGUESE or
+    SUBLANG_PORTUGUESE_BRAZILIAN shl 10, LANG_ROMANIAN or
+    SUBLANG_DEFAULT shl 10, LANG_RUSSIAN or SUBLANG_DEFAULT shl 10,
+    LANG_SERBIAN or SUBLANG_DEFAULT shl 10, LANG_SERBIAN or
+    SUBLANG_SERBIAN_LATIN shl 10, LANG_SERBIAN or
+    SUBLANG_SERBIAN_CYRILLIC shl 10, LANG_SLOVAK or SUBLANG_DEFAULT shl 10,
+    LANG_SLOVENIAN or SUBLANG_DEFAULT shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH shl 10, LANG_SPANISH or SUBLANG_SPANISH_MEXICAN shl 10,
+    LANG_SPANISH or SUBLANG_SPANISH_MODERN shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_GUATEMALA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_COSTA_RICA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_PANAMA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_DOMINICAN_REPUBLIC shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_VENEZUELA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_COLOMBIA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_PERU shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_ARGENTINA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_ECUADOR shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_CHILE shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_URUGUAY shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_PARAGUAY shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_BOLIVIA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_EL_SALVADOR shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_HONDURAS shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_NICARAGUA shl 10, LANG_SPANISH or
+    SUBLANG_SPANISH_PUERTO_RICO shl 10, LANG_SWEDISH or SUBLANG_SWEDISH shl 10,
+    LANG_SWEDISH or SUBLANG_SWEDISH_FINLAND shl 10, LANG_THAI or
+    SUBLANG_DEFAULT shl 10, LANG_TURKISH or SUBLANG_DEFAULT shl 10,
+    LANG_UKRAINIAN or SUBLANG_DEFAULT shl 10, LANG_VIETNAMESE or
+    SUBLANG_DEFAULT shl 10);
 
 const
-  LangShortcuts: array [0 .. 108] of AnsiString = (
-    'af', // LANG_AFRIKAANS or SUBLANG_DEFAULT shl 10,
+  LangShortcuts: array [0 .. 108] of AnsiString = ('af',
+    // LANG_AFRIKAANS or SUBLANG_DEFAULT shl 10,
     'sq', // LANG_ALBANIAN or SUBLANG_DEFAULT shl 10,
     'ar-sa', // LANG_ARABIC or SUBLANG_ARABIC_SAUDI_ARABIA shl 10,
     'ar-iq', // LANG_ARABIC or SUBLANG_ARABIC_IRAQ shl 10,
@@ -569,14 +558,14 @@ begin
   // second try, primary language code only
   LangShortcut := copy(LangShortcut, 1, 2);
   for i := Low(LangShortcuts) to High(LangShortcuts) do
-    if AnsiCompareText(LangShortcut, Copy(LangShortcuts[i], 1, 2)) = 0 then
+    if AnsiCompareText(LangShortcut, copy(LangShortcuts[i], 1, 2)) = 0 then
     begin
       Result := LangCodes[i];
       Exit;
     end;
 end;
 
-function GetLanguageName(LangID: WORD): String;
+function GetLanguageName(LangID: Word): String;
 var
   Buf: array [0 .. 79] of Char;
 begin
@@ -610,19 +599,18 @@ end;
 
 function TNHCustomDictionary.Load: Boolean;
 begin
-  Result := false;
+  Result := False;
 end;
 
 procedure TNHCustomDictionary.Unload;
 begin
-  FLoaded := false;
+  FLoaded := False;
 end;
 
 function TNHCustomDictionary.GetInternalFileID: String;
 begin
-  result := '';
+  Result := '';
 end;
-
 
 { #####   TNHSpellDictionary   ##### }
 
@@ -642,17 +630,18 @@ var
 begin
   if not FLoaded then
   begin
-    zip := TZipRead.Create(fDictionaryFilename);
+    zip := TZipRead.Create(FDictionaryFilename);
     try
-      intItem := zip.NameToIndex(fInternalAffixPath);
+      intItem := zip.NameToIndex(FInternalAffixPath);
       if intItem > -1 then
       begin
         tmpAffixData := zip.Unzip(intItem);
-        intItem := zip.NameToIndex(fInternalDictPath);
+        intItem := zip.NameToIndex(FInternalDictPath);
         if intItem > -1 then
         begin
           tmpDictionaryData := zip.Unzip(intItem);
-          FLoaded := InitSpelling(PAnsiChar(tmpAffixData), length(tmpAffixData), PAnsiChar(tmpDictionaryData), length(tmpDictionaryData), '');
+          FLoaded := InitSpelling(PAnsiChar(tmpAffixData), length(tmpAffixData),
+            PAnsiChar(tmpDictionaryData), length(tmpDictionaryData), '');
         end;
       end;
     finally
@@ -674,50 +663,53 @@ end;
 
 function TNHSpellDictionary.GetInternalFileID: String;
 begin
-  result := Format('%s::%s::%s', [ExtractFileName(fDictionaryFileName), fInternalAffixPath, fInternalDictPath]);
+  Result := Format('%s::%s::%s', [ExtractFileName(FDictionaryFilename),
+    FInternalAffixPath, FInternalDictPath]);
 end;
 
-function TNHSpellDictionary.InitSpelling(const AffixBuffer: PAnsiChar; AffixBufferSize: Integer; const DictionaryBuffer: PAnsiChar;
+function TNHSpellDictionary.InitSpelling(const AffixBuffer: PAnsiChar;
+  AffixBufferSize: Integer; const DictionaryBuffer: PAnsiChar;
   DictionaryBufferSize: Integer; key: PAnsiChar): Boolean;
 begin
   if HunspellDll <> 0 then
-    FHunspellHandle := HunspellInit(AffixBuffer, AffixBufferSize, DictionaryBuffer, DictionaryBufferSize, key);
+    FHunspellHandle := HunspellInit(AffixBuffer, AffixBufferSize,
+      DictionaryBuffer, DictionaryBufferSize, key);
   Result := Assigned(FHunspellHandle);
 end;
 
 { InternalLoadSpellDirect - depricated!
   This function loads an uncompressed dictionary (until OO2) from file.
-function TNHSpellDictionary.InternalLoadSpellDirect(const AffixFileName, DictionaryFileName: String; const key: AnsiString = ''): Boolean;
-var
+  function TNHSpellDictionary.InternalLoadSpellDirect(const AffixFileName, DictionaryFileName: String; const key: AnsiString = ''): Boolean;
+  var
   tmpDictionary, tmpAffix: TMemoryStream;
-begin
+  begin
   Result := False;
   if Assigned(FHunspellHandle) then
-    Unload;
+  Unload;
 
   tmpDictionary := TMemoryStream.Create;
   try
-    tmpDictionary.LoadFromFile(DictionaryFileName);
+  tmpDictionary.LoadFromFile(DictionaryFileName);
 
-    FDisplayName := copy(ExtractFileName(DictionaryFileName), 1, length(DictionaryFileName) - length(ExtractFileExt(DictionaryFileName)));
-    FID := '';
-    FLangID := LANG_SYSTEM_DEFAULT;
-    FLanguageName := GetLanguageName(FLangID);
-    FVersion := '';
+  FDisplayName := copy(ExtractFileName(DictionaryFileName), 1, length(DictionaryFileName) - length(ExtractFileExt(DictionaryFileName)));
+  FID := '';
+  FLangID := LANG_SYSTEM_DEFAULT;
+  FLanguageName := GetLanguageName(FLangID);
+  FVersion := '';
 
-    tmpAffix := TMemoryStream.Create;
-    try
-      tmpAffix.LoadFromFile(AffixFileName);
+  tmpAffix := TMemoryStream.Create;
+  try
+  tmpAffix.LoadFromFile(AffixFileName);
 
-      Result := InitSpelling(tmpAffix.Memory, tmpAffix.size, tmpDictionary.Memory, tmpDictionary.size, PAnsiChar(key));
-    finally
-      FreeAndNil(tmpAffix);
-    end;
+  Result := InitSpelling(tmpAffix.Memory, tmpAffix.size, tmpDictionary.Memory, tmpDictionary.size, PAnsiChar(key));
   finally
-    FreeAndNil(tmpDictionary);
+  FreeAndNil(tmpAffix);
+  end;
+  finally
+  FreeAndNil(tmpDictionary);
   end;
   FActive := Result;
-end;
+  end;
 }
 
 { ----- Hunspell spelling and hyphenation functions ----- }
@@ -730,13 +722,15 @@ begin
     Result := False;
 end;
 
-procedure TNHSpellDictionary.Suggest(const Word: UnicodeString; AWordList: TUnicodeStrings);
+procedure TNHSpellDictionary.Suggest(const Word: UnicodeString;
+  AWordList: TUnicodeStrings);
 var
   tmpWideCharPointerPointer: ^PWideChar;
 begin
   if Assigned(FHunspellHandle) then
   begin
-    tmpWideCharPointerPointer := HunspellSuggest(FHunspellHandle, PWideChar(Word));
+    tmpWideCharPointerPointer := HunspellSuggest(FHunspellHandle,
+      PWideChar(Word));
     while tmpWideCharPointerPointer^ <> nil do
     begin
       AWordList.Add(tmpWideCharPointerPointer^);
@@ -753,21 +747,25 @@ begin
     Result := False;
 end;
 
-function TNHSpellDictionary.AddWithAffix(const Word, AffixModel: UnicodeString): Boolean;
+function TNHSpellDictionary.AddWithAffix(const Word,
+  AffixModel: UnicodeString): Boolean;
 begin
   if Assigned(FHunspellHandle) then
-    Result := HunspellAddWithAffix(FHunspellHandle, PWideChar(Word), PWideChar(AffixModel)) <> 0
+    Result := HunspellAddWithAffix(FHunspellHandle, PWideChar(Word),
+      PWideChar(AffixModel)) <> 0
   else
     Result := False;
 end;
 
-procedure TNHSpellDictionary.Analyze(const Word: UnicodeString; AWordList: TUnicodeStrings);
+procedure TNHSpellDictionary.Analyze(const Word: UnicodeString;
+  AWordList: TUnicodeStrings);
 var
   tmpWideCharPointerPointer: ^PWideChar;
 begin
   if Assigned(FHunspellHandle) then
   begin
-    tmpWideCharPointerPointer := HunspellAnalyze(FHunspellHandle, PWideChar(Word));
+    tmpWideCharPointerPointer := HunspellAnalyze(FHunspellHandle,
+      PWideChar(Word));
     while tmpWideCharPointerPointer^ <> nil do
     begin
       AWordList.Add(tmpWideCharPointerPointer^);
@@ -776,7 +774,8 @@ begin
   end;
 end;
 
-procedure TNHSpellDictionary.Stem(const Word: UnicodeString; AWordList: TUnicodeStrings);
+procedure TNHSpellDictionary.Stem(const Word: UnicodeString;
+  AWordList: TUnicodeStrings);
 var
   tmpWideCharPointerPointer: ^PWideChar;
 begin
@@ -790,7 +789,6 @@ begin
     end;
   end;
 end;
-
 
 { #####   TNHHypenDictionary   ##### }
 
@@ -809,14 +807,15 @@ var
 begin
   if not FLoaded then
   begin
-    zip := TZipRead.Create(fDictionaryFilename);
+    zip := TZipRead.Create(FDictionaryFilename);
     try
-      intItem := zip.NameToIndex(fInternalHyphenPath);
+      intItem := zip.NameToIndex(FInternalHyphenPath);
       if intItem > -1 then
       begin
         tmpHyphenData := zip.Unzip(intItem);
         if HunspellDll <> 0 then
-          FHyphenHandle := HyphenInit(PAnsiChar(tmpHyphenData), length(tmpHyphenData));
+          FHyphenHandle := HyphenInit(PAnsiChar(tmpHyphenData),
+            length(tmpHyphenData));
         FLoaded := FHyphenHandle <> nil;
       end;
     finally
@@ -838,40 +837,42 @@ end;
 
 function TNHHyphenDictionary.GetInternalFileID: String;
 begin
-  result := Format('%s::%s', [ExtractFileName(fDictionaryFileName), fInternalHyphenPath])
+  Result := Format('%s::%s', [ExtractFileName(FDictionaryFilename),
+    FInternalHyphenPath])
 end;
 
 { InternalLoadHyphenDirect - depricated!
   This function loads an uncompressed dictionary (until OO2) from file.
-function TNHHyphenDictionary.InternalLoadHyphenDirect(const HyphenFileName: String): Boolean;
-var
+  function TNHHyphenDictionary.InternalLoadHyphenDirect(const HyphenFileName: String): Boolean;
+  var
   tmpHyphenData: TMemoryStream;
-begin
+  begin
   Result := False;
 
   if Assigned(FHyphenHandle) then
-    Unload;
+  Unload;
 
   tmpHyphenData := TMemoryStream.Create;
   try
-    tmpHyphenData.LoadFromFile(HyphenFileName);
-    Result := InitHyphenation(PAnsiChar(tmpHyphenData.Memory), tmpHyphenData.size);
+  tmpHyphenData.LoadFromFile(HyphenFileName);
+  Result := InitHyphenation(PAnsiChar(tmpHyphenData.Memory), tmpHyphenData.size);
   finally
-    FreeAndNil(tmpHyphenData);
+  FreeAndNil(tmpHyphenData);
   end;
   FActive := Result;
-end;
+  end;
 }
 
-function TNHHyphenDictionary.InitHyphenation(const hyphenBuffer: PAnsiChar; hyphenBufferSize: Integer): Boolean;
+function TNHHyphenDictionary.InitHyphenation(const hyphenBuffer: PAnsiChar;
+  hyphenBufferSize: Integer): Boolean;
 begin
   if HunspellDll <> 0 then
     FHyphenHandle := HyphenInit(PAnsiChar(hyphenBuffer), hyphenBufferSize);
   Result := Assigned(FHyphenHandle);
 end;
 
-
-function TNHHyphenDictionary.Hyphenate(const Word: UnicodeString): UnicodeString;
+function TNHHyphenDictionary.Hyphenate(const Word: UnicodeString)
+  : UnicodeString;
 begin
   if Active then
     Result := HyphenHyphenate(FHyphenHandle, PWideChar(Word)).hyphenatedWord
@@ -887,16 +888,14 @@ begin
     Result := nil;
 end;
 
-
-
 { #####   TNHunspell   ##### }
 
 constructor TNHunspell.Create;
 begin
-  FSpellDictionaries := TStringList.create;
+  FSpellDictionaries := TStringList.Create;
   FSpellDictionaries.Sorted := true;
 
-  FHyphenDictionaries := TStringList.create;
+  FHyphenDictionaries := TStringList.Create;
   FHyphenDictionaries.Sorted := true;
 end;
 
@@ -913,36 +912,36 @@ var
   tmpDict: TNHCustomDictionary;
 begin
   tmpDict := FindSpellDictionary(AInternalID);
-  if not assigned(tmpDict) then
+  if not Assigned(tmpDict) then
     tmpDict := FindHyphenDictionary(AInternalID);
-  if assigned(tmpDict) then
-    inc(tmpDict.fRefCount);
+  if Assigned(tmpDict) then
+    Inc(tmpDict.FRefCount);
 end;
 
 procedure TNHunspell.Dictionary_Release(const AInternalID: String);
 var
-  intIndex: integer;
+  intIndex: Integer;
   tmpDict: TNHCustomDictionary;
 begin
   tmpDict := nil;
 
-  for intIndex := 0 to fSpellDictionaries.Count - 1 do
+  for intIndex := 0 to FSpellDictionaries.Count - 1 do
     if GetSpellDictionary(intIndex).GetInternalFileID = AInternalID then
     begin
       tmpDict := GetSpellDictionary(intIndex);
-      inc(tmpDict.fRefCount);
-      if tmpDict.fRefCount < 1 then
+      Inc(tmpDict.FRefCount);
+      if tmpDict.FRefCount < 1 then
         RemoveSpellDictionary(intIndex);
       break;
     end;
 
-  if not assigned(tmpDict) then
-    for intIndex := 0 to fHyphenDictionaries.Count - 1 do
+  if not Assigned(tmpDict) then
+    for intIndex := 0 to FHyphenDictionaries.Count - 1 do
       if GetHyphenDictionary(intIndex).GetInternalFileID = AInternalID then
       begin
         tmpDict := GetHyphenDictionary(intIndex);
-        inc(tmpDict.fRefCount);
-        if tmpDict.fRefCount < 1 then
+        Inc(tmpDict.FRefCount);
+        if tmpDict.FRefCount < 1 then
           RemoveHyphenDictionary(intIndex);
         break;
       end;
@@ -952,22 +951,22 @@ procedure TNHunspell.ClearDictionaries;
 var
   intIndex: Integer;
 begin
-  for intIndex := 0 to FSpellDictionaries.count - 1 do
+  for intIndex := 0 to FSpellDictionaries.Count - 1 do
     TNHSpellDictionary(FSpellDictionaries.Objects[intIndex]).free;
   FSpellDictionaries.Clear;
 
-  for intIndex := 0 to FHyphenDictionaries.count - 1 do
+  for intIndex := 0 to FHyphenDictionaries.Count - 1 do
     TNHHyphenDictionary(FHyphenDictionaries.Objects[intIndex]).free;
   FHyphenDictionaries.Clear;
 end;
 
-procedure TNHunspell.RemoveSpellDictionary(index: integer);
+procedure TNHunspell.RemoveSpellDictionary(Index: Integer);
 begin
   TNHSpellDictionary(FSpellDictionaries.Objects[index]).free;
   FSpellDictionaries.Delete(index);
 end;
 
-procedure TNHunspell.RemoveHyphenDictionary(index: integer);
+procedure TNHunspell.RemoveHyphenDictionary(Index: Integer);
 begin
   TNHHyphenDictionary(FHyphenDictionaries.Objects[index]).free;
   FHyphenDictionaries.Delete(index);
@@ -975,50 +974,51 @@ end;
 
 function TNHunspell.GetSpellDictionaryCount: Integer;
 begin
-  result := fSpellDictionaries.Count;
+  Result := FSpellDictionaries.Count;
 end;
 
 function TNHunspell.GetHyphenDictionaryCount: Integer;
 begin
-  result := fHyphenDictionaries.Count;
+  Result := FHyphenDictionaries.Count;
 end;
 
 function TNHunspell.GetSpellDictionary(Index: Integer): TNHSpellDictionary;
 begin
-  result := TNHSpellDictionary(fSpellDictionaries.Objects[Index]);
+  Result := TNHSpellDictionary(FSpellDictionaries.Objects[Index]);
 end;
 
 function TNHunspell.GetHyphenDictionary(Index: Integer): TNHHyphenDictionary;
 begin
-  result := TNHHyphenDictionary(fHyphenDictionaries.Objects[Index]);
+  Result := TNHHyphenDictionary(FHyphenDictionaries.Objects[Index]);
 end;
 
-function TNHunspell.FindSpellDictionary(const AInternalID: String): TNHSpellDictionary;
+function TNHunspell.FindSpellDictionary(const AInternalID: String)
+  : TNHSpellDictionary;
 var
-  intIndex: integer;
+  intIndex: Integer;
 begin
-  result := nil;
-  for intIndex := 0 to fSpellDictionaries.Count - 1 do
+  Result := nil;
+  for intIndex := 0 to FSpellDictionaries.Count - 1 do
     if GetSpellDictionary(intIndex).GetInternalFileID = AInternalID then
     begin
-      result := GetSpellDictionary(intIndex);
+      Result := GetSpellDictionary(intIndex);
       break;
     end;
 end;
 
-function TNHunspell.FindHyphenDictionary(const AInternalID: String): TNHHyphenDictionary;
+function TNHunspell.FindHyphenDictionary(const AInternalID: String)
+  : TNHHyphenDictionary;
 var
-  intIndex: integer;
+  intIndex: Integer;
 begin
-  result := nil;
-  for intIndex := 0 to fHyphenDictionaries.Count - 1 do
+  Result := nil;
+  for intIndex := 0 to FHyphenDictionaries.Count - 1 do
     if GetHyphenDictionary(intIndex).GetInternalFileID = AInternalID then
     begin
-      result := GetHyphenDictionary(intIndex);
+      Result := GetHyphenDictionary(intIndex);
       break;
     end;
 end;
-
 
 function TNHunspell.ReadFolder(FolderName: String): Boolean;
 var
@@ -1026,22 +1026,23 @@ var
   SearchRec: TSearchRec;
   intIndex: Integer;
 begin
-  Result := false;
-  if copy(Foldername, length(Foldername), 1) <> '\' then Foldername := FolderName + '\';
+  Result := False;
+  if copy(FolderName, length(FolderName), 1) <> '\' then
+    FolderName := FolderName + '\';
   if DirectoryExists(FolderName) then
   begin
-    FindResult := FindFirst(FolderName + '*.oxt', faAnyFile, SearchRec );
+    FindResult := FindFirst(FolderName + '*.oxt', faAnyFile, SearchRec);
     while (FindResult = 0) do
     begin
-      if ReadOXT( FolderName + SearchRec.Name ) then
+      if ReadOXT(FolderName + SearchRec.Name) then
         Result := true;
-      FindResult := FindNext( SearchRec );
+      FindResult := FindNext(SearchRec);
     end;
-    FindClose( SearchRec );
+    FindClose(SearchRec);
   end;
 end;
 
-function TNHunspell.ReadOXT(const Filename: String): Boolean;
+function TNHunspell.ReadOXT(const FileName: String): Boolean;
 type
   TDictType = (dtNone, dtSpell, dtHyph, dtThes);
 var
@@ -1049,158 +1050,186 @@ var
   intItem: Integer;
   aNode: TOxtNode;
 
-  tmpDictionariesXcu: Ansistring;
+  tmpDictionariesXcu: AnsiString;
 
   aList: TList;
   tmpNodeName: Widestring;
-  tmpLocations: WideString;
-  tmpLangID: WORD;
+  tmpLocations: Widestring;
+  tmpLangID: Word;
   tmpVersion, tmpID, tmpDisplayName, tmpPublisher: Widestring;
   tmpDictType: TDictType;
 
   NewSpellDictionary: TNHSpellDictionary;
   NewHyphenDictionary: TNHHyphenDictionary;
 
-  tmpDictionaryPath: WideString;
-  tmpAffixPath: WideString;
-  tmpHyphenPath: WideString;
+  tmpDictionaryPath: Widestring;
+  tmpAffixPath: Widestring;
+  tmpHyphenPath: Widestring;
 begin
   Result := False;
 
-  zip := TZipRead.Create(Filename);
+  zip := TZipRead.Create(FileName);
   try
     intItem := zip.NameToIndex('description.xml');
     if intItem > -1 then
-      InternalReadDescription(zip.Unzip(intItem), tmpVersion, tmpID, tmpDisplayName, tmpPublisher, true);
+      InternalReadDescription(zip.Unzip(intItem), tmpVersion, tmpID,
+        tmpDisplayName, tmpPublisher, true);
 
     tmpDictionariesXcu := '';
     intItem := zip.NameToIndex('META-INF\manifest.xml');
     if intItem > -1 then
       with TOxtParser.Create(zip.Unzip(intItem)) do
-      try
-        aNode := GetFirst;
-        while aNode <> nil do
-        begin
-          tmpDictionariesXcu := aNode.Attrib('manifest:full-path');
-          if tmpDictionariesXcu <> '' then
-            break
-          else
-            aNode := GetNext(aNode);
-        end;
-      finally
-        free;
-      end;
-
-    intItem := zip.NameToIndex(StringReplace(tmpDictionariesXcu, '/', '\', [rfReplaceAll]));
-    if intItem > -1 then
-      with TOxtParser.Create(zip.Unzip(intItem)) do
-      try
-        aList := TList.Create;
         try
           aNode := GetFirst;
-
           while aNode <> nil do
           begin
-            if (Lowercase(aNode.Attrib('oor:op')) = 'fuse') then
-            begin
-              aList.clear;
-              aNode.NodesByName('value', aList);
-              tmpDictType := dtNone;
-              tmpLocations := '';
-
-              for intItem := 0 to aList.count - 1 do
-                if Assigned(TOxtNode(aList[intItem]).Parent) then
-                begin
-                  tmpNodeName := lowercase(TOxtNode(aList[intItem]).Parent.Attrib('oor:name'));
-
-                  if (tmpNodeName = 'locations') then
-                    tmpLocations := TOxtNode(aList[intItem]).Value
-                  else if (tmpNodeName = 'locales') then
-                    tmpLangID := LangShortCutToLangShortID(TOxtNode(aList[intItem]).Value) // implicit wide->ansi conversion
-                  else if (tmpNodeName = 'format') then
-                    if (UpperCase(TOxtNode(aList[intItem]).Value) = 'DICT_SPELL') then
-                      tmpDictType := dtSpell
-                    else if (UpperCase(TOxtNode(aList[intItem]).Value) = 'DICT_HYPH') then
-                      tmpDictType := dtHyph
-                    else if (UpperCase(TOxtNode(aList[intItem]).Value) = 'DICT_THES') then
-                      tmpDictType := dtThes;
-                end;
-
-              if (tmpLocations <> '') then
-              case tmpDictType of
-              dtSpell:
-                begin
-                  tmpAffixPath := Trim(Copy(tmpLocations, 1, Pos(' ', tmpLocations) - 1));
-                  tmpAffixPath := StringReplace(tmpAffixPath, '/', '\', [rfReplaceAll]);
-                  tmpAffixPath := StringReplace(tmpAffixPath, '%origin%\', '', [rfReplaceAll, rfIgnoreCase]);
-
-                  tmpDictionaryPath := Trim(copy(tmpLocations, pos(' ', tmpLocations) + 1, 255));
-                  tmpDictionaryPath := StringReplace(tmpDictionaryPath, '/', '\', [rfReplaceAll]);
-                  tmpDictionaryPath := StringReplace(tmpDictionaryPath, '%origin%\', '', [rfReplaceAll, rfIgnoreCase]);
-
-                  NewSpellDictionary := TNHSpellDictionary.create;
-                  with NewSpellDictionary do
-                  begin
-                    fVersion := tmpVersion;
-                    fID :=tmpID;
-                    fPublisher := tmpPublisher;
-                    fDisplayName := tmpDisplayName;
-                    fLangID := tmpLangID;
-                    FLanguageName := GetLanguageName(FLangID);
-                    FDictionaryFilename := Filename;
-                    FInternalAffixPath := tmpAffixPath;
-                    FInternalDictPath := tmpDictionaryPath;
-                  end;
-
-                  if FindSpellDictionary(NewSpellDictionary.GetInternalFileID) = nil then
-                    fSpellDictionaries.AddObject(Format('%s %s', [NewSpellDictionary.LanguageName, NewSpellDictionary.GetInternalFileID]), NewSpellDictionary)
-                  else
-                    NewSpellDictionary.free;
-
-                  Result := true;
-                end;
-              dtHyph:
-                begin
-                  tmpHyphenPath := StringReplace(tmpLocations, '/', '\', [rfReplaceAll]);
-                  tmpHyphenPath := StringReplace(tmpHyphenPath, '%origin%\', '', [rfReplaceAll, rfIgnoreCase]);
-
-                  NewHyphenDictionary := TNHHyphenDictionary.create;
-                  with NewHyphenDictionary do
-                  begin
-                    fVersion := tmpVersion;
-                    fID :=tmpID;
-                    fPublisher := tmpPublisher;
-                    fDisplayName := tmpDisplayName;
-                    fLangID := tmpLangID;
-                    FLanguageName := GetLanguageName(FLangID);
-                    FDictionaryFilename := Filename;
-                    FInternalHyphenPath := tmpHyphenPath;
-                  end;
-
-                  if FindHyphenDictionary(NewHyphenDictionary.GetInternalFileID) = nil then
-                    fHyphenDictionaries.AddObject(Format('%s %s', [NewHyphenDictionary.LanguageName, NewHyphenDictionary.GetInternalFileID]), NewHyphenDictionary)
-                  else
-                    NewHyphenDictionary.free;
-
-                  Result := true;
-                end;
-              dtThes:
-                begin
-                  //not implemented
-                end;
-              end; {case}
-
-              aNode := TOxtNode(aList[aList.count-1]); //proceed at last node
-            end;
-            aNode := GetNext(aNode);
-          end;  {aNode <> nil}
-
+            tmpDictionariesXcu := aNode.Attrib('manifest:full-path');
+            if tmpDictionariesXcu <> '' then
+              break
+            else
+              aNode := GetNext(aNode);
+          end;
         finally
-          FreeAndNil(aList);
+          free;
         end;
-      finally
-        Free;  {TOxtParser}
-      end;
+
+    intItem := zip.NameToIndex(StringReplace(tmpDictionariesXcu, '/', '\',
+      [rfReplaceAll]));
+    if intItem > -1 then
+      with TOxtParser.Create(zip.Unzip(intItem)) do
+        try
+          aList := TList.Create;
+          try
+            aNode := GetFirst;
+
+            while aNode <> nil do
+            begin
+              if (Lowercase(aNode.Attrib('oor:op')) = 'fuse') then
+              begin
+                aList.Clear;
+                aNode.NodesByName('value', aList);
+                tmpDictType := dtNone;
+                tmpLocations := '';
+
+                for intItem := 0 to aList.Count - 1 do
+                  if Assigned(TOxtNode(aList[intItem]).Parent) then
+                  begin
+                    tmpNodeName :=
+                      Lowercase(TOxtNode(aList[intItem])
+                      .Parent.Attrib('oor:name'));
+
+                    if (tmpNodeName = 'locations') then
+                      tmpLocations := TOxtNode(aList[intItem]).Value
+                    else if (tmpNodeName = 'locales') then
+                      tmpLangID := LangShortCutToLangShortID
+                        (TOxtNode(aList[intItem]).Value)
+                      // implicit wide->ansi conversion
+                    else if (tmpNodeName = 'format') then
+                      if (UpperCase(TOxtNode(aList[intItem]).Value)
+                        = 'DICT_SPELL') then
+                        tmpDictType := dtSpell
+                      else if (UpperCase(TOxtNode(aList[intItem]).Value)
+                        = 'DICT_HYPH') then
+                        tmpDictType := dtHyph
+                      else if (UpperCase(TOxtNode(aList[intItem]).Value)
+                        = 'DICT_THES') then
+                        tmpDictType := dtThes;
+                  end;
+
+                if (tmpLocations <> '') then
+                  case tmpDictType of
+                    dtSpell:
+                      begin
+                        tmpAffixPath :=
+                          Trim(copy(tmpLocations, 1,
+                          Pos(' ', tmpLocations) - 1));
+                        tmpAffixPath := StringReplace(tmpAffixPath, '/', '\',
+                          [rfReplaceAll]);
+                        tmpAffixPath := StringReplace(tmpAffixPath, '%origin%\',
+                          '', [rfReplaceAll, rfIgnoreCase]);
+
+                        tmpDictionaryPath :=
+                          Trim(copy(tmpLocations, Pos(' ', tmpLocations)
+                          + 1, 255));
+                        tmpDictionaryPath := StringReplace(tmpDictionaryPath,
+                          '/', '\', [rfReplaceAll]);
+                        tmpDictionaryPath := StringReplace(tmpDictionaryPath,
+                          '%origin%\', '', [rfReplaceAll, rfIgnoreCase]);
+
+                        NewSpellDictionary := TNHSpellDictionary.Create;
+                        with NewSpellDictionary do
+                        begin
+                          FVersion := tmpVersion;
+                          FID := tmpID;
+                          FPublisher := tmpPublisher;
+                          FDisplayName := tmpDisplayName;
+                          FLangID := tmpLangID;
+                          FLanguageName := GetLanguageName(FLangID);
+                          FDictionaryFilename := FileName;
+                          FInternalAffixPath := tmpAffixPath;
+                          FInternalDictPath := tmpDictionaryPath;
+                        end;
+
+                        if FindSpellDictionary
+                          (NewSpellDictionary.GetInternalFileID) = nil then
+                          FSpellDictionaries.AddObject
+                            (Format('%s %s', [NewSpellDictionary.LanguageName,
+                            NewSpellDictionary.GetInternalFileID]),
+                            NewSpellDictionary)
+                        else
+                          NewSpellDictionary.free;
+
+                        Result := true;
+                      end;
+                    dtHyph:
+                      begin
+                        tmpHyphenPath := StringReplace(tmpLocations, '/', '\',
+                          [rfReplaceAll]);
+                        tmpHyphenPath := StringReplace(tmpHyphenPath,
+                          '%origin%\', '', [rfReplaceAll, rfIgnoreCase]);
+
+                        NewHyphenDictionary := TNHHyphenDictionary.Create;
+                        with NewHyphenDictionary do
+                        begin
+                          FVersion := tmpVersion;
+                          FID := tmpID;
+                          FPublisher := tmpPublisher;
+                          FDisplayName := tmpDisplayName;
+                          FLangID := tmpLangID;
+                          FLanguageName := GetLanguageName(FLangID);
+                          FDictionaryFilename := FileName;
+                          FInternalHyphenPath := tmpHyphenPath;
+                        end;
+
+                        if FindHyphenDictionary
+                          (NewHyphenDictionary.GetInternalFileID) = nil then
+                          FHyphenDictionaries.AddObject
+                            (Format('%s %s', [NewHyphenDictionary.LanguageName,
+                            NewHyphenDictionary.GetInternalFileID]),
+                            NewHyphenDictionary)
+                        else
+                          NewHyphenDictionary.free;
+
+                        Result := true;
+                      end;
+                    dtThes:
+                      begin
+                        // not implemented
+                      end;
+                  end; { case }
+
+                aNode := TOxtNode(aList[aList.Count - 1]);
+                // proceed at last node
+              end;
+              aNode := GetNext(aNode);
+            end; { aNode <> nil }
+
+          finally
+            FreeAndNil(aList);
+          end;
+        finally
+          free; { TOxtParser }
+        end;
 
   finally
     FreeAndNil(zip);
@@ -1208,8 +1237,8 @@ begin
 end;
 
 procedure TNHunspell.InternalReadDescription(const ADescription: RawByteString;
-                                             var AVersion, AID, ADisplayName, APublisher: Widestring;
-                                             const PreferLocalized: Boolean = False);
+  var AVersion, AID, ADisplayName, APublisher: Widestring;
+  const PreferLocalized: Boolean = False);
 var
   aNode: TOxtNode;
   aList: TList;
@@ -1232,9 +1261,10 @@ begin
         if Assigned(aNode) then
         begin
           aNode.NodesByName('name', aList);
-          for intItem := 0 to aList.count - 1 do
+          for intItem := 0 to aList.Count - 1 do
             with TOxtNode(aList[intItem]) do
-              if (ADisplayName = '') or ((Attrib('lang') = cLangEN) and NOT PreferLocalized) or
+              if (ADisplayName = '') or
+                ((Attrib('lang') = cLangEN) and NOT PreferLocalized) or
                 ((Attrib('lang') <> cLangEN) and PreferLocalized) then
                 ADisplayName := Value;
         end;
@@ -1250,23 +1280,23 @@ begin
         APublisher := aNode.Value;
 
     finally
-      Free;
+      free;
     end;
 
 end;
 
 procedure TNHunspell.UpdateAndLoadDictionaries;
 var
-  intIndex: integer;
+  intIndex: Integer;
 begin
-  for intIndex := 0 to SpellDictionaryCount-1 do
+  for intIndex := 0 to SpellDictionaryCount - 1 do
     with SpellDictionaries[intIndex] do
       if (Active and not Loaded) then
         Load
       else if (not Active and Loaded) then
         Unload;
 
-  for intIndex := 0 to HyphenDictionaryCount-1 do
+  for intIndex := 0 to HyphenDictionaryCount - 1 do
     with HyphenDictionaries[intIndex] do
       if (Active and not Loaded) then
         Load
@@ -1274,13 +1304,14 @@ begin
         Unload;
 end;
 
-
 initialization
-  Hunspell := TNHunspell.create;
+
+Hunspell := TNHunspell.Create;
 
 finalization
-  FreeAndNil(Hunspell);
-  if HunspellDll <> 0 then
-    FreeLibrary(HunspellDll);
+
+FreeAndNil(Hunspell);
+if HunspellDll <> 0 then
+  FreeLibrary(HunspellDll);
 
 end.

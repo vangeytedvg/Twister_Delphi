@@ -91,12 +91,12 @@ function Zip(const Zip: String; const files, zipAs: array of String;
 procedure CreateVoidZip(const AFileName: String);
 
 /// create a compatible .gz file (returns file Size)
-function GzCompress(src: Pointer; srcLen: Integer;
-  const fName: String): cardinal;
+function GzCompress(src: Pointer; srcLen: Integer; const fName: String)
+  : cardinal;
 
 /// calculate the CRC32 hash of a specified memory buffer
-function UpdateCrc32(acrc32: cardinal; inBuf: Pointer;
-  inLen: Integer): cardinal;
+function UpdateCrc32(acrc32: cardinal; inBuf: Pointer; inLen: Integer)
+  : cardinal;
 {$DEFINE DYNAMIC_CRC_TABLE}
 { if defined, the crc32Tab[] is created on staturp: save 1KB of code Size }
 
@@ -109,48 +109,42 @@ var
 
 const
   crc32Tab: array [0 .. 255] of cardinal = ($00000000, $77073096, $EE0E612C,
-    $990951BA, $076DC419, $706AF48F, $E963A535, $9E6495A3, $0EDB8832,
-    $79DCB8A4, $E0D5E91E, $97D2D988, $09B64C2B, $7EB17CBD, $E7B82D07,
-    $90BF1D91, $1DB71064, $6AB020F2, $F3B97148, $84BE41DE, $1ADAD47D,
-    $6DDDE4EB, $F4D4B551, $83D385C7, $136C9856, $646BA8C0, $FD62F97A,
-    $8A65C9EC, $14015C4F, $63066CD9, $FA0F3D63, $8D080DF5, $3B6E20C8,
-    $4C69105E, $D56041E4, $A2677172, $3C03E4D1, $4B04D447, $D20D85FD,
-    $A50AB56B, $35B5A8FA, $42B2986C, $DBBBC9D6, $ACBCF940, $32D86CE3,
-    $45DF5C75, $DCD60DCF, $ABD13D59, $26D930AC, $51DE003A, $C8D75180,
-    $BFD06116, $21B4F4B5, $56B3C423, $CFBA9599, $B8BDA50F, $2802B89E,
-    $5F058808, $C60CD9B2, $B10BE924, $2F6F7C87, $58684C11, $C1611DAB,
-    $B6662D3D, $76DC4190, $01DB7106, $98D220BC, $EFD5102A, $71B18589,
-    $06B6B51F, $9FBFE4A5, $E8B8D433, $7807C9A2, $0F00F934, $9609A88E,
-    $E10E9818, $7F6A0DBB, $086D3D2D, $91646C97, $E6635C01, $6B6B51F4,
-    $1C6C6162, $856530D8, $F262004E, $6C0695ED, $1B01A57B, $8208F4C1,
-    $F50FC457, $65B0D9C6, $12B7E950, $8BBEB8EA, $FCB9887C, $62DD1DDF,
-    $15DA2D49, $8CD37CF3, $FBD44C65, $4DB26158, $3AB551CE, $A3BC0074,
-    $D4BB30E2, $4ADFA541, $3DD895D7, $A4D1C46D, $D3D6F4FB, $4369E96A,
-    $346ED9FC, $AD678846, $DA60B8D0, $44042D73, $33031DE5, $AA0A4C5F,
-    $DD0D7CC9, $5005713C, $270241AA, $BE0B1010, $C90C2086, $5768B525,
-    $206F85B3, $B966D409, $CE61E49F, $5EDEF90E, $29D9C998, $B0D09822,
-    $C7D7A8B4, $59B33D17, $2EB40D81, $B7BD5C3B, $C0BA6CAD, $EDB88320,
-    $9ABFB3B6, $03B6E20C, $74B1D29A, $EAD54739, $9DD277AF, $04DB2615,
-    $73DC1683, $E3630B12, $94643B84, $0D6D6A3E, $7A6A5AA8, $E40ECF0B,
-    $9309FF9D, $0A00AE27, $7D079EB1, $F00F9344, $8708A3D2, $1E01F268,
-    $6906C2FE, $F762575D, $806567CB, $196C3671, $6E6B06E7, $FED41B76,
-    $89D32BE0, $10DA7A5A, $67DD4ACC, $F9B9DF6F, $8EBEEFF9, $17B7BE43,
-    $60B08ED5, $D6D6A3E8, $A1D1937E, $38D8C2C4, $4FDFF252, $D1BB67F1,
-    $A6BC5767, $3FB506DD, $48B2364B, $D80D2BDA, $AF0A1B4C, $36034AF6,
-    $41047A60, $DF60EFC3, $A867DF55, $316E8EEF, $4669BE79, $CB61B38C,
-    $BC66831A, $256FD2A0, $5268E236, $CC0C7795, $BB0B4703, $220216B9,
-    $5505262F, $C5BA3BBE, $B2BD0B28, $2BB45A92, $5CB36A04, $C2D7FFA7,
-    $B5D0CF31, $2CD99E8B, $5BDEAE1D, $9B64C2B0, $EC63F226, $756AA39C,
-    $026D930A, $9C0906A9, $EB0E363F, $72076785, $05005713, $95BF4A82,
-    $E2B87A14, $7BB12BAE, $0CB61B38, $92D28E9B, $E5D5BE0D, $7CDCEFB7,
-    $0BDBDF21, $86D3D2D4, $F1D4E242, $68DDB3F8, $1FDA836E, $81BE16CD,
-    $F6B9265B, $6FB077E1, $18B74777, $88085AE6, $FF0F6A70, $66063BCA,
-    $11010B5C, $8F659EFF, $F862AE69, $616BFFD3, $166CCF45, $A00AE278,
-    $D70DD2EE, $4E048354, $3903B3C2, $A7672661, $D06016F7, $4969474D,
-    $3E6E77DB, $AED16A4A, $D9D65ADC, $40DF0B66, $37D83BF0, $A9BCAE53,
-    $DEBB9EC5, $47B2CF7F, $30B5FFE9, $BDBDF21C, $CABAC28A, $53B39330,
-    $24B4A3A6, $BAD03605, $CDD70693, $54DE5729, $23D967BF, $B3667A2E,
-    $C4614AB8, $5D681B02, $2A6F2B94, $B40BBE37, $C30C8EA1, $5A05DF1B,
+    $990951BA, $076DC419, $706AF48F, $E963A535, $9E6495A3, $0EDB8832, $79DCB8A4,
+    $E0D5E91E, $97D2D988, $09B64C2B, $7EB17CBD, $E7B82D07, $90BF1D91, $1DB71064,
+    $6AB020F2, $F3B97148, $84BE41DE, $1ADAD47D, $6DDDE4EB, $F4D4B551, $83D385C7,
+    $136C9856, $646BA8C0, $FD62F97A, $8A65C9EC, $14015C4F, $63066CD9, $FA0F3D63,
+    $8D080DF5, $3B6E20C8, $4C69105E, $D56041E4, $A2677172, $3C03E4D1, $4B04D447,
+    $D20D85FD, $A50AB56B, $35B5A8FA, $42B2986C, $DBBBC9D6, $ACBCF940, $32D86CE3,
+    $45DF5C75, $DCD60DCF, $ABD13D59, $26D930AC, $51DE003A, $C8D75180, $BFD06116,
+    $21B4F4B5, $56B3C423, $CFBA9599, $B8BDA50F, $2802B89E, $5F058808, $C60CD9B2,
+    $B10BE924, $2F6F7C87, $58684C11, $C1611DAB, $B6662D3D, $76DC4190, $01DB7106,
+    $98D220BC, $EFD5102A, $71B18589, $06B6B51F, $9FBFE4A5, $E8B8D433, $7807C9A2,
+    $0F00F934, $9609A88E, $E10E9818, $7F6A0DBB, $086D3D2D, $91646C97, $E6635C01,
+    $6B6B51F4, $1C6C6162, $856530D8, $F262004E, $6C0695ED, $1B01A57B, $8208F4C1,
+    $F50FC457, $65B0D9C6, $12B7E950, $8BBEB8EA, $FCB9887C, $62DD1DDF, $15DA2D49,
+    $8CD37CF3, $FBD44C65, $4DB26158, $3AB551CE, $A3BC0074, $D4BB30E2, $4ADFA541,
+    $3DD895D7, $A4D1C46D, $D3D6F4FB, $4369E96A, $346ED9FC, $AD678846, $DA60B8D0,
+    $44042D73, $33031DE5, $AA0A4C5F, $DD0D7CC9, $5005713C, $270241AA, $BE0B1010,
+    $C90C2086, $5768B525, $206F85B3, $B966D409, $CE61E49F, $5EDEF90E, $29D9C998,
+    $B0D09822, $C7D7A8B4, $59B33D17, $2EB40D81, $B7BD5C3B, $C0BA6CAD, $EDB88320,
+    $9ABFB3B6, $03B6E20C, $74B1D29A, $EAD54739, $9DD277AF, $04DB2615, $73DC1683,
+    $E3630B12, $94643B84, $0D6D6A3E, $7A6A5AA8, $E40ECF0B, $9309FF9D, $0A00AE27,
+    $7D079EB1, $F00F9344, $8708A3D2, $1E01F268, $6906C2FE, $F762575D, $806567CB,
+    $196C3671, $6E6B06E7, $FED41B76, $89D32BE0, $10DA7A5A, $67DD4ACC, $F9B9DF6F,
+    $8EBEEFF9, $17B7BE43, $60B08ED5, $D6D6A3E8, $A1D1937E, $38D8C2C4, $4FDFF252,
+    $D1BB67F1, $A6BC5767, $3FB506DD, $48B2364B, $D80D2BDA, $AF0A1B4C, $36034AF6,
+    $41047A60, $DF60EFC3, $A867DF55, $316E8EEF, $4669BE79, $CB61B38C, $BC66831A,
+    $256FD2A0, $5268E236, $CC0C7795, $BB0B4703, $220216B9, $5505262F, $C5BA3BBE,
+    $B2BD0B28, $2BB45A92, $5CB36A04, $C2D7FFA7, $B5D0CF31, $2CD99E8B, $5BDEAE1D,
+    $9B64C2B0, $EC63F226, $756AA39C, $026D930A, $9C0906A9, $EB0E363F, $72076785,
+    $05005713, $95BF4A82, $E2B87A14, $7BB12BAE, $0CB61B38, $92D28E9B, $E5D5BE0D,
+    $7CDCEFB7, $0BDBDF21, $86D3D2D4, $F1D4E242, $68DDB3F8, $1FDA836E, $81BE16CD,
+    $F6B9265B, $6FB077E1, $18B74777, $88085AE6, $FF0F6A70, $66063BCA, $11010B5C,
+    $8F659EFF, $F862AE69, $616BFFD3, $166CCF45, $A00AE278, $D70DD2EE, $4E048354,
+    $3903B3C2, $A7672661, $D06016F7, $4969474D, $3E6E77DB, $AED16A4A, $D9D65ADC,
+    $40DF0B66, $37D83BF0, $A9BCAE53, $DEBB9EC5, $47B2CF7F, $30B5FFE9, $BDBDF21C,
+    $CABAC28A, $53B39330, $24B4A3A6, $BAD03605, $CDD70693, $54DE5729, $23D967BF,
+    $B3667A2E, $C4614AB8, $5D681B02, $2A6F2B94, $B40BBE37, $C30C8EA1, $5A05DF1B,
     $2D02EF8D);
 {$ENDIF}
 
@@ -242,9 +236,8 @@ type
     Entry: array of TZipEntry;
 
     /// open a .zip archive file as Read Only
-    constructor Create(const AFileName: TFileName;
-      ZipStartOffset: cardinal = 0; Size: cardinal = 0;
-      ShowMessageBoxOnError: Boolean = true); overload;
+    constructor Create(const AFileName: TFileName; ZipStartOffset: cardinal = 0;
+      Size: cardinal = 0; ShowMessageBoxOnError: Boolean = true); overload;
     /// open a .zip archive file directly from a resource
     constructor Create(Instance: THandle; const ResName: String;
       ResType: PChar); overload;
@@ -256,7 +249,8 @@ type
     /// get the index of a file inside the .zip archive
     function NameToIndex(const aName: AnsiString): Integer;
     /// uncompress a file stored inside the .zip archive into a destination folder
-    function UnZipFile(AIndex: Integer; DestPath: String; ForceWriteFlush: Boolean): Boolean;
+    function UnZipFile(AIndex: Integer; DestPath: String;
+      ForceWriteFlush: Boolean): Boolean;
     /// uncompress a file stored inside the .zip archive into memory
     function UnZip(AIndex: Integer): AnsiString; overload;
     /// read the file from the supplied folder, and check its content according
@@ -297,8 +291,8 @@ constructor Create(const AFileName: TFileName); overload;
 /// compress (using the deflate method) a memory buffer, and add it to the zip file
 // - by default, the 1st of January, 2010 is used if not date is supplied
 procedure AddDeflated(const AFileName: AnsiString; Buf: Pointer; Size: Integer;
-  CompressLevel: Integer = 6; FileAge: Integer = 1 + 1 shl 5 + 30 shl 9);
-  overload;
+  CompressLevel: Integer = 6;
+  FileAge: Integer = 1 + 1 shl 5 + 30 shl 9); overload;
 /// compress (using the deflate method) a file, and add it to the zip file
 procedure AddDeflated(const AFileName: AnsiString; RemovePath: Boolean = true;
   CompressLevel: Integer = 6); overload;
@@ -408,109 +402,101 @@ type
     Mode: TInflateCodesMode; // current inflate codes mode
     // mode dependent information
     Len: cardinal;
+
     sub: record // submode
-      case byte of 0: (Code: record // if Len or Distance, where in tree
-        Tree: PInflateHuft; // Pointer into tree
-      need: cardinal; // bits needed
-      end);
-    1: (lit: cardinal); // if icmLit, literal
-    2: (copy: record // if EXT or icmCopy, where and how much
-        get: cardinal; // bits to get for extra
-      Distance: cardinal; // distance back to copy from
-      end);
+      case byte of
+        0:
+          (Code: record // if Len or Distance, where in tree
+            Tree: PInflateHuft; // Pointer into tree
+            need: cardinal; // bits needed
+          end);
+        1:
+          (lit: cardinal); // if icmLit, literal
+        2:
+          (copy: record // if EXT or icmCopy, where and how much
+            get: cardinal; // bits to get for extra
+            Distance: cardinal; // distance back to copy from
+          end);
+    end;
+
+    // mode independent information
+    LiteralTreeBits: byte; // LiteralTree bits decoded per branch
+    DistanceTreeBits: byte; // DistanceTree bits decoder per branch
+    LiteralTree: PInflateHuft; // literal/length/eob tree
+    DistanceTree: PInflateHuft; // distance tree
   end;
 
-  // mode independent information
-LiteralTreeBits :
-byte; // LiteralTree bits decoded per branch
-DistanceTreeBits :
-byte; // DistanceTree bits decoder per branch
-LiteralTree :
-PInflateHuft; // literal/length/eob tree
-DistanceTree :
-PInflateHuft; // distance tree
-end;
+  TInflateBlockMode = (ibmZType, // get type bits (3, including end bit)
+    ibmLens, // get lengths for stored
+    ibmStored, // processing stored block
+    ibmTable, // get table lengths
+    ibmBitTree, // get bit lengths tree for a dynamic block
+    ibmDistTree, // get length, distance trees for a dynamic block
+    ibmCodes, // processing fixed or dynamic block
+    ibmDry, // output remaining window bytes
+    ibmBlockDone, // finished last block, done
+    ibmBlockBad // got a data error -> stuck here
+    );
 
-TInflateBlockMode = (ibmZType, // get type bits (3, including end bit)
-  ibmLens, // get lengths for stored
-  ibmStored, // processing stored block
-  ibmTable, // get table lengths
-  ibmBitTree, // get bit lengths tree for a dynamic block
-  ibmDistTree, // get length, distance trees for a dynamic block
-  ibmCodes, // processing fixed or dynamic block
-  ibmDry, // output remaining window bytes
-  ibmBlockDone, // finished last block, done
-  ibmBlockBad // got a data error -> stuck here
-  );
+  // inflate blocks semi-private state
+  PInflateBlocksState = ^TInflateBlocksState;
 
-// inflate blocks semi-private state
-PInflateBlocksState = ^TInflateBlocksState;
-TInflateBlocksState = record Mode: TInflateBlockMode;
-// current inflate block mode
-// mode dependent information
-sub :
-record // submode
-case byte of
-  0:
-    (left: cardinal); // if ibmStored, bytes left to copy
-  1:
-    (Trees: record // if DistanceTree, decoding info for trees
-        Table: cardinal; // table lengths (14 Bits)
-      Index: cardinal; // index into blens (or BitOrder)
-      blens: TPACardinal; // bit lengths of codes
-      BB: cardinal; // bit length tree depth
-      TB: PInflateHuft; // bit length decoding tree
-      end);
-  2:
-    (decode: record // if ibmCodes, current state
-        TL: PInflateHuft;
-      TD: PInflateHuft; // trees to free
-      codes: PInflateCodesState;
-      end);
-end;
-Last :
-Boolean; // True if this block is the last block
+  TInflateBlocksState = record
+    Mode: TInflateBlockMode;
 
-// mode independent information
-bitk :
-cardinal; // bits in bit buffer
-bitb :
-cardinal; // bit buffer
-hufts :
-PHuftField; // single allocation for tree space
-window :
-PByte; // sliding window
-zend :
-PByte; // one byte after sliding window
-read :
-PByte; // window read Pointer
-write :
-PByte; // window write Pointer
-end;
+    // current inflate block mode
+    // mode dependent information
+    sub: record // submode
+      case byte of
+        0:
+          (left: cardinal); // if ibmStored, bytes left to copy
+        1:
+          (Trees: record // if DistanceTree, decoding info for trees
+            Table: cardinal; // table lengths (14 Bits)
+            Index: cardinal; // index into blens (or BitOrder)
+            blens: TPACardinal; // bit lengths of codes
+            BB: cardinal; // bit length tree depth
+            TB: PInflateHuft; // bit length decoding tree
+          end);
+        2:
+          (decode: record // if ibmCodes, current state
+            TL: PInflateHuft;
+            TD: PInflateHuft; // trees to free
+            codes: PInflateCodesState;
+          end);
+    end;
 
-// The application must update NextInput and AvailableInput when AvailableInput has dropped to zero. It must update
-// NextOutput and AvailableOutput when AvailableOutput has dropped to zero. All other fields are set by the
-// compression library and must not be updated by the application.
-//
-// The fields TotalInput and TotalOutput can be used for statistics or progress reports. After compression, TotalInput
-// holds the total Size of the uncompressed data and may be saved for use in the decompressor
-// (particularly if the decompressor wants to decompress everything in a single step).
+    Last: Boolean; // True if this block is the last block
 
-PZState = ^TZState;
-TZState = record NextInput: PByte; // next input byte
-AvailableInput :
-cardinal; // number of bytes available at NextInput
-TotalInput :
-cardinal; // total number of input bytes read so far
-NextOutput :
-PByte; // next output byte should be put there
-AvailableOutput :
-cardinal; // remaining free space at NextOutput
-TotalOutput :
-cardinal; // total number of bytes output so far
-State :
-PInflateBlocksState; // not visible by applications
-end;
+    // mode independent information
+    bitk: cardinal; // bits in bit buffer
+    bitb: cardinal; // bit buffer
+    hufts: PHuftField; // single allocation for tree space
+    window: PByte; // sliding window
+    zend: PByte; // one byte after sliding window
+    read: PByte; // window read Pointer
+    write: PByte; // window write Pointer
+  end;
+
+  // The application must update NextInput and AvailableInput when AvailableInput has dropped to zero. It must update
+  // NextOutput and AvailableOutput when AvailableOutput has dropped to zero. All other fields are set by the
+  // compression library and must not be updated by the application.
+  //
+  // The fields TotalInput and TotalOutput can be used for statistics or progress reports. After compression, TotalInput
+  // holds the total Size of the uncompressed data and may be saved for use in the decompressor
+  // (particularly if the decompressor wants to decompress everything in a single step).
+
+  PZState = ^TZState;
+
+  TZState = record
+    NextInput: PByte; // next input byte
+    AvailableInput: cardinal; // number of bytes available at NextInput
+    TotalInput: cardinal; // total number of input bytes read so far
+    NextOutput: PByte; // next output byte should be put there
+    AvailableOutput: cardinal; // remaining free space at NextOutput
+    TotalOutput: cardinal; // total number of bytes output so far
+    State: PInflateBlocksState; // not visible by applications
+  end;
 
 const
   // Return codes for the compression/decompression functions. Negative
@@ -535,7 +521,8 @@ const
   // ----------------- deflation support
 
 const
-  LENGTH_CODES = 29; // number of length codes, not counting the special END_BLOCK code
+  LENGTH_CODES = 29;
+  // number of length codes, not counting the special END_BLOCK code
   LITERALS = 256; // number of literal bytes 0..255
   L_CODES = (LITERALS + 1 + LENGTH_CODES);
   // number of literal or length codes, including the END_BLOCK code
@@ -549,206 +536,168 @@ type
   PTreeEntry = ^TTreeEntry;
 
   TTreeEntry = record
-    fc: record case byte of 0: (Frequency: word); // frequency count
-    1: (Code: word); // bit String
+    fc: record
+      case byte of
+        0:
+          (Frequency: word); // frequency count
+        1:
+          (Code: word); // bit String
+    end;
+
+    dl: record
+      case byte of
+        0:
+          (dad: word); // father node in Huffman tree
+        1:
+          (Len: word); // length of bit String
+    end;
   end;
 
-dl :
-record
-case byte of
-  0:
-    (dad: word); // father node in Huffman tree
-  1:
-    (Len: word); // length of bit String
-end;
-end;
+  TLiteralTree = array [0 .. HEAP_SIZE - 1] of TTreeEntry;
+  // literal and length tree
+  TDistanceTree = array [0 .. 2 * D_CODES] of TTreeEntry; // distance tree
+  THuffmanTree = array [0 .. 2 * BL_CODES] of TTreeEntry;
+  // Huffman tree for bit lengths
 
-TLiteralTree = array [0 .. HEAP_SIZE - 1] of TTreeEntry;
-// literal and length tree
-TDistanceTree = array [0 .. 2 * D_CODES] of TTreeEntry; // distance tree
-THuffmanTree = array [0 .. 2 * BL_CODES] of TTreeEntry;
-// Huffman tree for bit lengths
+  PTree = ^TTree;
+  TTree = array [0 .. (maxInt div SizeOf(TTreeEntry)) - 1] of TTreeEntry;
+  // generic tree type
 
-PTree = ^TTree;
-TTree = array [0 .. (maxInt div SizeOf(TTreeEntry)) - 1] of TTreeEntry;
-// generic tree type
+  PStaticTreeDescriptor = ^TStaticTreeDescriptor;
 
-PStaticTreeDescriptor = ^TStaticTreeDescriptor;
-TStaticTreeDescriptor = record StaticTree: PTree; // static tree or nil
-ExtraBits :
-TPAInteger; // extra bits for each code or nil
-ExtraBase :
-Integer; // base index for ExtraBits
-Elements :
-Integer; // max number of elements in the tree
-MaxLength :
-Integer; // max bit length for the codes
-end;
+  TStaticTreeDescriptor = record
+    StaticTree: PTree; // static tree or nil
+    ExtraBits: TPAInteger; // extra bits for each code or nil
+    ExtraBase: Integer; // base index for ExtraBits
+    Elements: Integer; // max number of elements in the tree
+    MaxLength: Integer; // max bit length for the codes
+  end;
 
-PTreeDescriptor = ^TTreeDescriptor;
-TTreeDescriptor = record DynamicTree: PTree;
-MaxCode :
-Integer; // largest code with non zero frequency
-StaticDescriptor :
-PStaticTreeDescriptor; // the corresponding static tree
-end;
+  PTreeDescriptor = ^TTreeDescriptor;
 
-PDeflateState = ^TDeflateState;
-TDeflateState = record ZState: PZState; // Pointer back to this zlib stream
-PendingBuffer :
-TPAByte; // output still pending
-PendingBufferSize :
-Integer;
-PendingOutput :
-PByte; // next pending byte to output to the stream
-Pending :
-Integer; // nb of bytes in the pending buffer
-WindowSize :
-cardinal; // LZ77 window Size (32K by default)
-WindowBits :
-cardinal; // log2(WindowSize) (8..16)
-WindowMask :
-cardinal; // WindowSize - 1
+  TTreeDescriptor = record
+    DynamicTree: PTree;
+    MaxCode: Integer; // largest code with non zero frequency
+    StaticDescriptor: PStaticTreeDescriptor; // the corresponding static tree
+  end;
 
-// Sliding window. Input bytes are read into the second half of the window,
-// and move to the first half later to keep a dictionary of at least WSize
-// bytes. With this organization, matches are limited to a distance of
-// WSize - MAX_MATCH bytes, but this ensures that IO is always
-// performed with a length multiple of the block Size. Also, it limits
-// the window Size to 64K, which is quite useful on MSDOS.
-// To do: use the user input buffer as sliding window.
-window :
-TPAByte;
+  PDeflateState = ^TDeflateState;
 
-// Actual Size of Window: 2 * WSize, except when the user input buffer
-// is directly used as sliding window.
-CurrentWindowSize :
-Integer;
+  TDeflateState = record
+    ZState: PZState; // Pointer back to this zlib stream
+    PendingBuffer: TPAByte; // output still pending
+    PendingBufferSize: Integer;
+    PendingOutput: PByte; // next pending byte to output to the stream
+    Pending: Integer; // nb of bytes in the pending buffer
+    WindowSize: cardinal; // LZ77 window Size (32K by default)
+    WindowBits: cardinal; // log2(WindowSize) (8..16)
+    WindowMask: cardinal; // WindowSize - 1
 
-// Link to older String with same hash index. to limit the Size of this
-// array to 64K, this link is maintained only for the last 32K strings.
-// An index in this array is thus a window index modulo 32K.
-Previous :
-TPAWord;
+    // Sliding window. Input bytes are read into the second half of the window,
+    // and move to the first half later to keep a dictionary of at least WSize
+    // bytes. With this organization, matches are limited to a distance of
+    // WSize - MAX_MATCH bytes, but this ensures that IO is always
+    // performed with a length multiple of the block Size. Also, it limits
+    // the window Size to 64K, which is quite useful on MSDOS.
+    // To do: use the user input buffer as sliding window.
+    window: TPAByte;
 
-Head :
-TPAWord; // heads of the hash chains or nil
+    // Actual Size of Window: 2 * WSize, except when the user input buffer
+    // is directly used as sliding window.
+    CurrentWindowSize: Integer;
 
-InsertHash :
-cardinal; // hash index of String to be inserted
-HashSize :
-cardinal; // number of elements in hash table
-HashBits :
-cardinal; // log2(HashSize)
-HashMask :
-cardinal; // HashSize - 1
+    // Link to older String with same hash index. to limit the Size of this
+    // array to 64K, this link is maintained only for the last 32K strings.
+    // An index in this array is thus a window index modulo 32K.
+    Previous: TPAWord;
 
-// Number of bits by which InsertHash must be shifted at each input step.
-// It must be such that after MIN_MATCH steps, the oldest byte no longer
-// takes part in the hash key, that is:
-// HashShift * MIN_MATCH >= HashBits
-HashShift :
-cardinal;
+    Head: TPAWord; // heads of the hash chains or nil
 
-// Window position at the beginning of the current output block. Gets
-// negative when the window is moved backwards.
-BlockStart :
-Integer;
+    InsertHash: cardinal; // hash index of String to be inserted
+    HashSize: cardinal; // number of elements in hash table
+    HashBits: cardinal; // log2(HashSize)
+    HashMask: cardinal; // HashSize - 1
 
-MatchLength :
-cardinal; // length of best match
-PreviousMatch :
-cardinal; // previous match
-MatchAvailable :
-Boolean; // set if previous match exists
-StringStart :
-cardinal; // start of String to insert
-MatchStart :
-cardinal; // start of matching String
-Lookahead :
-cardinal; // number of valid bytes ahead in window
+    // Number of bits by which InsertHash must be shifted at each input step.
+    // It must be such that after MIN_MATCH steps, the oldest byte no longer
+    // takes part in the hash key, that is:
+    // HashShift * MIN_MATCH >= HashBits
+    HashShift: cardinal;
 
-// Length of the best match at previous step. Matches not greater than this
-// are discarded. This is used in the lazy match evaluation.
-PreviousLength :
-cardinal;
+    // Window position at the beginning of the current output block. Gets
+    // negative when the window is moved backwards.
+    BlockStart: Integer;
 
-LiteralTree :
-TLiteralTree; // literal and length tree
-DistanceTree :
-TDistanceTree; // distance tree
-BitLengthTree :
-THuffmanTree; // Huffman tree for bit lengths
+    MatchLength: cardinal; // length of best match
+    PreviousMatch: cardinal; // previous match
+    MatchAvailable: Boolean; // set if previous match exists
+    StringStart: cardinal; // start of String to insert
+    MatchStart: cardinal; // start of matching String
+    Lookahead: cardinal; // number of valid bytes ahead in window
 
-LiteralDescriptor :
-TTreeDescriptor; // Descriptor for literal tree
-DistanceDescriptor :
-TTreeDescriptor; // Descriptor for distance tree
-BitLengthDescriptor :
-TTreeDescriptor; // Descriptor for bit length tree
+    // Length of the best match at previous step. Matches not greater than this
+    // are discarded. This is used in the lazy match evaluation.
+    PreviousLength: cardinal;
 
-BitLengthCounts :
-array [0 .. MAX_BITS] of word; // number of codes at each bit length for an optimal tree
+    LiteralTree: TLiteralTree; // literal and length tree
+    DistanceTree: TDistanceTree; // distance tree
+    BitLengthTree: THuffmanTree; // Huffman tree for bit lengths
 
-Heap :
-array [0 .. 2 * L_CODES] of Integer; // heap used to build the Huffman trees
-HeapLength :
-Integer; // number of elements in the heap
-HeapMaximum :
-Integer; // element of largest frequency
-// The sons of Heap[N] are Heap[2 * N] and Heap[2 * N + 1]. Heap[0] is not used.
-// The same heap array is used to build all trees.
+    LiteralDescriptor: TTreeDescriptor; // Descriptor for literal tree
+    DistanceDescriptor: TTreeDescriptor; // Descriptor for distance tree
+    BitLengthDescriptor: TTreeDescriptor; // Descriptor for bit length tree
 
-Depth :
-array [0 .. 2 * L_CODES] of byte; // depth of each subtree used as tie breaker for trees of equal frequency
+    BitLengthCounts: array [0 .. MAX_BITS] of word;
+    // number of codes at each bit length for an optimal tree
 
-LiteralBuffer :
-TPAByte; // buffer for literals or lengths
+    Heap: array [0 .. 2 * L_CODES] of Integer;
+    // heap used to build the Huffman trees
+    HeapLength: Integer; // number of elements in the heap
+    HeapMaximum: Integer; // element of largest frequency
+    // The sons of Heap[N] are Heap[2 * N] and Heap[2 * N + 1]. Heap[0] is not used.
+    // The same heap array is used to build all trees.
 
-// Size of match buffer for literals/lengths. There are 4 reasons for limiting LiteralBufferSize to 64K:
-// - frequencies can be kept in 16 bit counters
-// - If compression is not successful for the first block, all input
-// data is still in the window so we can still emit a stored block even
-// when input comes from standard input. This can also be done for
-// all blocks if LiteralBufferSize is not greater than 32K.
-// - if compression is not successful for a file smaller than 64K, we can
-// even emit a stored file instead of a stored block (saving 5 bytes).
-// This is applicable only for zip (not gzip or zlib).
-// - creating new Huffman trees less frequently may not provide fast
-// adaptation to changes in the input data statistics. (Take for
-// example a binary file with poorly compressible code followed by
-// a highly compressible String table.) Smaller buffer sizes give
-// fast adaptation but have of course the overhead of transmitting
-// trees more frequently.
-// - I can't count above 4
-LiteralBufferSize :
-cardinal;
+    Depth: array [0 .. 2 * L_CODES] of byte;
+    // depth of each subtree used as tie breaker for trees of equal frequency
 
-LastLiteral :
-cardinal; // running index in LiteralBuffer
+    LiteralBuffer: TPAByte; // buffer for literals or lengths
 
-// Buffer for distances. To simplify the code, DistanceBuffer and LiteralBuffer have
-// the same number of elements. To use different lengths, an extra flag array would be necessary.
-DistanceBuffer :
-TPAWord;
+    // Size of match buffer for literals/lengths. There are 4 reasons for limiting LiteralBufferSize to 64K:
+    // - frequencies can be kept in 16 bit counters
+    // - If compression is not successful for the first block, all input
+    // data is still in the window so we can still emit a stored block even
+    // when input comes from standard input. This can also be done for
+    // all blocks if LiteralBufferSize is not greater than 32K.
+    // - if compression is not successful for a file smaller than 64K, we can
+    // even emit a stored file instead of a stored block (saving 5 bytes).
+    // This is applicable only for zip (not gzip or zlib).
+    // - creating new Huffman trees less frequently may not provide fast
+    // adaptation to changes in the input data statistics. (Take for
+    // example a binary file with poorly compressible code followed by
+    // a highly compressible String table.) Smaller buffer sizes give
+    // fast adaptation but have of course the overhead of transmitting
+    // trees more frequently.
+    // - I can't count above 4
+    LiteralBufferSize: cardinal;
 
-OptimalLength :
-Integer; // bit length of current block with optimal trees
-StaticLength :
-Integer; // bit length of current block with static trees
-CompressedLength :
-Integer; // total bit length of compressed file
-Matches :
-cardinal; // number of String matches in current block
-LastEOBLength :
-Integer; // bit length of EOB code for last block
-BitsBuffer :
-word; // Output buffer. Bits are inserted starting at the bottom (least significant bits).
-ValidBits :
-Integer; // Number of valid bits in BitsBuffer. All Bits above the last valid bit are always zero.
-end;
+    LastLiteral: cardinal; // running index in LiteralBuffer
 
-// ----------------- Huffmann trees
+    // Buffer for distances. To simplify the code, DistanceBuffer and LiteralBuffer have
+    // the same number of elements. To use different lengths, an extra flag array would be necessary.
+    DistanceBuffer: TPAWord;
+
+    OptimalLength: Integer; // bit length of current block with optimal trees
+    StaticLength: Integer; // bit length of current block with static trees
+    CompressedLength: Integer; // total bit length of compressed file
+    Matches: cardinal; // number of String matches in current block
+    LastEOBLength: Integer; // bit length of EOB code for last block
+    BitsBuffer: word;
+    // Output buffer. Bits are inserted starting at the bottom (least significant bits).
+    ValidBits: Integer;
+    // Number of valid bits in BitsBuffer. All Bits above the last valid bit are always zero.
+  end;
+
+  // ----------------- Huffmann trees
 
 const
   DIST_CODE_LEN = 512; // see definition of array dist_code below
@@ -756,15 +705,14 @@ const
   // The static literal tree. Since the bit lengths are imposed, there is no need for the L_CODES Extra codes used
   // during heap construction. However the codes 286 and 287 are needed to build a canonical tree (see TreeInit below).
   StaticLiteralTree: array [0 .. L_CODES + 1] of TTreeEntry =
-    ((fc: (Frequency: 12); dl: (Len: 8)), (fc: (Frequency: 140);
-      dl: (Len: 8)), (fc: (Frequency: 76); dl: (Len: 8)),
-    (fc: (Frequency: 204); dl: (Len: 8)), (fc: (Frequency: 44); dl: (Len: 8)),
-    (fc: (Frequency: 172); dl: (Len: 8)), (fc: (Frequency: 108); dl: (Len: 8)),
-    (fc: (Frequency: 236); dl: (Len: 8)), (fc: (Frequency: 28); dl: (Len: 8)),
-    (fc: (Frequency: 156); dl: (Len: 8)), (fc: (Frequency: 92); dl: (Len: 8)),
-    (fc: (Frequency: 220); dl: (Len: 8)), (fc: (Frequency: 60); dl: (Len: 8)),
-    (fc: (Frequency: 188); dl: (Len: 8)), (fc: (Frequency: 124);
-      dl: (Len: 8)), (fc: (Frequency: 252); dl: (Len: 8)),
+    ((fc: (Frequency: 12); dl: (Len: 8)), (fc: (Frequency: 140); dl: (Len: 8)),
+    (fc: (Frequency: 76); dl: (Len: 8)), (fc: (Frequency: 204); dl: (Len: 8)),
+    (fc: (Frequency: 44); dl: (Len: 8)), (fc: (Frequency: 172); dl: (Len: 8)),
+    (fc: (Frequency: 108); dl: (Len: 8)), (fc: (Frequency: 236); dl: (Len: 8)),
+    (fc: (Frequency: 28); dl: (Len: 8)), (fc: (Frequency: 156); dl: (Len: 8)),
+    (fc: (Frequency: 92); dl: (Len: 8)), (fc: (Frequency: 220); dl: (Len: 8)),
+    (fc: (Frequency: 60); dl: (Len: 8)), (fc: (Frequency: 188); dl: (Len: 8)),
+    (fc: (Frequency: 124); dl: (Len: 8)), (fc: (Frequency: 252); dl: (Len: 8)),
     (fc: (Frequency: 2); dl: (Len: 8)), (fc: (Frequency: 130); dl: (Len: 8)),
     (fc: (Frequency: 66); dl: (Len: 8)), (fc: (Frequency: 194); dl: (Len: 8)),
     (fc: (Frequency: 34); dl: (Len: 8)), (fc: (Frequency: 162); dl: (Len: 8)),
@@ -772,12 +720,11 @@ const
     (fc: (Frequency: 18); dl: (Len: 8)), (fc: (Frequency: 146); dl: (Len: 8)),
     (fc: (Frequency: 82); dl: (Len: 8)), (fc: (Frequency: 210); dl: (Len: 8)),
     (fc: (Frequency: 50); dl: (Len: 8)), (fc: (Frequency: 178); dl: (Len: 8)),
-    (fc: (Frequency: 114); dl: (Len: 8)), (fc: (Frequency: 242);
-      dl: (Len: 8)), (fc: (Frequency: 10); dl: (Len: 8)),
-    (fc: (Frequency: 138); dl: (Len: 8)), (fc: (Frequency: 74); dl: (Len: 8)),
-    (fc: (Frequency: 202); dl: (Len: 8)), (fc: (Frequency: 42); dl: (Len: 8)),
-    (fc: (Frequency: 170); dl: (Len: 8)), (fc: (Frequency: 106);
-      dl: (Len: 8)), (fc: (Frequency: 234); dl: (Len: 8)),
+    (fc: (Frequency: 114); dl: (Len: 8)), (fc: (Frequency: 242); dl: (Len: 8)),
+    (fc: (Frequency: 10); dl: (Len: 8)), (fc: (Frequency: 138); dl: (Len: 8)),
+    (fc: (Frequency: 74); dl: (Len: 8)), (fc: (Frequency: 202); dl: (Len: 8)),
+    (fc: (Frequency: 42); dl: (Len: 8)), (fc: (Frequency: 170); dl: (Len: 8)),
+    (fc: (Frequency: 106); dl: (Len: 8)), (fc: (Frequency: 234); dl: (Len: 8)),
     (fc: (Frequency: 26); dl: (Len: 8)), (fc: (Frequency: 154); dl: (Len: 8)),
     (fc: (Frequency: 90); dl: (Len: 8)), (fc: (Frequency: 218); dl: (Len: 8)),
     (fc: (Frequency: 58); dl: (Len: 8)), (fc: (Frequency: 186); dl: (Len: 8)),
@@ -785,12 +732,11 @@ const
     (fc: (Frequency: 6); dl: (Len: 8)), (fc: (Frequency: 134); dl: (Len: 8)),
     (fc: (Frequency: 70); dl: (Len: 8)), (fc: (Frequency: 198); dl: (Len: 8)),
     (fc: (Frequency: 38); dl: (Len: 8)), (fc: (Frequency: 166); dl: (Len: 8)),
-    (fc: (Frequency: 102); dl: (Len: 8)), (fc: (Frequency: 230);
-      dl: (Len: 8)), (fc: (Frequency: 22); dl: (Len: 8)),
-    (fc: (Frequency: 150); dl: (Len: 8)), (fc: (Frequency: 86); dl: (Len: 8)),
-    (fc: (Frequency: 214); dl: (Len: 8)), (fc: (Frequency: 54); dl: (Len: 8)),
-    (fc: (Frequency: 182); dl: (Len: 8)), (fc: (Frequency: 118);
-      dl: (Len: 8)), (fc: (Frequency: 246); dl: (Len: 8)),
+    (fc: (Frequency: 102); dl: (Len: 8)), (fc: (Frequency: 230); dl: (Len: 8)),
+    (fc: (Frequency: 22); dl: (Len: 8)), (fc: (Frequency: 150); dl: (Len: 8)),
+    (fc: (Frequency: 86); dl: (Len: 8)), (fc: (Frequency: 214); dl: (Len: 8)),
+    (fc: (Frequency: 54); dl: (Len: 8)), (fc: (Frequency: 182); dl: (Len: 8)),
+    (fc: (Frequency: 118); dl: (Len: 8)), (fc: (Frequency: 246); dl: (Len: 8)),
     (fc: (Frequency: 14); dl: (Len: 8)), (fc: (Frequency: 142); dl: (Len: 8)),
     (fc: (Frequency: 78); dl: (Len: 8)), (fc: (Frequency: 206); dl: (Len: 8)),
     (fc: (Frequency: 46); dl: (Len: 8)), (fc: (Frequency: 174); dl: (Len: 8)),
@@ -798,34 +744,31 @@ const
     (fc: (Frequency: 30); dl: (Len: 8)), (fc: (Frequency: 158); dl: (Len: 8)),
     (fc: (Frequency: 94); dl: (Len: 8)), (fc: (Frequency: 222); dl: (Len: 8)),
     (fc: (Frequency: 62); dl: (Len: 8)), (fc: (Frequency: 190); dl: (Len: 8)),
-    (fc: (Frequency: 126); dl: (Len: 8)), (fc: (Frequency: 254);
-      dl: (Len: 8)), (fc: (Frequency: 1); dl: (Len: 8)),
-    (fc: (Frequency: 129); dl: (Len: 8)), (fc: (Frequency: 65); dl: (Len: 8)),
-    (fc: (Frequency: 193); dl: (Len: 8)), (fc: (Frequency: 33); dl: (Len: 8)),
-    (fc: (Frequency: 161); dl: (Len: 8)), (fc: (Frequency: 97); dl: (Len: 8)),
-    (fc: (Frequency: 225); dl: (Len: 8)), (fc: (Frequency: 17); dl: (Len: 8)),
-    (fc: (Frequency: 145); dl: (Len: 8)), (fc: (Frequency: 81); dl: (Len: 8)),
-    (fc: (Frequency: 209); dl: (Len: 8)), (fc: (Frequency: 49); dl: (Len: 8)),
-    (fc: (Frequency: 177); dl: (Len: 8)), (fc: (Frequency: 113);
-      dl: (Len: 8)), (fc: (Frequency: 241); dl: (Len: 8)),
+    (fc: (Frequency: 126); dl: (Len: 8)), (fc: (Frequency: 254); dl: (Len: 8)),
+    (fc: (Frequency: 1); dl: (Len: 8)), (fc: (Frequency: 129); dl: (Len: 8)),
+    (fc: (Frequency: 65); dl: (Len: 8)), (fc: (Frequency: 193); dl: (Len: 8)),
+    (fc: (Frequency: 33); dl: (Len: 8)), (fc: (Frequency: 161); dl: (Len: 8)),
+    (fc: (Frequency: 97); dl: (Len: 8)), (fc: (Frequency: 225); dl: (Len: 8)),
+    (fc: (Frequency: 17); dl: (Len: 8)), (fc: (Frequency: 145); dl: (Len: 8)),
+    (fc: (Frequency: 81); dl: (Len: 8)), (fc: (Frequency: 209); dl: (Len: 8)),
+    (fc: (Frequency: 49); dl: (Len: 8)), (fc: (Frequency: 177); dl: (Len: 8)),
+    (fc: (Frequency: 113); dl: (Len: 8)), (fc: (Frequency: 241); dl: (Len: 8)),
     (fc: (Frequency: 9); dl: (Len: 8)), (fc: (Frequency: 137); dl: (Len: 8)),
     (fc: (Frequency: 73); dl: (Len: 8)), (fc: (Frequency: 201); dl: (Len: 8)),
     (fc: (Frequency: 41); dl: (Len: 8)), (fc: (Frequency: 169); dl: (Len: 8)),
-    (fc: (Frequency: 105); dl: (Len: 8)), (fc: (Frequency: 233);
-      dl: (Len: 8)), (fc: (Frequency: 25); dl: (Len: 8)),
-    (fc: (Frequency: 153); dl: (Len: 8)), (fc: (Frequency: 89); dl: (Len: 8)),
-    (fc: (Frequency: 217); dl: (Len: 8)), (fc: (Frequency: 57); dl: (Len: 8)),
-    (fc: (Frequency: 185); dl: (Len: 8)), (fc: (Frequency: 121);
-      dl: (Len: 8)), (fc: (Frequency: 249); dl: (Len: 8)),
+    (fc: (Frequency: 105); dl: (Len: 8)), (fc: (Frequency: 233); dl: (Len: 8)),
+    (fc: (Frequency: 25); dl: (Len: 8)), (fc: (Frequency: 153); dl: (Len: 8)),
+    (fc: (Frequency: 89); dl: (Len: 8)), (fc: (Frequency: 217); dl: (Len: 8)),
+    (fc: (Frequency: 57); dl: (Len: 8)), (fc: (Frequency: 185); dl: (Len: 8)),
+    (fc: (Frequency: 121); dl: (Len: 8)), (fc: (Frequency: 249); dl: (Len: 8)),
     (fc: (Frequency: 5); dl: (Len: 8)), (fc: (Frequency: 133); dl: (Len: 8)),
     (fc: (Frequency: 69); dl: (Len: 8)), (fc: (Frequency: 197); dl: (Len: 8)),
     (fc: (Frequency: 37); dl: (Len: 8)), (fc: (Frequency: 165); dl: (Len: 8)),
-    (fc: (Frequency: 101); dl: (Len: 8)), (fc: (Frequency: 229);
-      dl: (Len: 8)), (fc: (Frequency: 21); dl: (Len: 8)),
-    (fc: (Frequency: 149); dl: (Len: 8)), (fc: (Frequency: 85); dl: (Len: 8)),
-    (fc: (Frequency: 213); dl: (Len: 8)), (fc: (Frequency: 53); dl: (Len: 8)),
-    (fc: (Frequency: 181); dl: (Len: 8)), (fc: (Frequency: 117);
-      dl: (Len: 8)), (fc: (Frequency: 245); dl: (Len: 8)),
+    (fc: (Frequency: 101); dl: (Len: 8)), (fc: (Frequency: 229); dl: (Len: 8)),
+    (fc: (Frequency: 21); dl: (Len: 8)), (fc: (Frequency: 149); dl: (Len: 8)),
+    (fc: (Frequency: 85); dl: (Len: 8)), (fc: (Frequency: 213); dl: (Len: 8)),
+    (fc: (Frequency: 53); dl: (Len: 8)), (fc: (Frequency: 181); dl: (Len: 8)),
+    (fc: (Frequency: 117); dl: (Len: 8)), (fc: (Frequency: 245); dl: (Len: 8)),
     (fc: (Frequency: 13); dl: (Len: 8)), (fc: (Frequency: 141); dl: (Len: 8)),
     (fc: (Frequency: 77); dl: (Len: 8)), (fc: (Frequency: 205); dl: (Len: 8)),
     (fc: (Frequency: 45); dl: (Len: 8)), (fc: (Frequency: 173); dl: (Len: 8)),
@@ -833,68 +776,59 @@ const
     (fc: (Frequency: 29); dl: (Len: 8)), (fc: (Frequency: 157); dl: (Len: 8)),
     (fc: (Frequency: 93); dl: (Len: 8)), (fc: (Frequency: 221); dl: (Len: 8)),
     (fc: (Frequency: 61); dl: (Len: 8)), (fc: (Frequency: 189); dl: (Len: 8)),
-    (fc: (Frequency: 125); dl: (Len: 8)), (fc: (Frequency: 253);
-      dl: (Len: 8)), (fc: (Frequency: 19); dl: (Len: 9)),
-    (fc: (Frequency: 275); dl: (Len: 9)), (fc: (Frequency: 147);
-      dl: (Len: 9)), (fc: (Frequency: 403); dl: (Len: 9)),
+    (fc: (Frequency: 125); dl: (Len: 8)), (fc: (Frequency: 253); dl: (Len: 8)),
+    (fc: (Frequency: 19); dl: (Len: 9)), (fc: (Frequency: 275); dl: (Len: 9)),
+    (fc: (Frequency: 147); dl: (Len: 9)), (fc: (Frequency: 403); dl: (Len: 9)),
     (fc: (Frequency: 83); dl: (Len: 9)), (fc: (Frequency: 339); dl: (Len: 9)),
     (fc: (Frequency: 211); dl: (Len: 9)), (fc: (Frequency: 467); dl: (Len: 9)),
     (fc: (Frequency: 51); dl: (Len: 9)), (fc: (Frequency: 307); dl: (Len: 9)),
-    (fc: (Frequency: 179); dl: (Len: 9)), (fc: (Frequency: 435);
-      dl: (Len: 9)), (fc: (Frequency: 115); dl: (Len: 9)),
-    (fc: (Frequency: 371); dl: (Len: 9)), (fc: (Frequency: 243);
-      dl: (Len: 9)), (fc: (Frequency: 499); dl: (Len: 9)),
+    (fc: (Frequency: 179); dl: (Len: 9)), (fc: (Frequency: 435); dl: (Len: 9)),
+    (fc: (Frequency: 115); dl: (Len: 9)), (fc: (Frequency: 371); dl: (Len: 9)),
+    (fc: (Frequency: 243); dl: (Len: 9)), (fc: (Frequency: 499); dl: (Len: 9)),
     (fc: (Frequency: 11); dl: (Len: 9)), (fc: (Frequency: 267); dl: (Len: 9)),
     (fc: (Frequency: 139); dl: (Len: 9)), (fc: (Frequency: 395); dl: (Len: 9)),
     (fc: (Frequency: 75); dl: (Len: 9)), (fc: (Frequency: 331); dl: (Len: 9)),
-    (fc: (Frequency: 203); dl: (Len: 9)), (fc: (Frequency: 459);
-      dl: (Len: 9)), (fc: (Frequency: 43); dl: (Len: 9)),
-    (fc: (Frequency: 299); dl: (Len: 9)), (fc: (Frequency: 171);
-      dl: (Len: 9)), (fc: (Frequency: 427); dl: (Len: 9)),
-    (fc: (Frequency: 107); dl: (Len: 9)), (fc: (Frequency: 363);
-      dl: (Len: 9)), (fc: (Frequency: 235); dl: (Len: 9)),
-    (fc: (Frequency: 491); dl: (Len: 9)), (fc: (Frequency: 27);
-      dl: (Len: 9)), (fc: (Frequency: 283); dl: (Len: 9)),
-    (fc: (Frequency: 155); dl: (Len: 9)), (fc: (Frequency: 411);
-      dl: (Len: 9)), (fc: (Frequency: 91); dl: (Len: 9)),
-    (fc: (Frequency: 347); dl: (Len: 9)), (fc: (Frequency: 219);
-      dl: (Len: 9)), (fc: (Frequency: 475); dl: (Len: 9)),
+    (fc: (Frequency: 203); dl: (Len: 9)), (fc: (Frequency: 459); dl: (Len: 9)),
+    (fc: (Frequency: 43); dl: (Len: 9)), (fc: (Frequency: 299); dl: (Len: 9)),
+    (fc: (Frequency: 171); dl: (Len: 9)), (fc: (Frequency: 427); dl: (Len: 9)),
+    (fc: (Frequency: 107); dl: (Len: 9)), (fc: (Frequency: 363); dl: (Len: 9)),
+    (fc: (Frequency: 235); dl: (Len: 9)), (fc: (Frequency: 491); dl: (Len: 9)),
+    (fc: (Frequency: 27); dl: (Len: 9)), (fc: (Frequency: 283); dl: (Len: 9)),
+    (fc: (Frequency: 155); dl: (Len: 9)), (fc: (Frequency: 411); dl: (Len: 9)),
+    (fc: (Frequency: 91); dl: (Len: 9)), (fc: (Frequency: 347); dl: (Len: 9)),
+    (fc: (Frequency: 219); dl: (Len: 9)), (fc: (Frequency: 475); dl: (Len: 9)),
     (fc: (Frequency: 59); dl: (Len: 9)), (fc: (Frequency: 315); dl: (Len: 9)),
     (fc: (Frequency: 187); dl: (Len: 9)), (fc: (Frequency: 443); dl: (Len: 9)),
     (fc: (Frequency: 123); dl: (Len: 9)), (fc: (Frequency: 379); dl: (Len: 9)),
     (fc: (Frequency: 251); dl: (Len: 9)), (fc: (Frequency: 507); dl: (Len: 9)),
     (fc: (Frequency: 7); dl: (Len: 9)), (fc: (Frequency: 263); dl: (Len: 9)),
-    (fc: (Frequency: 135); dl: (Len: 9)), (fc: (Frequency: 391);
-      dl: (Len: 9)), (fc: (Frequency: 71); dl: (Len: 9)),
-    (fc: (Frequency: 327); dl: (Len: 9)), (fc: (Frequency: 199);
-      dl: (Len: 9)), (fc: (Frequency: 455); dl: (Len: 9)),
+    (fc: (Frequency: 135); dl: (Len: 9)), (fc: (Frequency: 391); dl: (Len: 9)),
+    (fc: (Frequency: 71); dl: (Len: 9)), (fc: (Frequency: 327); dl: (Len: 9)),
+    (fc: (Frequency: 199); dl: (Len: 9)), (fc: (Frequency: 455); dl: (Len: 9)),
     (fc: (Frequency: 39); dl: (Len: 9)), (fc: (Frequency: 295); dl: (Len: 9)),
     (fc: (Frequency: 167); dl: (Len: 9)), (fc: (Frequency: 423); dl: (Len: 9)),
     (fc: (Frequency: 103); dl: (Len: 9)), (fc: (Frequency: 359); dl: (Len: 9)),
     (fc: (Frequency: 231); dl: (Len: 9)), (fc: (Frequency: 487); dl: (Len: 9)),
     (fc: (Frequency: 23); dl: (Len: 9)), (fc: (Frequency: 279); dl: (Len: 9)),
-    (fc: (Frequency: 151); dl: (Len: 9)), (fc: (Frequency: 407);
-      dl: (Len: 9)), (fc: (Frequency: 87); dl: (Len: 9)),
-    (fc: (Frequency: 343); dl: (Len: 9)), (fc: (Frequency: 215);
-      dl: (Len: 9)), (fc: (Frequency: 471); dl: (Len: 9)),
+    (fc: (Frequency: 151); dl: (Len: 9)), (fc: (Frequency: 407); dl: (Len: 9)),
+    (fc: (Frequency: 87); dl: (Len: 9)), (fc: (Frequency: 343); dl: (Len: 9)),
+    (fc: (Frequency: 215); dl: (Len: 9)), (fc: (Frequency: 471); dl: (Len: 9)),
     (fc: (Frequency: 55); dl: (Len: 9)), (fc: (Frequency: 311); dl: (Len: 9)),
     (fc: (Frequency: 183); dl: (Len: 9)), (fc: (Frequency: 439); dl: (Len: 9)),
     (fc: (Frequency: 119); dl: (Len: 9)), (fc: (Frequency: 375); dl: (Len: 9)),
     (fc: (Frequency: 247); dl: (Len: 9)), (fc: (Frequency: 503); dl: (Len: 9)),
     (fc: (Frequency: 15); dl: (Len: 9)), (fc: (Frequency: 271); dl: (Len: 9)),
-    (fc: (Frequency: 143); dl: (Len: 9)), (fc: (Frequency: 399);
-      dl: (Len: 9)), (fc: (Frequency: 79); dl: (Len: 9)),
-    (fc: (Frequency: 335); dl: (Len: 9)), (fc: (Frequency: 207);
-      dl: (Len: 9)), (fc: (Frequency: 463); dl: (Len: 9)),
+    (fc: (Frequency: 143); dl: (Len: 9)), (fc: (Frequency: 399); dl: (Len: 9)),
+    (fc: (Frequency: 79); dl: (Len: 9)), (fc: (Frequency: 335); dl: (Len: 9)),
+    (fc: (Frequency: 207); dl: (Len: 9)), (fc: (Frequency: 463); dl: (Len: 9)),
     (fc: (Frequency: 47); dl: (Len: 9)), (fc: (Frequency: 303); dl: (Len: 9)),
     (fc: (Frequency: 175); dl: (Len: 9)), (fc: (Frequency: 431); dl: (Len: 9)),
     (fc: (Frequency: 111); dl: (Len: 9)), (fc: (Frequency: 367); dl: (Len: 9)),
     (fc: (Frequency: 239); dl: (Len: 9)), (fc: (Frequency: 495); dl: (Len: 9)),
     (fc: (Frequency: 31); dl: (Len: 9)), (fc: (Frequency: 287); dl: (Len: 9)),
-    (fc: (Frequency: 159); dl: (Len: 9)), (fc: (Frequency: 415);
-      dl: (Len: 9)), (fc: (Frequency: 95); dl: (Len: 9)),
-    (fc: (Frequency: 351); dl: (Len: 9)), (fc: (Frequency: 223);
-      dl: (Len: 9)), (fc: (Frequency: 479); dl: (Len: 9)),
+    (fc: (Frequency: 159); dl: (Len: 9)), (fc: (Frequency: 415); dl: (Len: 9)),
+    (fc: (Frequency: 95); dl: (Len: 9)), (fc: (Frequency: 351); dl: (Len: 9)),
+    (fc: (Frequency: 223); dl: (Len: 9)), (fc: (Frequency: 479); dl: (Len: 9)),
     (fc: (Frequency: 63); dl: (Len: 9)), (fc: (Frequency: 319); dl: (Len: 9)),
     (fc: (Frequency: 191); dl: (Len: 9)), (fc: (Frequency: 447); dl: (Len: 9)),
     (fc: (Frequency: 127); dl: (Len: 9)), (fc: (Frequency: 383); dl: (Len: 9)),
@@ -904,18 +838,17 @@ const
     (fc: (Frequency: 16); dl: (Len: 7)), (fc: (Frequency: 80); dl: (Len: 7)),
     (fc: (Frequency: 48); dl: (Len: 7)), (fc: (Frequency: 112); dl: (Len: 7)),
     (fc: (Frequency: 8); dl: (Len: 7)), (fc: (Frequency: 72); dl: (Len: 7)),
-    (fc: (Frequency: 40); dl: (Len: 7)), (fc: (Frequency: 104);
-      dl: (Len: 7)), (fc: (Frequency: 24); dl: (Len: 7)),
-    (fc: (Frequency: 88); dl: (Len: 7)), (fc: (Frequency: 56); dl: (Len: 7)),
-    (fc: (Frequency: 120); dl: (Len: 7)), (fc: (Frequency: 4); dl: (Len: 7)),
-    (fc: (Frequency: 68); dl: (Len: 7)), (fc: (Frequency: 36); dl: (Len: 7)),
-    (fc: (Frequency: 100); dl: (Len: 7)), (fc: (Frequency: 20); dl: (Len: 7)),
-    (fc: (Frequency: 84); dl: (Len: 7)), (fc: (Frequency: 52); dl: (Len: 7)),
-    (fc: (Frequency: 116); dl: (Len: 7)), (fc: (Frequency: 3); dl: (Len: 8)),
-    (fc: (Frequency: 131); dl: (Len: 8)), (fc: (Frequency: 67); dl: (Len: 8)),
-    (fc: (Frequency: 195); dl: (Len: 8)), (fc: (Frequency: 35); dl: (Len: 8)),
-    (fc: (Frequency: 163); dl: (Len: 8)), (fc: (Frequency: 99); dl: (Len: 8)),
-    (fc: (Frequency: 227); dl: (Len: 8)));
+    (fc: (Frequency: 40); dl: (Len: 7)), (fc: (Frequency: 104); dl: (Len: 7)),
+    (fc: (Frequency: 24); dl: (Len: 7)), (fc: (Frequency: 88); dl: (Len: 7)),
+    (fc: (Frequency: 56); dl: (Len: 7)), (fc: (Frequency: 120); dl: (Len: 7)),
+    (fc: (Frequency: 4); dl: (Len: 7)), (fc: (Frequency: 68); dl: (Len: 7)),
+    (fc: (Frequency: 36); dl: (Len: 7)), (fc: (Frequency: 100); dl: (Len: 7)),
+    (fc: (Frequency: 20); dl: (Len: 7)), (fc: (Frequency: 84); dl: (Len: 7)),
+    (fc: (Frequency: 52); dl: (Len: 7)), (fc: (Frequency: 116); dl: (Len: 7)),
+    (fc: (Frequency: 3); dl: (Len: 8)), (fc: (Frequency: 131); dl: (Len: 8)),
+    (fc: (Frequency: 67); dl: (Len: 8)), (fc: (Frequency: 195); dl: (Len: 8)),
+    (fc: (Frequency: 35); dl: (Len: 8)), (fc: (Frequency: 163); dl: (Len: 8)),
+    (fc: (Frequency: 99); dl: (Len: 8)), (fc: (Frequency: 227); dl: (Len: 8)));
 
   // The static distance tree. (Actually a trivial tree since all lens use 5 Bits.)
   StaticDescriptorTree: array [0 .. D_CODES - 1] of TTreeEntry =
@@ -951,37 +884,37 @@ const
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 0, 0, 16, 17,
-    18, 18, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22,
-    22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24,
-    24, 24, 24, 24, 24, 24, 24, 24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
-    25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-    26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-    26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-    27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 28,
-    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-    28, 28, 28, 28, 28, 28, 28, 28, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
-    29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
-    29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
-    29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29);
+    18, 18, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22,
+    22, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+    24, 24, 24, 24, 24, 24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+    25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
+    26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 27, 27, 27,
+    27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+    27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 29, 29,
+    29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
+    29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
+    29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
+    29, 29, 29, 29, 29);
 
   // length code for each normalized match length (0 = MIN_MATCH)
-  LengthCode: array [0 .. MAX_MATCH - MIN_MATCH] of byte = (0, 1, 2, 3, 4, 5,
-    6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14,
-    14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17,
-    17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19,
-    20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 21, 21,
-    21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22,
-    22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-    23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+  LengthCode: array [0 .. MAX_MATCH - MIN_MATCH] of byte = (0, 1, 2, 3, 4, 5, 6,
+    7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14,
+    14, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17,
+    17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 20,
+    20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 21, 21, 21,
+    21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22,
+    22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+    23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
     24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
-    24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
-    25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26,
+    25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+    25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26,
     26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
-    26, 26, 26, 26, 26, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-    27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
-    27, 28);
+    26, 26, 26, 26, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+    27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+    27, 27, 28);
 
   // first normalized length for each code (0 = MIN_MATCH)
   BaseLength: array [0 .. LENGTH_CODES - 1] of byte = (0, 1, 2, 3, 4, 5, 6, 7,
@@ -998,16 +931,17 @@ const
   END_BLOCK = 256; // end of block literal code
   REP_3_6 = 16; // repeat previous bit length 3-6 times (2 Bits of repeat count)
   REPZ_3_10 = 17; // repeat a zero length 3-10 times  (3 Bits of repeat count)
-  REPZ_11_138 = 18; // repeat a zero length 11-138 times  (7 Bits of repeat count)
+  REPZ_11_138 = 18;
+  // repeat a zero length 11-138 times  (7 Bits of repeat count)
 
   // extra bits for each length code
-  ExtraLengthBits: array [0 .. LENGTH_CODES - 1] of Integer = (0, 0, 0, 0, 0,
-    0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0);
+  ExtraLengthBits: array [0 .. LENGTH_CODES - 1] of Integer = (0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0);
 
   // extra bits for each distance code
-  ExtraDistanceBits: array [0 .. D_CODES - 1] of Integer = (0, 0, 0, 0, 1, 1,
-    2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12,
-    13, 13);
+  ExtraDistanceBits: array [0 .. D_CODES - 1] of Integer = (0, 0, 0, 0, 1, 1, 2,
+    2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12,
+    12, 13, 13);
 
   // extra bits for each bit length code
   ExtraBitLengthBits: array [0 .. BL_CODES - 1] of Integer = (0, 0, 0, 0, 0, 0,
@@ -1037,9 +971,9 @@ const
   // ----------------- Inflate support
 
 const
-  InflateMask: array [0 .. 16] of cardinal = ($0000, $0001, $0003, $0007,
-    $000F, $001F, $003F, $007F, $00FF, $01FF, $03FF, $07FF, $0FFF, $1FFF,
-    $3FFF, $7FFF, $FFFF);
+  InflateMask: array [0 .. 16] of cardinal = ($0000, $0001, $0003, $0007, $000F,
+    $001F, $003F, $007F, $00FF, $01FF, $03FF, $07FF, $0FFF, $1FFF, $3FFF,
+    $7FFF, $FFFF);
 
 function InflateFlush(var S: TInflateBlocksState; var Z: TZState;
   R: Integer): Integer;
@@ -1051,11 +985,11 @@ var
 begin
   // local copies of source and destination pointers
   P := Z.NextOutput;
-  Q := S.Read;
+  Q := S.read;
 
   // compute number of bytes to copy as far as end of window
-  if cardinal(Q) <= cardinal(S.Write) then
-    N := cardinal(S.Write) - cardinal(Q)
+  if cardinal(Q) <= cardinal(S.write) then
+    N := cardinal(S.write) - cardinal(Q)
   else
     N := cardinal(S.zend) - cardinal(Q);
   if N > Z.AvailableOutput then
@@ -1096,7 +1030,7 @@ begin
 
   // update pointers
   Z.NextOutput := P;
-  S.Read := Q;
+  S.read := Q;
 
   Result := R;
 end;
@@ -1127,7 +1061,7 @@ begin
   BitsBuffer := S.bitb;
   K := S.bitk;
   Q := S.write;
-  if cardinal(Q) < cardinal(S.Read) then
+  if cardinal(Q) < cardinal(S.read) then
     M := cardinal(S.read) - cardinal(Q) - 1
   else
     M := cardinal(S.zend) - cardinal(Q);
@@ -1224,7 +1158,8 @@ begin
                 // copy to end of window
                 dec(C, Extra);
                 MoveWithOverlap(R, Q, Extra);
- {?? R wird 2 Zeilen weiter überschrieben}             //  inc(R, Extra);
+                { ?? R wird 2 Zeilen weiter überschrieben }
+                // inc(R, Extra);
                 inc(Q, Extra);
                 // copy rest from start of window
                 R := S.window;
@@ -1787,13 +1722,13 @@ const
   // Tables for deflate from PKZIP'S appnote.txt
   // copy lengths for literal codes 257..285 (actually lengths - 2; also see note #13 above about 258)
   CopyLengths: array [0 .. 30] of cardinal = (3, 4, 5, 6, 7, 8, 9, 10, 11, 13,
-    15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195,
-    227, 258, 0, 0);
+    15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227,
+    258, 0, 0);
 
   INVALID_CODE = 112;
   // extra bits for literal codes 257..285
-  CopyLiteralExtra: array [0 .. 30] of cardinal = (0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, INVALID_CODE,
+  CopyLiteralExtra: array [0 .. 30] of cardinal = (0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+    1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, INVALID_CODE,
     INVALID_CODE);
 
   // copy offsets for distance codes 0..29
@@ -2130,8 +2065,7 @@ Begin
 end;
 
 function InflateTreesBits(var C: array of cardinal; var BB: cardinal;
-  var TB: PInflateHuft; var HP: array of TInflateHuft;
-  var Z: TZState): Integer;
+  var TB: PInflateHuft; var HP: array of TInflateHuft; var Z: TZState): Integer;
 // C holds 19 code lengths
 // BB - bits tree desired/actual depth
 // TB - bits tree result
@@ -2208,8 +2142,8 @@ var
   FixedDistanceTable: PInflateHuft;
 
 function InflateTreesFixed(var LiteralBits: cardinal;
-  var DistanceBits: cardinal; var TL, TD: PInflateHuft;
-  var Z: TZState): Integer;
+  var DistanceBits: cardinal; var TL, TD: PInflateHuft; var Z: TZState)
+  : Integer;
 
 type
   PFixedTable = ^TFixedTable;
@@ -2247,8 +2181,8 @@ begin
       for K := 0 to 29 do
         C[K] := 5;
       FixedDistanceBits := 5;
-      BuildHuffmanTables(C^, 30, 0, CopyOffsets, CopyExtra,
-        @FixedDistanceTable, FixedDistanceBits, FixedTablesMemory, F, V^);
+      BuildHuffmanTables(C^, 30, 0, CopyOffsets, CopyExtra, @FixedDistanceTable,
+        FixedDistanceBits, FixedTablesMemory, F, V^);
       FixedBuild := true;
     finally
       if Assigned(V) then
@@ -2337,7 +2271,7 @@ begin
       if Assigned(S.hufts) then
         FreeMem(S.hufts);
       FreeMem(S);
-      raise ;
+      raise;
     end;
 end;
 
@@ -2420,8 +2354,8 @@ begin
             1: // fixed
               begin
                 InflateTreesFixed(LiteralBits, DistanceBits, TL, TD, Z);
-                S.sub.decode.codes := InflateCodesNew(LiteralBits,
-                  DistanceBits, TL, TD, Z);
+                S.sub.decode.codes := InflateCodesNew(LiteralBits, DistanceBits,
+                  TL, TD, Z);
                 if S.sub.decode.codes = nil then
                 begin
                   R := Z_MEM_ERROR;
@@ -2632,7 +2566,7 @@ begin
           begin
             Temp := S.sub.Trees.Table;
             if not(S.sub.Trees.Index < 258 + (Temp and $1F) +
-                ((Temp shr 5) and $1F)) then
+              ((Temp shr 5) and $1F)) then
               break;
             Temp := S.sub.Trees.BB;
             while K < Temp do
@@ -2967,8 +2901,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
   // On exit at least one byte has been read, or AvailableInput = 0. Reads are performed for at least two bytes (required
   // for the zip translate_eol option -> not supported here).
 
-    function ReadBuffer(ZState: PZState; Buffer: PByte;
-      Size: cardinal): Integer;
+    function ReadBuffer(ZState: PZState; Buffer: PByte; Size: cardinal)
+      : Integer;
     // Reads a new buffer from the current input stream, updates the Adler32 and total number of bytes read.  All Deflate
     // input goes through this function so some applications may wish to modify it to avoid allocating a large
     // ZState.NextInput buffer and copying from it (see also FlushPending).
@@ -2996,8 +2930,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
     More: cardinal; // amount of free space at the end of the window
   begin
     repeat
-      More := S.CurrentWindowSize - Integer(S.Lookahead) - Integer
-        (S.StringStart);
+      More := S.CurrentWindowSize - Integer(S.Lookahead) -
+        Integer(S.StringStart);
       if (More = 0) and (S.StringStart = 0) and (S.Lookahead = 0) then
         More := S.WindowSize
       else if More = cardinal(-1) then
@@ -3008,7 +2942,7 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
         // move the upper half to the lower one to make room in the upper half.
       end
       else if S.StringStart >= S.WindowSize + (S.WindowSize - MIN_LOOKAHEAD)
-        then
+      then
       begin
         Move(S.window[S.WindowSize], S.window^, S.WindowSize);
         dec(S.MatchStart, S.WindowSize);
@@ -3063,8 +2997,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
       if S.Lookahead >= MIN_MATCH then
       begin
         S.InsertHash := S.window[S.StringStart];
-        S.InsertHash := ((S.InsertHash shl S.HashShift)
-            xor S.window[S.StringStart + 1]) and S.HashMask;
+        S.InsertHash := ((S.InsertHash shl S.HashShift) xor S.window
+          [S.StringStart + 1]) and S.HashMask;
       end;
       // If the whole input has less than MIN_MATCH bytes, InsertHash is garbage,
       // but this is not important since only literal bytes will be emitted.
@@ -3197,17 +3131,16 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
           begin
             // set J to the smallest of the two sons:
             if (J < S.HeapLength) and
-              ((Tree[S.Heap[J + 1]].fc.Frequency < Tree[S.Heap[J]]
-                  .fc.Frequency) or
-                ((Tree[S.Heap[J + 1]].fc.Frequency = Tree[S.Heap[J]]
-                    .fc.Frequency) and (S.Depth[S.Heap[J + 1]] <= S.Depth
-                    [S.Heap[J]]))) then
+              ((Tree[S.Heap[J + 1]].fc.Frequency < Tree[S.Heap[J]].fc.Frequency)
+              or ((Tree[S.Heap[J + 1]].fc.Frequency = Tree[S.Heap[J]]
+              .fc.Frequency) and (S.Depth[S.Heap[J + 1]] <= S.Depth[S.Heap[J]])))
+            then
               inc(J);
 
             // exit if V is smaller than both sons
             if ((Tree[V].fc.Frequency < Tree[S.Heap[J]].fc.Frequency) or
-                ((Tree[V].fc.Frequency = Tree[S.Heap[J]].fc.Frequency) and
-                  (S.Depth[V] <= S.Depth[S.Heap[J]]))) then
+              ((Tree[V].fc.Frequency = Tree[S.Heap[J]].fc.Frequency) and
+              (S.Depth[V] <= S.Depth[S.Heap[J]]))) then
               break;
 
             // exchange V with the smallest son
@@ -3312,8 +3245,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
                 continue;
               if Tree[M].dl.Len <> Bits then
               begin
-                inc(S.OptimalLength,
-                  (Bits - Tree[M].dl.Len) * Tree[M].fc.Frequency);
+                inc(S.OptimalLength, (Bits - Tree[M].dl.Len) *
+                  Tree[M].fc.Frequency);
                 Tree[M].dl.Len := word(Bits);
               end;
               dec(N);
@@ -3401,8 +3334,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
           S.Heap[S.HeapMaximum] := M;
 
           // create a new node father of N and M
-          Tree[Node].fc.Frequency := Tree[N].fc.Frequency + Tree[M]
-            .fc.Frequency;
+          Tree[Node].fc.Frequency := Tree[N].fc.Frequency +
+            Tree[M].fc.Frequency;
           // maximum
           if (S.Depth[N] >= S.Depth[M]) then
             S.Depth[Node] := byte(S.Depth[N] + 1)
@@ -3706,8 +3639,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
         CopyBlock(S, Buffer, cardinal(StoredLength), true);
       end;
 
-      procedure CompressBlock(var S: TDeflateState; const LiteralTree,
-        DistanceTree: array of TTreeEntry);
+      procedure CompressBlock(var S: TDeflateState;
+        const LiteralTree, DistanceTree: array of TTreeEntry);
       // sends the block data compressed using the given Huffman trees
       var
         Distance: cardinal; // distance of matched String
@@ -3762,15 +3695,16 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
             // Check that the overlay between PendingBuffer and DistanceBuffer + LiteralBuffer is ok
           until i >= S.LastLiteral;
 
-          SendBits(S, LiteralTree[END_BLOCK].fc.Code,
-            LiteralTree[END_BLOCK].dl.Len);
+        SendBits(S, LiteralTree[END_BLOCK].fc.Code,
+          LiteralTree[END_BLOCK].dl.Len);
         S.LastEOBLength := LiteralTree[END_BLOCK].dl.Len;
       end;
 
     var
       OptimalByteLength, StaticByteLength: Integer;
       // OptimalLength and StaticLength in bytes
-      MacBLIndex: Integer; // index of last bit length code of non zero frequency
+      MacBLIndex: Integer;
+      // index of last bit length code of non zero frequency
     begin
       // construct the literal and distance trees
       // After this, OptimalLength and StaticLength are the total bit lengths of
@@ -3878,8 +3812,8 @@ function CompressMem(src, dst: Pointer; srcLen, dstLen: Integer): Integer;
   // bytes of Str are valid (except for the last MIN_MATCH - 1 bytes of the input file).
   // Returns the previous length of the hash chain.
   begin
-    S.InsertHash := ((S.InsertHash shl S.HashShift) xor
-        (S.window[(Str) + (MIN_MATCH - 1)])) and S.HashMask;
+    S.InsertHash := ((S.InsertHash shl S.HashShift)
+      xor (S.window[(Str) + (MIN_MATCH - 1)])) and S.HashMask;
 
     MatchHead := S.Head[S.InsertHash];
     S.Previous[(Str) and S.WindowMask] := MatchHead;
@@ -3922,8 +3856,8 @@ begin
     S.PendingBuffer := TPAByte(Overlay);
     S.PendingBufferSize := S.LiteralBufferSize * (SizeOf(word) + 2);
     S.DistanceBuffer := @Overlay[S.LiteralBufferSize div SizeOf(word)];
-    S.LiteralBuffer := @S.PendingBuffer[(1 + SizeOf(word))
-      * S.LiteralBufferSize];
+    S.LiteralBuffer := @S.PendingBuffer
+      [(1 + SizeOf(word)) * S.LiteralBufferSize];
     S.PendingOutput := PByte(S.PendingBuffer);
     S.LiteralDescriptor.DynamicTree := @S.LiteralTree;
     S.LiteralDescriptor.StaticDescriptor := @StaticLiteralDescriptor;
@@ -3965,8 +3899,8 @@ begin
 
       // Find the longest match, discarding those <= PreviousLength.
       // At this point we have always MatchLength < MIN_MATCH.
-      if (HashHead <> 0) and (S.StringStart - HashHead <=
-          (S.WindowSize - MIN_LOOKAHEAD)) then
+      if (HashHead <> 0) and
+        (S.StringStart - HashHead <= (S.WindowSize - MIN_LOOKAHEAD)) then
         S.MatchLength := LongestMatch(S, HashHead);
       if S.MatchLength >= MIN_MATCH then
       begin
@@ -3993,8 +3927,8 @@ begin
           inc(S.StringStart, S.MatchLength);
           S.MatchLength := 0;
           S.InsertHash := S.window[S.StringStart];
-          S.InsertHash := ((S.InsertHash shl S.HashShift)
-              xor S.window[S.StringStart + 1]) and S.HashMask;
+          S.InsertHash := ((S.InsertHash shl S.HashShift) xor S.window
+            [S.StringStart + 1]) and S.HashMask;
           // if Lookahead < MIN_MATCH, InsertHash is garbage, but it does not
           // matter since it will be recomputed at next Deflate call.
         end;
@@ -4046,8 +3980,8 @@ begin
   FreeMem(Z.State);
 end;
 
-function UpdateCrc32(acrc32: cardinal; inBuf: Pointer;
-  inLen: Integer): cardinal;
+function UpdateCrc32(acrc32: cardinal; inBuf: Pointer; inLen: Integer)
+  : cardinal;
 var
   i: Integer;
 begin
@@ -4102,9 +4036,10 @@ begin
   begin
     SetLength(Result, PCardinal(data)^);
     SetLength(Result, UnCompressMem(PAnsiChar(Integer(data) + 12),
-        Pointer(Result), Length(data) - 12, Length(Result)));
-    if (Result <> '') and ((not UpdateCrc32($FFFFFFFF, Pointer(Result),
-          Length(Result))) <> TPACardinal(data)^[2]) then
+      Pointer(Result), Length(data) - 12, Length(Result)));
+    if (Result <> '') and
+      ((not UpdateCrc32($FFFFFFFF, Pointer(Result), Length(Result))) <>
+      TPACardinal(data)^[2]) then
       Result := '';
   end
   else
@@ -4130,8 +4065,8 @@ type
     Result := false;
     err := 0;
     try
-      sf := CreateFile(Pointer(srcFile), GENERIC_READ,
-        FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+      sf := CreateFile(Pointer(srcFile), GENERIC_READ, FILE_SHARE_READ or
+        FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
       if sf <> INVALID_HANDLE_VALUE then
       begin
         df := CreateFile(Pointer(dstFile), GENERIC_READ or GENERIC_WRITE, 0,
@@ -4157,8 +4092,8 @@ type
                   dl := CompressMem(sb, Pointer(dword(db) + 12), sl, dl - 12);
                   Result := (dl > 0) and ((dl + 12 < sl) or (not failIfGrow));
                   if Result then
-                    PCardinal(dword(db) + 8)^ := not UpdateCrc32($FFFFFFFF, sb,
-                      sl);
+                    PCardinal(dword(db) + 8)^ :=
+                      not UpdateCrc32($FFFFFFFF, sb, sl);
                   UnmapViewOfFile(db);
                 end
                 else
@@ -4215,9 +4150,9 @@ type
     Result := false;
     err := 0;
     try
-      sf := CreateFile(Pointer(srcFile), GENERIC_READ,
-        FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL or FILE_FLAG_SEQUENTIAL_SCAN, 0);
+      sf := CreateFile(Pointer(srcFile), GENERIC_READ, FILE_SHARE_READ or
+        FILE_SHARE_WRITE, nil, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL or
+        FILE_FLAG_SEQUENTIAL_SCAN, 0);
       if sf <> INVALID_HANDLE_VALUE then
       begin
         df := CreateFile(Pointer(dstFile), GENERIC_READ or GENERIC_WRITE, 0,
@@ -4238,11 +4173,12 @@ type
                 db := MapViewOfFile(dm, FILE_MAP_ALL_ACCESS, 0, 0, 0);
                 if db <> nil then
                 begin
-                  splitInt64(sl).loCard := GetFileSize(sf,
-                    @splitInt64(sl).hiCard);
+                  splitInt64(sl).loCard :=
+                    GetFileSize(sf, @splitInt64(sl).hiCard);
                   dl := UnCompressMem(Pointer(dword(sb) + 12), db, sl - 12, dl);
-                  Result := (dl > 0) and ((not UpdateCrc32($FFFFFFFF, db, dl))
-                      = PCardinal(dword(sb) + 8)^);
+                  Result := (dl > 0) and
+                    ((not UpdateCrc32($FFFFFFFF, db, dl))
+                    = PCardinal(dword(sb) + 8)^);
                   UnmapViewOfFile(db);
                 end
                 else
@@ -4298,9 +4234,9 @@ type
     crc1, crc2: dword;
 
   begin
-    Result := GetCompressedFileInfo(comprFile, size1, crc1)
-      and GetUncompressedFileInfo(uncomprFile, size2, crc2) and
-      (size1 = size2) and (crc1 = crc2);
+    Result := GetCompressedFileInfo(comprFile, size1, crc1) and
+      GetUncompressedFileInfo(uncomprFile, size2, crc2) and (size1 = size2) and
+      (crc1 = crc2);
   end;
 
   function GetCompressedFileInfo(const comprFile: String; var Size: int64;
@@ -4313,12 +4249,12 @@ type
   begin
     Result := false;
     crc32 := 0;
-    file_ := CreateFile(Pointer(comprFile), GENERIC_READ,
-      FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+    file_ := CreateFile(Pointer(comprFile), GENERIC_READ, FILE_SHARE_READ or
+      FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
     if file_ <> INVALID_HANDLE_VALUE then
     begin
-      Result := ReadFile(file_, Size, 8, c1, nil) and (c1 = 8) and ReadFile
-        (file_, crc32, 4, c1, nil) and (c1 = 4);
+      Result := ReadFile(file_, Size, 8, c1, nil) and (c1 = 8) and
+        ReadFile(file_, crc32, 4, c1, nil) and (c1 = 4);
       CloseHandle(file_);
     end;
   end;
@@ -4332,8 +4268,8 @@ type
 
   begin
     Result := false;
-    file_ := CreateFile(Pointer(uncomprFile), GENERIC_READ,
-      FILE_SHARE_READ or FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
+    file_ := CreateFile(Pointer(uncomprFile), GENERIC_READ, FILE_SHARE_READ or
+      FILE_SHARE_WRITE, nil, OPEN_EXISTING, 0, 0);
     if file_ <> INVALID_HANDLE_VALUE then
     begin
       splitInt64(Size).loCard := GetFileSize(file_, @splitInt64(Size).hiCard);
@@ -4353,8 +4289,8 @@ type
     end;
   end;
 {$ENDIF}
-  function GzCompress(src: Pointer; srcLen: Integer;
-    const fName: String): cardinal;
+  function GzCompress(src: Pointer; srcLen: Integer; const fName: String)
+    : cardinal;
 
   const
     gzheader: array [0 .. 2] of cardinal = ($88B1F, 0, 0);
@@ -4410,7 +4346,7 @@ type
     fhr: TFileHeader;
   end;
 
-lhr :
+lhr:
 TLastHeader;
 
 begin
@@ -4480,9 +4416,9 @@ begin
                 end;
                 Result := WriteFile(dstFh, lfhr, SizeOf(lfhr), c1, nil) and
                   (c1 = SizeOf(lfhr)) and WriteFile(dstFh, Pointer(name)^,
-                  Length(name), c1, nil) and (c1 = dword(Length(name)))
-                  and WriteFile(dstFh, dstBuf^, lfhr.fileInfo.zzipSize, c1,
-                  nil) and (c1 = lfhr.fileInfo.zzipSize);
+                  Length(name), c1, nil) and (c1 = dword(Length(name))) and
+                  WriteFile(dstFh, dstBuf^, lfhr.fileInfo.zzipSize, c1, nil) and
+                  (c1 = lfhr.fileInfo.zzipSize);
                 inc(i2);
               end;
               LocalFree(dword(dstBuf));
@@ -4513,9 +4449,9 @@ begin
         with zipRec[i1] do
         begin
           inc(lhr.headerSize, SizeOf(TFileHeader) + Length(name));
-          if not(WriteFile(dstFh, fhr, SizeOf(fhr), c1,
-              nil) and (c1 = SizeOf(fhr)) and WriteFile(dstFh, Pointer(name)^,
-              Length(name), c1, nil) and (c1 = dword(Length(name)))) then
+          if not(WriteFile(dstFh, fhr, SizeOf(fhr), c1, nil) and
+            (c1 = SizeOf(fhr)) and WriteFile(dstFh, Pointer(name)^,
+            Length(name), c1, nil) and (c1 = dword(Length(name)))) then
           begin
             Result := false;
             break;
@@ -4647,8 +4583,8 @@ begin
         inc(P);
       until J = L;
       Name[J] := #0; // make ASCIIZ
-      inc(cardinal(H),
-        SizeOf(H^) + info^.nameLen + H^.fileInfo.extraLen + H^.commentLen);
+      inc(cardinal(H), SizeOf(H^) + info^.nameLen + H^.fileInfo.extraLen +
+        H^.commentLen);
       if (info^.zzipMethod in [0, 8]) and (Name[J - 1] <> '\') then
         inc(Count); // known methods: stored + deflate
     end;
@@ -4687,8 +4623,8 @@ begin
   begin
     UnMap;
     if ShowMessageBoxOnError then
-      MessageBox(0, Pointer(AFileName), 'No File',
-        MB_SYSTEMMODAL or MB_ICONERROR);
+      MessageBox(0, Pointer(AFileName), 'No File', MB_SYSTEMMODAL or
+        MB_ICONERROR);
     Exit;
   end;
   Buf := MapViewOfFile(map, FILE_MAP_READ, 0, 0, 0);
@@ -4757,9 +4693,12 @@ begin
       Move(data^, Pointer(Result)^, Len);
     end
     else // deflate method
-      Len := UnCompressMem(data, Pointer(Result), info^.zzipSize, info^.zfullSize);
+      Len := UnCompressMem(data, Pointer(Result), info^.zzipSize,
+        info^.zfullSize);
 
-    if (Len <> info^.zfullSize) or (info^.zcrc32 <> not UpdateCrc32(dword(-1), Pointer(Result), info^.zfullSize)) then
+    if (Len <> info^.zfullSize) or
+      (info^.zcrc32 <> not UpdateCrc32(dword(-1), Pointer(Result),
+      info^.zfullSize)) then
     begin
       MessageBoxA(0, 'CRC', Name, 0);
       Result := '';
@@ -4769,7 +4708,8 @@ end;
 
 function ForceDirectories(const Dir: String): Boolean;
 begin
-  if (Length(Dir) < 3) or DirectoryExists(Dir) or (ExtractFileDir(Dir) = Dir) then // avoid 'x:\' problem.
+  if (Length(Dir) < 3) or DirectoryExists(Dir) or (ExtractFileDir(Dir) = Dir)
+  then // avoid 'x:\' problem.
     Result := true
   else
     Result := ForceDirectories(ExtractFileDir(Dir)) and CreateDir(Dir);
@@ -4786,7 +4726,8 @@ begin
     Exit;
   if DestPath[Length(DestPath)] <> '\' then
     DestPath := DestPath + '\';
-  F := CreateFile(Pointer(DestPath + Entry[AIndex].Name), GENERIC_READ, FILE_SHARE_READ, nil, OPEN_EXISTING, 0, 0);
+  F := CreateFile(Pointer(DestPath + Entry[AIndex].Name), GENERIC_READ,
+    FILE_SHARE_READ, nil, OPEN_EXISTING, 0, 0);
   if F <> INVALID_HANDLE_VALUE then
     with Entry[AIndex] do
       try
@@ -4802,7 +4743,7 @@ begin
             Exit;
           Buf := MapViewOfFile(map, FILE_MAP_READ, 0, 0, 0);
           if (Buf <> nil) and (info^.zcrc32 = not UpdateCrc32(dword(-1), Buf,
-              info^.zfullSize)) then
+            info^.zfullSize)) then
             Result := true;
           UnmapViewOfFile(Buf);
           CloseHandle(map);
@@ -4850,17 +4791,15 @@ begin
       FileTimeToLocalFileTime(fFileTime, fFileTime);
       fFileSize := GetFileSize(H, nil);
       FileClose(H);
-      if (int64(dFileTime) = int64(fFileTime)) and
-        (info^.zfullSize = fFileSize) then
+      if (int64(dFileTime) = int64(fFileTime)) and (info^.zfullSize = fFileSize)
+      then
       begin
         Result := true;
         Exit; // good file is already there: don't overwrite for nothing
       end;
       while not Windows.DeleteFile(Pointer(F)) do // delete wrong version
-        MessageBox(0,
-          Pointer('File ' + UpperCase(N)
-              + ' is still in use.'#13#13 + 'Please Close it for update.'),
-          nil, MB_ICONERROR);
+        MessageBox(0, Pointer('File ' + UpperCase(N) + ' is still in use.'#13#13
+          + 'Please Close it for update.'), nil, MB_ICONERROR);
     end;
     ForceDirectories(ExtractFileDir(F));
     H := FileCreate(F);
@@ -4868,8 +4807,8 @@ begin
       try
         if info^.zzipMethod = 0 then
         begin // stored method
-          if (info^.zcrc32 <> not UpdateCrc32(dword(-1), data,
-              info^.zfullSize)) then
+          if (info^.zcrc32 <> not UpdateCrc32(dword(-1), data, info^.zfullSize))
+          then
           begin
             MessageBox(0, 'CRC', Pointer(N), 0);
             Exit;
@@ -4882,8 +4821,8 @@ begin
           try
             Len := UnCompressMem(data, Buf, info^.zzipSize, info^.zfullSize);
             if (Len <> info^.zfullSize) or
-              (info^.zcrc32 <> not UpdateCrc32(dword(-1), Buf,
-                info^.zfullSize)) then
+              (info^.zcrc32 <> not UpdateCrc32(dword(-1), Buf, info^.zfullSize))
+            then
             begin
               MessageBox(0, 'CRC', Pointer(N), 0);
               Exit;
@@ -4893,8 +4832,8 @@ begin
             FreeMem(Buf);
           end;
         end;
-        if LocalFileTimeToFileTime(dFileTime, fFileTime) and SetFileTime(H,
-          @fFileTime, @fFileTime, @fFileTime) then
+        if LocalFileTimeToFileTime(dFileTime, fFileTime) and
+          SetFileTime(H, @fFileTime, @fFileTime, @fFileTime) then
           Result := true;
         if ForceWriteFlush then
           FlushFileBuffers(H);
@@ -4921,7 +4860,7 @@ var
   tmpsize: Integer;
 begin
   if (self = nil) or (Handle = 0) or (Handle = Integer(INVALID_HANDLE_VALUE))
-    then
+  then
     Exit;
   if Count >= Length(Entry) then
     SetLength(Entry, Length(Entry) + 20);
@@ -4939,8 +4878,8 @@ begin
       zfullSize := Size;
       zzipMethod := 8; // deflate
       PInteger(@zlastModTime)^ := FileAge;
-      localHeadOff := SetFilePointer(Handle, 0, nil, FILE_CURRENT)
-        - fAppendOffset;
+      localHeadOff := SetFilePointer(Handle, 0, nil, FILE_CURRENT) -
+        fAppendOffset;
       tmpsize := (Size * 11) div 10 + 12;
       GetMem(tmp, tmpsize);
       zzipSize := CompressMem(Buf, tmp, Size, tmpsize);
@@ -4954,7 +4893,8 @@ begin
   inc(Count);
 end;
 
-procedure TZipWrite.AddDeflated(const AFileName: AnsiString; RemovePath: Boolean; CompressLevel: Integer);
+procedure TZipWrite.AddDeflated(const AFileName: AnsiString;
+  RemovePath: Boolean; CompressLevel: Integer);
 var
   H: THandle;
   Buf: Pointer;
@@ -4984,7 +4924,7 @@ end;
 procedure TZipWrite.AddFromZip(const ZipEntry: TZipEntry);
 begin
   if (self = nil) or (Handle = 0) or (Handle = Integer(INVALID_HANDLE_VALUE))
-    then
+  then
     Exit;
   if Count >= Length(Entry) then
     SetLength(Entry, Length(Entry) + 20);
@@ -4998,8 +4938,8 @@ begin
       madeBy := $14;
       fileInfo := ZipEntry.info^;
       fileInfo.nameLen := Length(name);
-      localHeadOff := SetFilePointer(Handle, 0, nil, FILE_CURRENT)
-        - fAppendOffset;
+      localHeadOff := SetFilePointer(Handle, 0, nil, FILE_CURRENT) -
+        fAppendOffset;
       FileWrite(Handle, fMagic, 4);
       FileWrite(Handle, fileInfo, SizeOf(fileInfo));
       FileWrite(Handle, Pointer(name)^, fileInfo.nameLen);
@@ -5013,7 +4953,7 @@ procedure TZipWrite.AddStored(const AFileName: AnsiString; Buf: Pointer;
   Size, FileAge: Integer);
 begin
   if (self = nil) or (Handle = 0) or (Handle = Integer(INVALID_HANDLE_VALUE))
-    then
+  then
     Exit;
   if Count >= Length(Entry) then
     SetLength(Entry, Length(Entry) + 20);
@@ -5031,7 +4971,8 @@ begin
       zfullSize := Size;
       zzipSize := Size;
       PInteger(@zlastModTime)^ := FileAge;
-      localHeadOff := SetFilePointer(Handle, 0, nil, FILE_CURRENT) - fAppendOffset;
+      localHeadOff := SetFilePointer(Handle, 0, nil, FILE_CURRENT) -
+        fAppendOffset;
       FileWrite(Handle, fMagic, 4);
       FileWrite(Handle, fileInfo, SizeOf(fileInfo));
       FileWrite(Handle, Pointer(name)^, nameLen);
@@ -5043,8 +4984,8 @@ end;
 
 procedure TZipWrite.Append(const Content: AnsiString);
 begin
-  if (self = nil) or (Handle = 0) or (Handle = Integer(INVALID_HANDLE_VALUE))
-    or (fAppendOffset <> 0) then
+  if (self = nil) or (Handle = 0) or (Handle = Integer(INVALID_HANDLE_VALUE)) or
+    (fAppendOffset <> 0) then
     Exit;
   fAppendOffset := Length(Content);
   FileWrite(Handle, Pointer(Content)^, fAppendOffset);
@@ -5068,7 +5009,8 @@ begin
   dec(lhr.signature); // +1 to avoid finding it in the exe
   lhr.thisFiles := Count;
   lhr.totalFiles := Count;
-  lhr.headerOffset := SetFilePointer(Handle, 0, nil, FILE_CURRENT) - fAppendOffset;
+  lhr.headerOffset := SetFilePointer(Handle, 0, nil, FILE_CURRENT) -
+    fAppendOffset;
   for i := 0 to Count - 1 do
     with Entry[i] do
     begin
@@ -5094,7 +5036,7 @@ end;
 initialization
 
 {$IFDEF DYNAMIC_CRC_TABLE}
-InitCrc32Tab;
+  InitCrc32Tab;
 {$ENDIF}
 
 end.

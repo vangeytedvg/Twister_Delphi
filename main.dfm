@@ -40,10 +40,11 @@ object mainForm: TmainForm
       end>
   end
   object MyEditor: TRichEdit
-    Left = 8
-    Top = 200
+    Left = 0
+    Top = 121
     Width = 1041
-    Height = 319
+    Height = 419
+    Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -81,14 +82,14 @@ object mainForm: TmainForm
       Top = 0
       Hint = 'Open existing file'
       Caption = 'ToolButtonOpen'
-      ImageIndex = 11
+      ImageIndex = 12
     end
     object ToolButton3: TToolButton
       Left = 96
       Top = 0
       Hint = 'Save File'
       Caption = 'ToolButtonSave'
-      ImageIndex = 13
+      ImageIndex = 14
     end
     object ToolButton11: TToolButton
       Left = 144
@@ -102,25 +103,25 @@ object mainForm: TmainForm
       Left = 152
       Top = 0
       Action = FormatRichEditBold1
-      ImageIndex = 3
+      ImageIndex = 4
     end
     object ToolButtonItalic: TToolButton
       Left = 200
       Top = 0
       Action = FormatRichEditItalic1
-      ImageIndex = 10
+      ImageIndex = 11
     end
     object ToolButtonUnderline: TToolButton
       Left = 248
       Top = 0
       Action = FormatRichEditUnderline1
-      ImageIndex = 15
+      ImageIndex = 16
     end
     object ToolButtonStrikeThrough: TToolButton
       Left = 296
       Top = 0
       Action = FormatRichEditStrikeOut1
-      ImageIndex = 14
+      ImageIndex = 15
     end
     object ToolButton17: TToolButton
       Left = 344
@@ -134,7 +135,7 @@ object mainForm: TmainForm
       Left = 352
       Top = 0
       Action = EditUndo
-      ImageIndex = 16
+      ImageIndex = 17
     end
     object ToolButtonSelectFont: TToolButton
       Left = 400
@@ -155,19 +156,19 @@ object mainForm: TmainForm
       Left = 456
       Top = 0
       Action = EditCut
-      ImageIndex = 7
+      ImageIndex = 8
     end
     object ToolButtonCopy: TToolButton
       Left = 504
       Top = 0
       Action = EditCopy
-      ImageIndex = 6
+      ImageIndex = 7
     end
     object ToolButtonPaste: TToolButton
       Left = 552
       Top = 0
       Action = EditPaste
-      ImageIndex = 12
+      ImageIndex = 13
     end
     object ToolButton12: TToolButton
       Left = 600
@@ -181,7 +182,7 @@ object mainForm: TmainForm
       Left = 608
       Top = 0
       Action = FormatRichEditBullets1
-      ImageIndex = 4
+      ImageIndex = 5
     end
     object ToolButton13: TToolButton
       Left = 656
@@ -195,13 +196,13 @@ object mainForm: TmainForm
       Left = 664
       Top = 0
       Action = FormatRichEditAlignLeft1
-      ImageIndex = 2
+      ImageIndex = 3
     end
     object ToolButtonCenter: TToolButton
       Left = 712
       Top = 0
       Action = FormatRichEditAlignCenter1
-      ImageIndex = 5
+      ImageIndex = 6
     end
     object ToolButtonAlignRight: TToolButton
       Left = 760
@@ -227,67 +228,15 @@ object mainForm: TmainForm
     TabOrder = 3
   end
   object lbSpellDicts: TCheckListBox
-    Left = 8
-    Top = 95
-    Width = 265
-    Height = 66
+    Left = 0
+    Top = 89
+    Width = 1041
+    Height = 32
     OnClickCheck = lbSpellDictsClickCheck
+    Align = alTop
     ItemHeight = 13
     TabOrder = 4
     OnClick = lbSpellDictsClickCheck
-  end
-  object Memo1: TMemo
-    Left = 279
-    Top = 95
-    Width = 273
-    Height = 99
-    Lines.Strings = (
-      'Memo1')
-    TabOrder = 5
-  end
-  object Edit2: TEdit
-    Left = 558
-    Top = 135
-    Width = 475
-    Height = 21
-    TabOrder = 6
-    Text = 'Test'
-  end
-  object btnDict: TButton
-    Left = 424
-    Top = 25
-    Width = 25
-    Height = 25
-    Caption = '...'
-    TabOrder = 7
-  end
-  object Button1: TButton
-    Left = 558
-    Top = 162
-    Width = 58
-    Height = 25
-    Caption = 'Fill Combo'
-    TabOrder = 8
-    OnClick = Button1Click
-  end
-  object btnSpeller: TButton
-    Left = 622
-    Top = 162
-    Width = 75
-    Height = 25
-    Caption = 'Spell'
-    Enabled = False
-    TabOrder = 9
-    OnClick = btnSpellerClick
-  end
-  object Button2: TButton
-    Left = 720
-    Top = 160
-    Width = 75
-    Height = 25
-    Caption = 'Button2'
-    TabOrder = 10
-    OnClick = Button2Click
   end
   object MainAppMenu: TMainMenu
     Left = 32

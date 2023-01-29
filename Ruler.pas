@@ -64,7 +64,7 @@ begin
   begin
     Canvas.MoveTo(i * FRulerMeasure, 5);
     Canvas.LineTo(i * FRulerMeasure, Height);
-//    Canvas.TextOut(i * FRulerMeasure + 2, 2, IntToStr(i));
+    // Canvas.TextOut(i * FRulerMeasure + 2, 2, IntToStr(i));
   end;
 end;
 
@@ -98,4 +98,3 @@ begin
 end;
 
 end.
-
