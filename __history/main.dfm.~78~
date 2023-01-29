@@ -232,41 +232,27 @@ object mainForm: TmainForm
     Top = 95
     Width = 265
     Height = 66
+    OnClickCheck = lbSpellDictsClickCheck
     ItemHeight = 13
     TabOrder = 4
-  end
-  object lbHyphenDicts: TCheckListBox
-    Left = 287
-    Top = 95
-    Width = 265
-    Height = 66
-    ItemHeight = 13
-    TabOrder = 5
+    OnClick = lbSpellDictsClickCheck
   end
   object Memo1: TMemo
-    Left = 558
+    Left = 279
     Top = 95
-    Width = 475
-    Height = 34
+    Width = 273
+    Height = 99
     Lines.Strings = (
       'Memo1')
-    TabOrder = 6
+    TabOrder = 5
   end
   object Edit2: TEdit
     Left = 558
     Top = 135
     Width = 475
     Height = 21
-    TabOrder = 7
+    TabOrder = 6
     Text = 'Test'
-  end
-  object EdDict: TEdit
-    Left = 8
-    Top = 167
-    Width = 752
-    Height = 21
-    TabOrder = 8
-    Text = 'EdDict'
   end
   object btnDict: TButton
     Left = 424
@@ -274,34 +260,26 @@ object mainForm: TmainForm
     Width = 25
     Height = 25
     Caption = '...'
-    TabOrder = 9
-  end
-  object btnDicter: TButton
-    Left = 766
-    Top = 162
-    Width = 75
-    Height = 25
-    Caption = 'btnDicter'
-    TabOrder = 10
-    OnClick = btnDicterClick
+    TabOrder = 7
   end
   object Button1: TButton
-    Left = 847
+    Left = 823
     Top = 162
-    Width = 75
+    Width = 58
     Height = 25
-    Caption = 'Button1'
-    TabOrder = 11
+    Caption = 'Fill Combo'
+    TabOrder = 8
     OnClick = Button1Click
   end
-  object Button2: TButton
-    Left = 928
+  object btnSpeller: TButton
+    Left = 887
     Top = 162
     Width = 75
     Height = 25
-    Caption = 'Button2'
-    TabOrder = 12
-    OnClick = Button2Click
+    Caption = 'Spell'
+    Enabled = False
+    TabOrder = 9
+    OnClick = btnSpellerClick
   end
   object MainAppMenu: TMainMenu
     Left = 32

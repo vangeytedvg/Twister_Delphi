@@ -72,12 +72,12 @@ type
     RulerHolder: TPanel;
     ToolButtenSpellCheck: TToolButton;
     lbSpellDicts: TCheckListBox;
-    lbHyphenDicts: TCheckListBox;
     Memo1: TMemo;
     Edit2: TEdit;
     dlgLoadDictionary: TOpenDialog;
     Button1: TButton;
     btnSpeller: TButton;
+    Button2: TButton;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -87,13 +87,11 @@ type
     procedure MyEditorChange(Sender: TObject);
     procedure ToolButtonNewClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-//    procedure btnDicterClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure HyphenClick(Sender: TObject);
     procedure btnSpellerClick(Sender: TObject);
     procedure lbSpellDictsClickCheck(Sender: TObject);
-
-
+    procedure ToolButtenSpellCheckClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
     IsDirty : Boolean;
@@ -102,6 +100,7 @@ type
     MyRuler: TRuler;
     procedure UpdateDicts;
     procedure UpdateButtons;
+    function CheckWords:Integer;
 //    procedure UpdateButtons;
   end;
 
@@ -112,22 +111,13 @@ implementation
 
 {$R *.dfm}
 
-
-
-//procedure TmainForm.btnDicterClick(Sender: TObject);
-//begin
-// dlgLoadDictionary.Filename := EdDict.Text;
-//  if dlgLoadDictionary.Execute then
-//    EdDict.Text := dlgLoadDictionary.FileName;
-//
-//end;
-
 procedure TmainForm.btnSpellerClick(Sender: TObject);
 var
   tmpStr: TUnicodeStringList;
 begin
-
-  if TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex]).Spell(Edit2.Text) then
+//  Hunspell.SpellDictionaries[0].Active := lbSpellDicts.Checked[0];
+//  btnSpeller.Enabled := (lbSpellDicts.ItemIndex > -1) and TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.ItemIndex]).Loaded;
+  if TNHSpellDictionary(lbSpellDicts.Items.Objects[0]).Spell(Edit2.Text) then
     Memo1.Text := 'Correct'
   else
   begin
@@ -142,17 +132,54 @@ begin
   end;
 end;
 
+function TMainForm.CheckWords(): integer;
+var
+  i, j, SelStarter: Integer;
+  Line: String;
+  Words: TArray<String>;
+begin
+  MyEditor.SelStart := 0;
+  MyEditor.SelLength := MyEditor.GetTextLen;
+  MyEditor.SelAttributes.Color := clBlack;
+  SelStarter := 0;
+  for i := 0 to MyEditor.Lines.Count - 1 do
+  begin
+    Line := MyEditor.Lines[i];
+    Words := Line.Split([' ']);
+    for j := 0 to High(Words) do
+    begin
+      if not TNHSpellDictionary(lbSpellDicts.Items.Objects[0]).Spell(Words[j])  then
+      begin
+        Memo1.Lines.Add(Words[j]);
+        MyEditor.SelStart := SelStarter;
+        MyEditor.SelLength := Length(Words[j]);
+        MyEditor.SelAttributes.Color := clRed;
+      end;
+//      else
+//         MyEditor.SelAttributes.Color := clBlack;
+      SelStarter := SelStarter + Length(Words[j]) + 1;
+//      MyEditor.SelAttributes.Color := clBlack;
+    end;
+    SelStarter := SelStarter + 1;
+  end;
+  MyEditor.SelStart := SelStarter;
+  MyEditor.SelAttributes.Color := clBlack;
+end;
+
+
 procedure TmainForm.Button1Click(Sender: TObject);
 begin
   Hunspell.ReadOXT('C:\Development\Delphi\Twister\Dictionaries\OpenTaal-210G-LO.oxt');
   UpdateDicts;
 end;
 
-procedure TmainForm.HyphenClick(Sender: TObject);
-begin
-  Memo1.Text := TNHHyphenDictionary(lbHyphenDicts.Items.Objects[lbHyphenDicts.Itemindex]).Hyphenate(Edit2.Text);
-end;
 
+procedure TmainForm.Button2Click(Sender: TObject);
+var
+  t: Integer;
+begin
+  t := CheckWords();
+end;
 
 procedure TmainForm.Exit1Click(Sender: TObject);
 // Leave the application
@@ -163,6 +190,8 @@ end;
 
 procedure TmainForm.FormCreate(Sender: TObject);
 { Creation details }
+var
+  i: Integer;
 begin
   self.IsDirty := False;
   // create an instance of the ruler
@@ -173,7 +202,15 @@ begin
   MyRuler.RulerColor := clWhite;
   Hunspell.ReadOXT('C:\Development\Delphi\Twister\Dictionaries\OpenTaal-210G-LO.oxt');
   UpdateDicts;
-  btnSpeller.Enabled := (lbSpellDicts.ItemIndex > -1) and TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.ItemIndex]).Loaded;
+//  for i := 0 to lbSpellDicts.Items.Count-1 do
+//  begin
+//    lbSpellDicts.Checked[i] := i = lbSpellDicts.ItemIndex;
+//    Hunspell.SpellDictionaries[i].Active := lbSpellDicts.Checked[i];
+//  end;
+//  Hunspell.UpdateAndLoadDictionaries;
+//
+//  btnSpeller.Enabled := (lbSpellDicts.ItemIndex > -1) and TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.ItemIndex]).Loaded;
+
 end;
 
 
@@ -186,8 +223,8 @@ begin
       CanClose := true
       else
         CanClose := false;
-
 end;
+
 
 procedure TmainForm.FormResize(Sender: TObject);
 { Resizeing the windows also resizes the ruler }
@@ -216,6 +253,15 @@ begin
 end;
 
 
+procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
+begin
+    lbSpellDicts.CheckAll(cbChecked, false, true);
+    lbSpellDicts.Selected[0] := true;
+    Hunspell.SpellDictionaries[0].Active := lbSpellDicts.Checked[0];
+    Hunspell.UpdateAndLoadDictionaries;
+    btnSpeller.Enabled := True; //(lbSpellDicts.ItemIndex > -1) and TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.ItemIndex]).Loaded;
+end;
+
 procedure TmainForm.ToolButtonNewClick(Sender: TObject);
 { When creating a new document, reset the edited flag }
 begin
@@ -234,6 +280,7 @@ begin
   end;
 end;
 
+
 procedure TmainForm.UpdateDicts;
 { Update the dictionary }
 var
@@ -251,20 +298,8 @@ begin
   finally
     Items.EndUpdate;
   end;
-
-//  with lbHyphenDicts do
-//  try
-//    Items.BeginUpdate;
-//    clear;
-//    for intIndex := 0 to Hunspell.HyphenDictionaryCount-1 do
-//      Items.AddObject(Format('%s - %s Version: %s', [Hunspell.HyphenDictionaries[intIndex].LanguageName,
-//                                                     Hunspell.HyphenDictionaries[intIndex].DisplayName,
-//                                                     Hunspell.HyphenDictionaries[intIndex].Version]),
-//                      Hunspell.HyphenDictionaries[intIndex]);
-//  finally
-//    Items.EndUpdate;
-//  end;
 end;
+
 
 procedure TMainForm.UpdateButtons;
 { The spelling button is enabled only if the dictionary is loaded }
@@ -279,11 +314,6 @@ procedure TmainForm.lbSpellDictsClickCheck(Sender: TObject);
 var
   i: integer;
 begin
-  for i := 0 to lbSpellDicts.Items.Count-1 do
-  begin
-    lbSpellDicts.Checked[i] := i = lbSpellDicts.ItemIndex;
-    Hunspell.SpellDictionaries[i].Active := lbSpellDicts.Checked[i];
-  end;
   Hunspell.UpdateAndLoadDictionaries;
   UpdateButtons;
 end;

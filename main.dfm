@@ -38,7 +38,6 @@ object mainForm: TmainForm
       item
         Width = 50
       end>
-    ExplicitTop = 544
   end
   object MyEditor: TRichEdit
     Left = 8
@@ -215,6 +214,7 @@ object mainForm: TmainForm
       Top = 0
       Caption = 'Spell Check'
       ImageIndex = 1
+      OnClick = ToolButtenSpellCheckClick
     end
   end
   object RulerHolder: TPanel
@@ -236,29 +236,21 @@ object mainForm: TmainForm
     TabOrder = 4
     OnClick = lbSpellDictsClickCheck
   end
-  object lbHyphenDicts: TCheckListBox
-    Left = 287
-    Top = 95
-    Width = 265
-    Height = 66
-    ItemHeight = 13
-    TabOrder = 5
-  end
   object Memo1: TMemo
-    Left = 558
+    Left = 279
     Top = 95
-    Width = 475
-    Height = 34
+    Width = 273
+    Height = 99
     Lines.Strings = (
       'Memo1')
-    TabOrder = 6
+    TabOrder = 5
   end
   object Edit2: TEdit
     Left = 558
     Top = 135
     Width = 475
     Height = 21
-    TabOrder = 7
+    TabOrder = 6
     Text = 'Test'
   end
   object btnDict: TButton
@@ -267,26 +259,35 @@ object mainForm: TmainForm
     Width = 25
     Height = 25
     Caption = '...'
-    TabOrder = 8
+    TabOrder = 7
   end
   object Button1: TButton
-    Left = 823
+    Left = 558
     Top = 162
     Width = 58
     Height = 25
     Caption = 'Fill Combo'
-    TabOrder = 9
+    TabOrder = 8
     OnClick = Button1Click
   end
   object btnSpeller: TButton
-    Left = 887
+    Left = 622
     Top = 162
     Width = 75
     Height = 25
     Caption = 'Spell'
     Enabled = False
-    TabOrder = 10
+    TabOrder = 9
     OnClick = btnSpellerClick
+  end
+  object Button2: TButton
+    Left = 720
+    Top = 160
+    Width = 75
+    Height = 25
+    Caption = 'Button2'
+    TabOrder = 10
+    OnClick = Button2Click
   end
   object MainAppMenu: TMainMenu
     Left = 32
