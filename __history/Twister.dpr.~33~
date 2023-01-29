@@ -1,0 +1,24 @@
+program Twister;
+
+uses
+  Vcl.Forms,
+  main in 'main.pas' {mainForm},
+  Vcl.Themes,
+  Vcl.Styles,
+  Ruler in 'Ruler.pas',
+  NHunspell in 'NHunspell.pas',
+  NHunXml in 'NHunXml.pas',
+  PasZip in 'PasZip.pas',
+  frmSettings in 'frmSettings.pas' {Form1};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Obsidian');
+  Application.CreateForm(TmainForm, mainForm);
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+
+end.

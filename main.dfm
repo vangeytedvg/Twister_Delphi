@@ -245,7 +245,7 @@ object mainForm: TmainForm
       Caption = '&File'
       object Exit1: TMenuItem
         Caption = 'E&xit'
-        OnClick = Exit1Click
+        OnClick = MenuExitClick
       end
     end
     object Edit1: TMenuItem
@@ -302,6 +302,13 @@ object mainForm: TmainForm
       object AlignRight1: TMenuItem
         Action = FormatRichEditAlignRight1
         AutoCheck = True
+      end
+    end
+    object ools1: TMenuItem
+      Caption = '&Tools'
+      object mnuToolsOptions: TMenuItem
+        Caption = 'Op&tions'
+        OnClick = mnuToolsOptionsClick
       end
     end
   end

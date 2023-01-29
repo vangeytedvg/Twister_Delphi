@@ -2,9 +2,9 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2023/01/27 12:24:34.000.079,=C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Unit5.pas</Transaction>
-    <Transaction>2023/01/27 12:33:22.000.181,C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Unit5.pas=C:\Development\Delphi\Twister\main.pas</Transaction>
-    <Transaction>2023/01/27 12:33:22.000.181,C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Unit5.dfm=C:\Development\Delphi\Twister\main.dfm</Transaction>
-    <Transaction>2023/01/27 12:33:29.000.880,C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Project5.dproj=C:\Development\Delphi\Twister\Twister.dproj</Transaction>
+    <Transaction>2023/01/27 12:33:22.000.181,C:\Development\Delphi\Twister\main.dfm=C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Unit5.dfm</Transaction>
+    <Transaction>2023/01/27 12:33:22.000.181,C:\Development\Delphi\Twister\main.pas=C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Unit5.pas</Transaction>
+    <Transaction>2023/01/27 12:33:29.000.880,C:\Development\Delphi\Twister\Twister.dproj=C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Project5.dproj</Transaction>
     <Transaction>2023/01/27 15:36:58.000.541,=C:\Development\Delphi\Twister\Twister.todo</Transaction>
     <Transaction>2023/01/28 06:25:04.000.136,=C:\Development\Delphi\Twister\Ruler.pas</Transaction>
     <Transaction>2023/01/28 06:29:56.000.098,C:\Development\Delphi\Twister\Ruler.pas=</Transaction>
@@ -17,9 +17,16 @@
     <Transaction>2023/01/28 10:08:26.000.082,=C:\Development\Delphi\Twister\hunspell\NHunXml.pas</Transaction>
     <Transaction>2023/01/28 10:10:09.000.685,=C:\Development\Delphi\Twister\hunspell\NHunspell.pas</Transaction>
     <Transaction>2023/01/28 10:16:35.000.420,=C:\Development\Delphi\Twister\NHunspell.pas</Transaction>
-    <Transaction>2023/01/28 10:16:35.000.548,=C:\Development\Delphi\Twister\PasZip.pas</Transaction>
     <Transaction>2023/01/28 10:16:35.000.471,=C:\Development\Delphi\Twister\NHunXml.pas</Transaction>
+    <Transaction>2023/01/28 10:16:35.000.548,=C:\Development\Delphi\Twister\PasZip.pas</Transaction>
     <Transaction>2023/01/28 22:23:25.000.224,=C:\Development\Delphi\Twister\README.md</Transaction>
     <Transaction>2023/01/28 22:23:40.000.572,C:\Development\Delphi\Twister\README.md=</Transaction>
+    <Transaction>2023/01/29 14:50:27.000.139,=C:\Development\Delphi\Twister\Unit1.pas</Transaction>
+    <Transaction>2023/01/29 14:50:42.000.742,C:\Development\Delphi\Twister\Unit1.dfm=C:\Development\Delphi\Twister\frmSettings.dfm</Transaction>
+    <Transaction>2023/01/29 14:50:42.000.742,C:\Development\Delphi\Twister\Unit1.pas=C:\Development\Delphi\Twister\frmSettings.pas</Transaction>
+    <Transaction>2023/01/29 15:23:18.862,C:\Development\Delphi\Twister\frmSettings.pas=</Transaction>
+    <Transaction>2023/01/29 15:23:28.975,=C:\Development\Delphi\Twister\Unit1.pas</Transaction>
+    <Transaction>2023/01/29 15:24:18.095,C:\Development\Delphi\Twister\frmSettings.dfm=C:\Development\Delphi\Twister\Unit1.dfm</Transaction>
+    <Transaction>2023/01/29 15:24:18.095,C:\Development\Delphi\Twister\frmSettings.pas=C:\Development\Delphi\Twister\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

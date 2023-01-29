@@ -8,7 +8,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList,
   Vcl.Menus,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
-  Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst;
+  Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
+  EsBase, EsCalc;
 
 type
   TmainForm = class(TForm)
@@ -75,10 +76,12 @@ type
     ToolButtenSpellCheck: TToolButton;
     lbSpellDicts: TCheckListBox;
     dlgLoadDictionary: TOpenDialog;
+    ools1: TMenuItem;
+    mnuToolsOptions: TMenuItem;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Exit1Click(Sender: TObject);
+    procedure MenuExitClick(Sender: TObject);
     procedure ToolButtonSelectFontClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure MyEditorChange(Sender: TObject);
@@ -88,23 +91,26 @@ type
 
     procedure lbSpellDictsClickCheck(Sender: TObject);
     procedure ToolButtenSpellCheckClick(Sender: TObject);
+    procedure SpellTimerTimer(Sender: TObject);
+    procedure mnuToolsOptionsClick(Sender: TObject);
 
   private
     { Private declarations }
     IsDirty: Boolean;
+    CanSpellCheck: Boolean;
   public
     { Public declarations }
     MyRuler: TRuler;
     procedure UpdateDicts;
     procedure UpdateButtons;
     function CheckWords: Integer;
-    // procedure UpdateButtons;
   end;
 
 var
   mainForm: TmainForm;
 
 implementation
+  uses frmSettings;
 
 {$R *.dfm}
 
@@ -148,17 +154,31 @@ begin
       SelStarter := SelStarter + Length(Words[j]) + 1;
     end;
     SelStarter := SelStarter + 1;
+    MyEditor.SelStart := SelStarter;
   end;
 end;
 
-
-procedure TmainForm.Exit1Click(Sender: TObject);
+procedure TmainForm.MenuExitClick(Sender: TObject);
 {
   Leave the application, note that this can be interrupted if
   the editor is 'dirty'
 }
 begin
   Application.Terminate;
+end;
+
+procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
+{ Create an instance of the settings form}
+var
+  SettingsDialog: TFSettings;
+begin
+  SettingsDialog:=TFSettings.Create(self);
+  try
+    SettingsDialog.Position := poMainFormCenter;
+    SettingsDialog.ShowModal;
+  finally
+    SettingsDialog.Free;
+  end;
 end;
 
 procedure TmainForm.FormCreate(Sender: TObject);
@@ -212,6 +232,12 @@ begin
   // Show in the statusbar
   Sb.Panels[2].Text := IntToStr(CursorPosition.Y + 1);
   Sb.Panels[3].Text := IntToStr(CursorPosition.X + 1);
+
+end;
+
+procedure TmainForm.SpellTimerTimer(Sender: TObject);
+begin
+  CheckWords();
 end;
 
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
@@ -220,6 +246,8 @@ begin
   lbSpellDicts.Selected[0] := true;
   Hunspell.SpellDictionaries[0].Active := lbSpellDicts.Checked[0];
   Hunspell.UpdateAndLoadDictionaries;
+  // Indicate that the spell check routine can be run for the timer
+  CanSpellCheck := true;
   CheckWords();
 end;
 
