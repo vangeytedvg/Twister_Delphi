@@ -44,11 +44,13 @@ object mainForm: TmainForm
     Top = 121
     Width = 1041
     Height = 419
+    Margins.Left = 40
+    Margins.Right = 40
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     PopupMenu = PopupForEditor
@@ -58,7 +60,6 @@ object mainForm: TmainForm
     OnChange = myEditorChange
     OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
-    ExplicitTop = 115
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -3085,7 +3086,8 @@ object mainForm: TmainForm
     Left = 448
     Top = 488
     object Edit2: TMenuItem
-      Caption = '&Edit'
+      Caption = 'Nothing Selected'
+      Enabled = False
     end
   end
 end

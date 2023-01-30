@@ -178,8 +178,7 @@ begin
   if TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
     .Spell(WordToCheck) then
   begin
-    Word := 'Correct';
-    tmpStr.Add(Word);
+    tmpStr.Add('Correct');
     Result := tmpStr;
   end
   else
@@ -237,6 +236,7 @@ begin
   Hunspell.ReadOXT
     ('C:\Development\Delphi\Twister\Dictionaries\nl-dict-v2.00g.oxt');
   UpdateDicts;
+  CanSpellCheck:=true;
 end;
 
 procedure TmainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -274,31 +274,45 @@ var
   short: TShortCut;
 begin
   SelString := MyEditor.SelText;
-  Sb.Panels[0].Text := SelString;
-  mRes := CheckSingleWord(SelString);
-//    MessageDlg(mRes[i], mtConfirmation, [mbYes, mbNo], 0, mbYes)
-  // Remove existing entries
-  PopupForEditor.Items.Clear;
-  for i := 0 to mRes.Count - 1 do
+  // If nothing is selected
+  if SelString = '' then
   begin
+    PopupForEditor.Items.Clear;
     PopupItem := TMenuItem.create(PopupForEditor);
-    PopupItem.ShortCut := TextToShortCut('D');
-    PopupItem.Caption := mRes[i];
+    PopupItem.Caption := 'Nothing Selected';
     PopupItem.OnClick := MyClickEventHandler;
+    PopupItem.Enabled:= False;
     PopupForEditor.Items.Add(PopupItem);
+    exit;
+  end
+  else
+  begin
+    // We have a suggestion
+    mRes := CheckSingleWord(SelString);
+    PopupForEditor.Items.Clear;
+    PopupForEditor.AutoHotkeys := maManual;
+    for i := 0 to mRes.Count - 1 do
+    begin
+      PopupItem := TMenuItem.create(PopupForEditor);
+      PopupItem.Caption := mRes[i];
+      PopupItem.OnClick := MyClickEventHandler;
+      PopupForEditor.Items.Add(PopupItem);
+    end;
   end;
-  // PopupItem.Free;
 end;
 
 procedure TmainForm.MyClickEventHandler(Sender: TObject);
+{ Get the correction word }
 var
   acceptText: String;
 begin
   // Add code to handle the first menu item
   with Sender as TMenuItem do
   begin
-    acceptText := Caption.Substring(0, Caption.Length-1);
+    acceptText := Caption.Substring(0, Caption.Length);
     MyEditor.SelText := acceptText +' ';
+    // After accepting the corrections, check spelling again
+    CheckWords();
   end;
 
 end;

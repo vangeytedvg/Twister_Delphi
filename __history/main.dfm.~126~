@@ -40,24 +40,31 @@ object mainForm: TmainForm
       end>
   end
   object MyEditor: TRichEdit
-    Left = 0
-    Top = 121
-    Width = 1041
-    Height = 419
+    AlignWithMargins = True
+    Left = 177
+    Top = 136
+    Width = 703
+    Height = 401
+    Margins.Left = 0
+    Margins.Right = 0
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
-    PopupMenu = PopupMenu1
+    PopupMenu = PopupForEditor
     TabOrder = 1
     StyleElements = []
     Zoom = 100
     OnChange = myEditorChange
     OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
+    ExplicitLeft = 128
+    ExplicitTop = 124
+    ExplicitWidth = 777
+    ExplicitHeight = 413
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -221,24 +228,55 @@ object mainForm: TmainForm
     end
   end
   object RulerHolder: TPanel
-    Left = 0
-    Top = 49
-    Width = 1041
+    AlignWithMargins = True
+    Left = 177
+    Top = 90
+    Width = 704
     Height = 40
+    Margins.Left = 177
+    Margins.Right = 160
     Align = alTop
     AutoSize = True
     TabOrder = 3
+    ExplicitLeft = 0
+    ExplicitTop = 49
+    ExplicitWidth = 1041
   end
   object lbSpellDicts: TCheckListBox
-    Left = 0
-    Top = 89
-    Width = 1041
+    AlignWithMargins = True
+    Left = 3
+    Top = 52
+    Width = 1038
     Height = 32
+    Margins.Right = 0
     OnClickCheck = lbSpellDictsClickCheck
     Align = alTop
     ItemHeight = 13
     TabOrder = 4
     OnClick = lbSpellDictsClickCheck
+    ExplicitLeft = 139
+    ExplicitTop = 49
+    ExplicitWidth = 741
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 133
+    Width = 177
+    Height = 407
+    Align = alLeft
+    TabOrder = 5
+    ExplicitTop = 121
+    ExplicitHeight = 419
+  end
+  object Panel2: TPanel
+    Left = 880
+    Top = 133
+    Width = 161
+    Height = 407
+    Align = alRight
+    TabOrder = 6
+    ExplicitTop = 121
+    ExplicitHeight = 419
   end
   object MainAppMenu: TMainMenu
     Left = 32
@@ -3080,21 +3118,12 @@ object mainForm: TmainForm
     Left = 360
     Top = 488
   end
-  object PopupMenu1: TPopupMenu
+  object PopupForEditor: TPopupMenu
     Left = 448
     Top = 488
-    object Copy2: TMenuItem
-      Action = EditUndo
-    end
-    object Cut2: TMenuItem
-      Action = EditCut
-    end
-    object Copy3: TMenuItem
-      Action = EditCopy
-    end
-    object CheckSpelling1: TMenuItem
-      Caption = 'Check Spelling'
-      OnClick = CheckSpelling1Click
+    object Edit2: TMenuItem
+      Caption = 'Nothing Selected'
+      Enabled = False
     end
   end
 end

@@ -40,15 +40,19 @@ object mainForm: TmainForm
       end>
   end
   object MyEditor: TRichEdit
-    Left = 0
-    Top = 121
-    Width = 1041
-    Height = 419
+    Left = 177
+    Top = 133
+    Width = 703
+    Height = 407
+    Margins.Left = 0
+    Margins.Right = 0
     Align = alClient
+    BevelInner = bvSpace
+    BorderWidth = 2
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     PopupMenu = PopupForEditor
@@ -221,24 +225,55 @@ object mainForm: TmainForm
     end
   end
   object RulerHolder: TPanel
-    Left = 0
-    Top = 49
-    Width = 1041
+    AlignWithMargins = True
+    Left = 177
+    Top = 90
+    Width = 704
     Height = 40
+    Margins.Left = 177
+    Margins.Right = 160
     Align = alTop
     AutoSize = True
     TabOrder = 3
+    ExplicitLeft = 0
+    ExplicitTop = 49
+    ExplicitWidth = 1041
   end
   object lbSpellDicts: TCheckListBox
-    Left = 0
-    Top = 89
-    Width = 1041
+    AlignWithMargins = True
+    Left = 3
+    Top = 52
+    Width = 1038
     Height = 32
+    Margins.Right = 0
     OnClickCheck = lbSpellDictsClickCheck
     Align = alTop
     ItemHeight = 13
     TabOrder = 4
     OnClick = lbSpellDictsClickCheck
+    ExplicitLeft = 139
+    ExplicitTop = 49
+    ExplicitWidth = 741
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 133
+    Width = 177
+    Height = 407
+    Align = alLeft
+    TabOrder = 5
+    ExplicitTop = 121
+    ExplicitHeight = 419
+  end
+  object Panel2: TPanel
+    Left = 880
+    Top = 133
+    Width = 161
+    Height = 407
+    Align = alRight
+    TabOrder = 6
+    ExplicitTop = 121
+    ExplicitHeight = 419
   end
   object MainAppMenu: TMainMenu
     Left = 32
@@ -3084,7 +3119,8 @@ object mainForm: TmainForm
     Left = 448
     Top = 488
     object Edit2: TMenuItem
-      Caption = '&Edit'
+      Caption = 'Nothing Selected'
+      Enabled = False
     end
   end
 end

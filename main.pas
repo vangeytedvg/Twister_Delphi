@@ -80,6 +80,8 @@ type
     mnuToolsOptions: TMenuItem;
     PopupForEditor: TPopupMenu;
     Edit2: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -175,14 +177,8 @@ var
   tmpStr: TUnicodeStringList;
   Word: UnicodeString;
 begin
-  if TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
-    .Spell(WordToCheck) then
-  begin
-    Word := 'Correct';
-    tmpStr.Add(Word);
-    Result := tmpStr;
-  end
-  else
+  
+  if not TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex]).Spell(WordToCheck) then
   begin
     tmpStr := TUnicodeStringList.create;
     TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
@@ -195,6 +191,12 @@ begin
       Result := tmpStr;
     end
     else
+      Result := tmpStr;
+  end
+  else
+  begin
+      Word := 'No suggestions';
+      tmpStr.Add(Word);
       Result := tmpStr;
   end;
 end;
@@ -237,6 +239,7 @@ begin
   Hunspell.ReadOXT
     ('C:\Development\Delphi\Twister\Dictionaries\nl-dict-v2.00g.oxt');
   UpdateDicts;
+  CanSpellCheck:=true;
 end;
 
 procedure TmainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -274,16 +277,33 @@ var
   short: TShortCut;
 begin
   SelString := MyEditor.SelText;
-  Sb.Panels[0].Text := SelString;
-  mRes := CheckSingleWord(SelString);
-  PopupForEditor.Items.Clear;
-  PopupForEditor.AutoHotkeys := maManual;
-  for i := 0 to mRes.Count - 1 do
+  // If nothing is selected
+  if SelString = '' then
   begin
+    PopupForEditor.Items.Clear;
     PopupItem := TMenuItem.create(PopupForEditor);
-    PopupItem.Caption := mRes[i];
+    PopupItem.Caption := 'Nothing Selected';
     PopupItem.OnClick := MyClickEventHandler;
+    PopupItem.Enabled:= False;
     PopupForEditor.Items.Add(PopupItem);
+    exit;
+  end
+  else
+  begin
+    // We have a suggestion
+    mRes := CheckSingleWord(SelString);
+    PopupForEditor.Items.Clear;
+    PopupForEditor.AutoHotkeys := maManual;    
+    try
+        for i := 0 to mRes.Count - 1 do
+    begin
+      PopupItem := TMenuItem.create(PopupForEditor);
+      PopupItem.Caption := mRes[i];
+      PopupItem.OnClick := MyClickEventHandler;
+      PopupForEditor.Items.Add(PopupItem);
+    end;
+    finally
+    end;
   end;
 end;
 
@@ -297,6 +317,7 @@ begin
   begin
     acceptText := Caption.Substring(0, Caption.Length);
     MyEditor.SelText := acceptText +' ';
+    // After accepting the corrections, check spelling again
     CheckWords();
   end;
 

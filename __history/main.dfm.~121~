@@ -47,15 +47,16 @@ object mainForm: TmainForm
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
-    PopupMenu = PopupMenu1
+    PopupMenu = PopupForEditor
     TabOrder = 1
     StyleElements = []
     Zoom = 100
     OnChange = myEditorChange
+    OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
   end
   object ToolBar1: TToolBar
@@ -3079,21 +3080,12 @@ object mainForm: TmainForm
     Left = 360
     Top = 488
   end
-  object PopupMenu1: TPopupMenu
+  object PopupForEditor: TPopupMenu
     Left = 448
     Top = 488
-    object Copy2: TMenuItem
-      Action = EditUndo
-    end
-    object Cut2: TMenuItem
-      Action = EditCut
-    end
-    object Copy3: TMenuItem
-      Action = EditCopy
-    end
-    object CheckSpelling1: TMenuItem
-      Caption = 'Check Spelling'
-      OnClick = CheckSpelling1Click
+    object Edit2: TMenuItem
+      Caption = 'Nothing Selected'
+      Enabled = False
     end
   end
 end

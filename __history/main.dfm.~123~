@@ -40,15 +40,18 @@ object mainForm: TmainForm
       end>
   end
   object MyEditor: TRichEdit
-    Left = 0
-    Top = 121
-    Width = 1041
-    Height = 419
+    AlignWithMargins = True
+    Left = 177
+    Top = 130
+    Width = 703
+    Height = 407
+    Margins.Left = 0
+    Margins.Right = 0
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     PopupMenu = PopupForEditor
@@ -58,6 +61,10 @@ object mainForm: TmainForm
     OnChange = myEditorChange
     OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
+    ExplicitLeft = 128
+    ExplicitTop = 124
+    ExplicitWidth = 777
+    ExplicitHeight = 413
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -230,15 +237,43 @@ object mainForm: TmainForm
     TabOrder = 3
   end
   object lbSpellDicts: TCheckListBox
-    Left = 0
-    Top = 89
-    Width = 1041
+    AlignWithMargins = True
+    Left = 150
+    Top = 92
+    Width = 741
     Height = 32
+    Margins.Left = 150
+    Margins.Right = 150
     OnClickCheck = lbSpellDictsClickCheck
     Align = alTop
     ItemHeight = 13
     TabOrder = 4
     OnClick = lbSpellDictsClickCheck
+    ExplicitLeft = 0
+    ExplicitTop = 89
+    ExplicitWidth = 1041
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 127
+    Width = 177
+    Height = 413
+    Align = alLeft
+    Caption = 'Panel1'
+    TabOrder = 5
+    ExplicitTop = 121
+    ExplicitHeight = 419
+  end
+  object Panel2: TPanel
+    Left = 880
+    Top = 127
+    Width = 161
+    Height = 413
+    Align = alRight
+    Caption = 'Panel1'
+    TabOrder = 6
+    ExplicitTop = 121
+    ExplicitHeight = 419
   end
   object MainAppMenu: TMainMenu
     Left = 32
@@ -3083,5 +3118,9 @@ object mainForm: TmainForm
   object PopupForEditor: TPopupMenu
     Left = 448
     Top = 488
+    object Edit2: TMenuItem
+      Caption = 'Nothing Selected'
+      Enabled = False
+    end
   end
 end
