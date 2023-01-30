@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 0
-  Caption = 'Tister Editor'
+  Caption = 'Twister Editor'
   ClientHeight = 559
   ClientWidth = 1041
   Color = clBtnFace
@@ -51,10 +51,12 @@ object mainForm: TmainForm
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
+    PopupMenu = PopupMenu1
     TabOrder = 1
     StyleElements = []
     Zoom = 100
     OnChange = myEditorChange
+    OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
   end
   object ToolBar1: TToolBar
@@ -238,25 +240,6 @@ object mainForm: TmainForm
     TabOrder = 4
     OnClick = lbSpellDictsClickCheck
   end
-  object EsCalculator1: TEsCalculator
-    Left = 472
-    Top = 368
-    Width = 200
-    Height = 140
-    Colors.ColorScheme = csCustom
-    Colors.DisabledMemoryButtons = clGray
-    Colors.Display = clWindow
-    Colors.DisplayText = clWindowText
-    Colors.EditButtons = clMaroon
-    Colors.FunctionButtons = clNavy
-    Colors.MemoryButtons = clRed
-    Colors.NumberButtons = clBlue
-    Colors.OperatorButtons = clRed
-    EsLabelInfo.OffsetX = 0
-    EsLabelInfo.OffsetY = 0
-    EsLabelInfo.Visible = False
-    TabOrder = 5
-  end
   object MainAppMenu: TMainMenu
     Left = 32
     Top = 488
@@ -321,6 +304,13 @@ object mainForm: TmainForm
       object AlignRight1: TMenuItem
         Action = FormatRichEditAlignRight1
         AutoCheck = True
+      end
+    end
+    object ools1: TMenuItem
+      Caption = '&Tools'
+      object mnuToolsOptions: TMenuItem
+        Caption = 'Op&tions'
+        OnClick = mnuToolsOptionsClick
       end
     end
   end
@@ -3089,5 +3079,22 @@ object mainForm: TmainForm
   object dlgLoadDictionary: TOpenDialog
     Left = 360
     Top = 488
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 448
+    Top = 488
+    object Copy2: TMenuItem
+      Action = EditUndo
+    end
+    object Cut2: TMenuItem
+      Action = EditCut
+    end
+    object Copy3: TMenuItem
+      Action = EditCopy
+    end
+    object CheckSpelling1: TMenuItem
+      Caption = 'Check Spelling'
+      OnClick = CheckSpelling1Click
+    end
   end
 end

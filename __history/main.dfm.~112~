@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 0
-  Caption = 'Tister Editor'
+  Caption = 'Twister Editor'
   ClientHeight = 559
   ClientWidth = 1041
   Color = clBtnFace
@@ -51,6 +51,7 @@ object mainForm: TmainForm
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
+    PopupMenu = PopupMenu1
     TabOrder = 1
     StyleElements = []
     Zoom = 100
@@ -302,6 +303,13 @@ object mainForm: TmainForm
       object AlignRight1: TMenuItem
         Action = FormatRichEditAlignRight1
         AutoCheck = True
+      end
+    end
+    object ools1: TMenuItem
+      Caption = '&Tools'
+      object mnuToolsOptions: TMenuItem
+        Caption = 'Op&tions'
+        OnClick = mnuToolsOptionsClick
       end
     end
   end
@@ -3070,5 +3078,22 @@ object mainForm: TmainForm
   object dlgLoadDictionary: TOpenDialog
     Left = 360
     Top = 488
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 448
+    Top = 488
+    object Copy2: TMenuItem
+      Action = EditUndo
+    end
+    object Cut2: TMenuItem
+      Action = EditCut
+    end
+    object Copy3: TMenuItem
+      Action = EditCopy
+    end
+    object CheckSpelling1: TMenuItem
+      Caption = 'Check Spelling'
+      OnClick = CheckSpelling1Click
+    end
   end
 end

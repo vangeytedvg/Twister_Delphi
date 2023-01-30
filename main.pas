@@ -78,6 +78,8 @@ type
     dlgLoadDictionary: TOpenDialog;
     ools1: TMenuItem;
     mnuToolsOptions: TMenuItem;
+    PopupForEditor: TPopupMenu;
+    Edit2: TMenuItem;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -87,12 +89,15 @@ type
     procedure MyEditorChange(Sender: TObject);
     procedure ToolButtonNewClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    // procedure Button1Click(Sender: TObject);
-
     procedure lbSpellDictsClickCheck(Sender: TObject);
     procedure ToolButtenSpellCheckClick(Sender: TObject);
     procedure SpellTimerTimer(Sender: TObject);
     procedure mnuToolsOptionsClick(Sender: TObject);
+
+    procedure MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
+
+    procedure MyClickEventHandler(Sender: TObject);
 
   private
     { Private declarations }
@@ -104,15 +109,21 @@ type
     procedure UpdateDicts;
     procedure UpdateButtons;
     function CheckWords: Integer;
+    function CheckSingleWord(WordToCheck: String): TUnicodeStringList;
   end;
 
 var
   mainForm: TmainForm;
 
 implementation
-  uses frmSettings;
+
+uses frmSettings;
 
 {$R *.dfm}
+// procedure TmainForm.CheckSpelling1Click(Sender: TObject);
+// begin
+// CheckWords()
+// end;
 
 function TmainForm.CheckWords(): Integer;
 {
@@ -158,6 +169,36 @@ begin
   end;
 end;
 
+function TmainForm.CheckSingleWord(WordToCheck: String): TUnicodeStringList;
+{ Check a single word based on the selection of the popup }
+var
+  tmpStr: TUnicodeStringList;
+  Word: UnicodeString;
+begin
+  if TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
+    .Spell(WordToCheck) then
+  begin
+    Word := 'Correct';
+    tmpStr.Add(Word);
+    Result := tmpStr;
+  end
+  else
+  begin
+    tmpStr := TUnicodeStringList.create;
+    TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
+      .Suggest(WordToCheck, tmpStr);
+
+    if tmpStr.Count = 0 then
+    begin
+      Word := 'No suggestions';
+      tmpStr.Add(Word);
+      Result := tmpStr;
+    end
+    else
+      Result := tmpStr;
+  end;
+end;
+
 procedure TmainForm.MenuExitClick(Sender: TObject);
 {
   Leave the application, note that this can be interrupted if
@@ -168,11 +209,11 @@ begin
 end;
 
 procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
-{ Create an instance of the settings form}
+{ Create an instance of the settings form }
 var
   SettingsDialog: TFSettings;
 begin
-  SettingsDialog:=TFSettings.Create(self);
+  SettingsDialog := TFSettings.create(self);
   try
     SettingsDialog.Position := poMainFormCenter;
     SettingsDialog.ShowModal;
@@ -188,7 +229,7 @@ var
 begin
   self.IsDirty := False;
   // create an instance of the ruler
-  MyRuler := TRuler.Create(self);
+  MyRuler := TRuler.create(self);
   MyRuler.Parent := RulerHolder;
   MyRuler.Width := RulerHolder.Width;
   MyRuler.RulerMeasure := 10;
@@ -220,6 +261,49 @@ procedure TmainForm.MyEditorChange(Sender: TObject);
 { Text changes }
 begin
   IsDirty := true;
+end;
+
+procedure TmainForm.MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+{ Handle the richt click on the editor }
+var
+  SelString: String;
+  PopupItem: TMenuItem;
+  mRes: TUnicodeStringList;
+  i: Integer;
+begin
+  SelString := MyEditor.SelText;
+  Sb.Panels[0].Text := SelString;
+  mRes := CheckSingleWord(SelString);
+//    MessageDlg(mRes[i], mtConfirmation, [mbYes, mbNo], 0, mbYes)
+  // Remove existing entries
+  PopupForEditor.Items.Clear;
+  for i := 0 to mRes.Count - 1 do
+  begin
+    PopupItem := TMenuItem.create(PopupForEditor);
+    PopupItem.Caption := mRes[i];
+    PopupItem.OnClick := MyClickEventHandler;
+    PopupForEditor.Items.Add(PopupItem);
+  end;
+  // PopupItem.Free;
+end;
+
+procedure TmainForm.MyClickEventHandler(Sender: TObject);
+var
+  mRes: TUnicodeStringList;
+  i: Integer;
+begin
+  // Add code to handle the first menu item
+  with Sender as TMenuItem do
+  begin
+    mRes := CheckSingleWord(Caption);
+    for i := 0 to mRes.Count - 1 do
+    begin
+      MessageDlg(mRes[i], mtConfirmation, [mbYes, mbNo], 0, mbYes)
+    end;
+
+  end;
+
 end;
 
 procedure TmainForm.MyEditorSelectionChange(Sender: TObject);
@@ -276,7 +360,7 @@ begin
   with lbSpellDicts do
     try
       Items.BeginUpdate;
-      clear;
+      Clear;
       for intIndex := 0 to Hunspell.SpellDictionaryCount - 1 do
         Items.AddObject(Format('%s - %s Version: %s',
           [Hunspell.SpellDictionaries[intIndex].LanguageName,
@@ -291,9 +375,9 @@ end;
 procedure TmainForm.UpdateButtons;
 { The spelling button is enabled only if the dictionary is loaded }
 begin
-  ToolButtenSpellCheck.Enabled := (lbSpellDicts.ItemIndex > -1) and
+  ToolButtenSpellCheck.Enabled := (lbSpellDicts.Itemindex > -1) and
     TNHSpellDictionary(lbSpellDicts.Items.Objects
-    [lbSpellDicts.ItemIndex]).Loaded;
+    [lbSpellDicts.Itemindex]).Loaded;
   // btnHyphenate.Enabled := (lbHyphenDicts.ItemIndex > -1) and TNHHyphenDictionary(lbHyphenDicts.Items.Objects[lbHyphenDicts.ItemIndex]).Loaded;
 end;
 

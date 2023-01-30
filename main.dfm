@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 0
-  Caption = 'Tister Editor'
+  Caption = 'Twister Editor'
   ClientHeight = 559
   ClientWidth = 1041
   Color = clBtnFace
@@ -51,10 +51,12 @@ object mainForm: TmainForm
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
+    PopupMenu = PopupForEditor
     TabOrder = 1
     StyleElements = []
     Zoom = 100
     OnChange = myEditorChange
+    OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
   end
   object ToolBar1: TToolBar
@@ -3077,5 +3079,12 @@ object mainForm: TmainForm
   object dlgLoadDictionary: TOpenDialog
     Left = 360
     Top = 488
+  end
+  object PopupForEditor: TPopupMenu
+    Left = 448
+    Top = 488
+    object Edit2: TMenuItem
+      Caption = '&Edit'
+    end
   end
 end
