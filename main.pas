@@ -271,13 +271,13 @@ var
   PopupItem: TMenuItem;
   mRes: TUnicodeStringList;
   i: Integer;
+  short: TShortCut;
 begin
   SelString := MyEditor.SelText;
   Sb.Panels[0].Text := SelString;
   mRes := CheckSingleWord(SelString);
-//    MessageDlg(mRes[i], mtConfirmation, [mbYes, mbNo], 0, mbYes)
-  // Remove existing entries
   PopupForEditor.Items.Clear;
+  PopupForEditor.AutoHotkeys := maManual;
   for i := 0 to mRes.Count - 1 do
   begin
     PopupItem := TMenuItem.create(PopupForEditor);
@@ -285,23 +285,19 @@ begin
     PopupItem.OnClick := MyClickEventHandler;
     PopupForEditor.Items.Add(PopupItem);
   end;
-  // PopupItem.Free;
 end;
 
 procedure TmainForm.MyClickEventHandler(Sender: TObject);
+{ Get the correction word }
 var
-  mRes: TUnicodeStringList;
-  i: Integer;
+  acceptText: String;
 begin
   // Add code to handle the first menu item
   with Sender as TMenuItem do
   begin
-    mRes := CheckSingleWord(Caption);
-    for i := 0 to mRes.Count - 1 do
-    begin
-      MessageDlg(mRes[i], mtConfirmation, [mbYes, mbNo], 0, mbYes)
-    end;
-
+    acceptText := Caption.Substring(0, Caption.Length);
+    MyEditor.SelText := acceptText +' ';
+    CheckWords();
   end;
 
 end;

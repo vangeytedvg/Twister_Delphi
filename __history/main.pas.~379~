@@ -93,7 +93,7 @@ type
     procedure ToolButtenSpellCheckClick(Sender: TObject);
     procedure SpellTimerTimer(Sender: TObject);
     procedure mnuToolsOptionsClick(Sender: TObject);
-    procedure CheckSpelling1Click(Sender: TObject);
+
     procedure MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
 
@@ -109,7 +109,7 @@ type
     procedure UpdateDicts;
     procedure UpdateButtons;
     function CheckWords: Integer;
-    function CheckSingleWord(WordToCheck: String): TStringList;
+    function CheckSingleWord(WordToCheck: String): TUnicodeStringList;
   end;
 
 var
@@ -120,11 +120,10 @@ implementation
 uses frmSettings;
 
 {$R *.dfm}
-
-//procedure TmainForm.CheckSpelling1Click(Sender: TObject);
-//begin
-//  CheckWords()
-//end;
+// procedure TmainForm.CheckSpelling1Click(Sender: TObject);
+// begin
+// CheckWords()
+// end;
 
 function TmainForm.CheckWords(): Integer;
 {
@@ -170,22 +169,34 @@ begin
   end;
 end;
 
-function TmainForm.CheckSingleWord(WordToCheck: String): TStringList;
+function TmainForm.CheckSingleWord(WordToCheck: String): TUnicodeStringList;
 { Check a single word based on the selection of the popup }
+var
+  tmpStr: TUnicodeStringList;
+  Word: UnicodeString;
 begin
-  if not TNHSpellDictionary(lbSpellDicts.Items.Objects[0]).Spell(WordToCheck)
-      then
-      begin
-        MyEditor.SelStart := SelStarter;
-        MyEditor.SelLength := Length(Words[j]);
-        MyEditor.SelAttributes.Color := clRed;
-      end
-      else
-      begin
-        MyEditor.SelStart := SelStarter;
-        MyEditor.SelLength := Length(Words[j]);
-        MyEditor.SelAttributes.Color := clBlack;
-      end;
+  if TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
+    .Spell(WordToCheck) then
+  begin
+    Word := 'Correct';
+    tmpStr.Add(Word);
+    Result := tmpStr;
+  end
+  else
+  begin
+    tmpStr := TUnicodeStringList.create;
+    TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
+      .Suggest(WordToCheck, tmpStr);
+
+    if tmpStr.Count = 0 then
+    begin
+      Word := 'No suggestions';
+      tmpStr.Add(Word);
+      Result := tmpStr;
+    end
+    else
+      Result := tmpStr;
+  end;
 end;
 
 procedure TmainForm.MenuExitClick(Sender: TObject);
@@ -202,7 +213,7 @@ procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
 var
   SettingsDialog: TFSettings;
 begin
-  SettingsDialog := TFSettings.Create(self);
+  SettingsDialog := TFSettings.create(self);
   try
     SettingsDialog.Position := poMainFormCenter;
     SettingsDialog.ShowModal;
@@ -218,7 +229,7 @@ var
 begin
   self.IsDirty := False;
   // create an instance of the ruler
-  MyRuler := TRuler.Create(self);
+  MyRuler := TRuler.create(self);
   MyRuler.Parent := RulerHolder;
   MyRuler.Width := RulerHolder.Width;
   MyRuler.RulerMeasure := 10;
@@ -258,23 +269,34 @@ procedure TmainForm.MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
 var
   SelString: String;
   PopupItem: TMenuItem;
+  mRes: TUnicodeStringList;
+  i: Integer;
 begin
   SelString := MyEditor.SelText;
   Sb.Panels[0].Text := SelString;
+  mRes := CheckSingleWord(SelString);
+//    MessageDlg(mRes[i], mtConfirmation, [mbYes, mbNo], 0, mbYes)
+  // Remove existing entries
   PopupForEditor.Items.Clear;
-  PopupItem := TMenuItem.Create(PopupForEditor);
-  PopupItem.Caption := SelString;
-  PopupItem.OnClick := MyClickEventHandler;
-  PopupForEditor.Items.Add(PopupItem);
+  for i := 0 to mRes.Count - 1 do
+  begin
+    PopupItem := TMenuItem.create(PopupForEditor);
+    PopupItem.Caption := mRes[i];
+    PopupItem.OnClick := MyClickEventHandler;
+    PopupForEditor.Items.Add(PopupItem);
+  end;
   // PopupItem.Free;
 end;
 
 procedure TmainForm.MyClickEventHandler(Sender: TObject);
+var
+  acceptText: String;
 begin
   // Add code to handle the first menu item
   with Sender as TMenuItem do
   begin
-    Sb.Panels[0].Text := Caption;
+    acceptText := Caption.Substring(0, Caption.Length-1);
+    MyEditor.SelText := acceptText +' ';
   end;
 
 end;
@@ -348,9 +370,9 @@ end;
 procedure TmainForm.UpdateButtons;
 { The spelling button is enabled only if the dictionary is loaded }
 begin
-  ToolButtenSpellCheck.Enabled := (lbSpellDicts.ItemIndex > -1) and
+  ToolButtenSpellCheck.Enabled := (lbSpellDicts.Itemindex > -1) and
     TNHSpellDictionary(lbSpellDicts.Items.Objects
-    [lbSpellDicts.ItemIndex]).Loaded;
+    [lbSpellDicts.Itemindex]).Loaded;
   // btnHyphenate.Enabled := (lbHyphenDicts.ItemIndex > -1) and TNHHyphenDictionary(lbHyphenDicts.Items.Objects[lbHyphenDicts.ItemIndex]).Loaded;
 end;
 
