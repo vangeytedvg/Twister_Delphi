@@ -17,6 +17,7 @@ object mainForm: TmainForm
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnResize = FormResize
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Sb: TStatusBar
