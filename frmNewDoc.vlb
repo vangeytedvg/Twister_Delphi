@@ -1,0 +1,10 @@
+﻿[StatusBar]
+Coordinates=125,10,62,51
+
+[lblSelectSender]
+Coordinates=10,10,91,51
+
+[]
+Coordinates=41,80,73,33
+Visible=True
+

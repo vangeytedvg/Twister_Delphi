@@ -9,7 +9,7 @@ uses
   Vcl.Menus, System.IniFiles,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
-  EsBase, EsCalc;
+  EsBase, EsCalc, frmSettings, frmNewDoc;
 
 type
   TmainForm = class(TForm)
@@ -108,7 +108,7 @@ type
     procedure lbSpellDictsClickCheck(Sender: TObject);
     procedure ToolButtenSpellCheckClick(Sender: TObject);
     procedure SpellTimerTimer(Sender: TObject);
-    procedure mnuToolsOptionsClick(Sender: TObject);
+
     procedure MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
     procedure MyClickEventHandler(Sender: TObject);
@@ -137,7 +137,7 @@ var
 
 implementation
 
-uses frmSettings;
+
 
 {$R *.dfm}
 
@@ -197,6 +197,13 @@ begin
       IsDirty := False;
       MyEditor.Lines.Clear;
     end;
+  end
+  else
+  begin
+//    FormNewDocument.Left := (Self.Width - FormNewDocument.Width) div 2;
+//    FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
+    FormNewDocument.Position := poOwnerFormCenter;
+    FormNewDocument.ShowModal();
   end;
 end;
 
@@ -256,19 +263,19 @@ begin
   Application.Terminate;
 end;
 
-procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
+//procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
 { Create an instance of the settings form }
-var
-  SettingsDialog: TFSettings;
-begin
-  SettingsDialog := TFSettings.create(self);
-  try
-    SettingsDialog.Position := poMainFormCenter;
-    SettingsDialog.ShowModal;
-  finally
-    SettingsDialog.Free;
-  end;
-end;
+//var
+//  SettingsDialog: TFSettings;
+//begin
+//  SettingsDialog := TFSettings.create(self);
+//  try
+//    SettingsDialog.Position := poMainFormCenter;
+//    SettingsDialog.ShowModal;
+//  finally
+//    SettingsDialog.Free;
+//  end;
+//end;
 
 procedure TmainForm.FormCreate(Sender: TObject);
 { Creation details }

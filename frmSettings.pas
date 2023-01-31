@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TFSettings = class(TForm)
+  TFormSettings = class(TForm)
   private
     { Private declarations }
   public
@@ -15,7 +15,7 @@ type
   end;
 
 var
-  FSettings: TFSettings;
+  FormSettings: TFormSettings;
 
 implementation
 

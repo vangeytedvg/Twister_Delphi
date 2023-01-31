@@ -1,0 +1,15 @@
+unit CustomComboItem;
+
+interface
+
+type
+  TCustomComboBoxItem = class(TObject)
+  private
+    FValue: integer;
+    FDisplayText: string;
+  public
+    property Value: integer read FValue write FValue;
+    property DisplayText: string read FDisplayText write FDisplayText;
+  end;
+
+
