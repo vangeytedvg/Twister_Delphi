@@ -23,7 +23,9 @@ type
 
     FDQryListOfSenders: TFDQuery;
     SendersList: TComboBox;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
+    procedure SendersListChange(Sender: TObject);
   private
     { Private declarations }
     procedure LoadSenders;
@@ -60,7 +62,6 @@ procedure TFormNewDocument.LoadSenders();
 { Load the list of senders }
 var
   qryString: string;
-  myItem: TCustomComboBox;
 begin
   qryString := 'SELECT Id, Name, FirstName FROM senders';
   with FDQryListOfSenders do
@@ -69,7 +70,7 @@ begin
     SQL.Text := qryString;
     Open;
   end;
-
+  // Fill The ComboBox
   while Not FDQryListOfSenders.Eof do
   begin
     SendersList.items.AddObject(FDQryListOfSenders.FieldByName('Name').AsString,
@@ -77,17 +78,15 @@ begin
       FDQryListOfSenders.FieldByName('Name').AsString));
     FDQryListOfSenders.Next;
   end;
+end;
 
-  // try
-  // SQLQuery.SQLConnection := SQLConnection;
-  // SQLQuery.SQL.Text := qry;
-  // SQLQuery.Active := True;
-  // except
-  // on E: Exception do
-  // begin
-  // ShowMessage(E.Message);
-  // end;
-  // end;
+procedure TFormNewDocument.SendersListChange(Sender: TObject);
+{ Get the selected Item }
+var
+  myItem: TCustomComboBoxItem;
+begin
+  myItem := TCustomComboBoxItem(SendersList.items.Objects[SendersList.ItemIndex]);
+  Label1.Caption := myItem.DisplayText;
 end;
 
 end.

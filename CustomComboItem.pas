@@ -9,9 +9,6 @@ unit CustomComboItem;
 
 interface
 
-uses Vcl.Controls;
-
-
 type
   TCustomComboBoxItem = class(TObject)
   private

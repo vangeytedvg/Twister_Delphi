@@ -27,6 +27,13 @@ object FormNewDocument: TFormNewDocument
     Font.Style = []
     ParentFont = False
   end
+  object Label1: TLabel
+    Left = 320
+    Top = 51
+    Width = 121
+    Height = 13
+    Caption = 'Label1'
+  end
   object StatusBar: TStatusBar
     Left = 0
     Top = 358
@@ -38,13 +45,14 @@ object FormNewDocument: TFormNewDocument
       end>
   end
   object SendersList: TComboBox
-    Left = 16
+    Left = 8
     Top = 48
     Width = 289
     Height = 21
     Style = csDropDownList
     Sorted = True
     TabOrder = 1
+    OnChange = SendersListChange
   end
   object TwisterConnection: TFDConnection
     Params.Strings = (
