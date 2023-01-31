@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList,
-  Vcl.Menus,
+  Vcl.Menus, System.IniFiles,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
   EsBase, EsCalc;
@@ -19,8 +19,8 @@ type
     MyEditor: TRichEdit;
     ToolBar1: TToolBar;
     ToolButtonNew: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
+    ToolButtonOpenFile: TToolButton;
+    ToolButtonSave: TToolButton;
     ToolButtonCut: TToolButton;
     ToolButtonCopy: TToolButton;
     ToolButtonPaste: TToolButton;
@@ -46,7 +46,7 @@ type
     ToolButton17: TToolButton;
     ToolButtonUndo: TToolButton;
     N1: TMenuItem;
-    Exit1: TMenuItem;
+    MenuFileExit: TMenuItem;
     Edit1: TMenuItem;
     Undo1: TMenuItem;
     Cut1: TMenuItem;
@@ -82,6 +82,21 @@ type
     Edit2: TMenuItem;
     Panel1: TPanel;
     Panel2: TPanel;
+    MenuNewFile: TMenuItem;
+    Action1: TAction;
+    Action2: TAction;
+    Action3: TAction;
+    ActionList1: TActionList;
+    Print1: TMenuItem;
+    ActionSaveFile: TAction;
+    MenuSaveFile: TMenuItem;
+    ActionNewFile: TAction;
+    ActionOpenFile: TAction;
+    MenuOpenFile: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    ActionPrint: TAction;
+    ToolButtonPrint: TToolButton;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -89,7 +104,6 @@ type
     procedure ToolButtonSelectFontClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure MyEditorChange(Sender: TObject);
-    procedure ToolButtonNewClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure lbSpellDictsClickCheck(Sender: TObject);
     procedure ToolButtenSpellCheckClick(Sender: TObject);
@@ -100,6 +114,11 @@ type
       var Handled: Boolean);
 
     procedure MyClickEventHandler(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ActionNewFileExecute(Sender: TObject);
+    procedure ActionSaveFileExecute(Sender: TObject);
+    procedure ActionOpenFileExecute(Sender: TObject);
+    procedure ActionPrintExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -171,19 +190,49 @@ begin
   end;
 end;
 
+
+procedure TmainForm.ActionNewFileExecute(Sender: TObject);
+begin
+  if IsDirty then
+  begin
+     If MessageDlg('Do you want to save changes?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+        // Save the file
+     else
+     begin
+       IsDirty:=False;
+       MyEditor.Lines.Clear;
+     end;
+  end;
+end;
+
+procedure TmainForm.ActionOpenFileExecute(Sender: TObject);
+begin
+  ShowMessage('Open File');
+end;
+
+procedure TmainForm.ActionPrintExecute(Sender: TObject);
+begin
+  ShowMessage('Print');
+//  MyEditor.Print('My New Document');
+end;
+
+procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
+begin
+  ShowMessage('Save File');
+end;
+
 function TmainForm.CheckSingleWord(WordToCheck: String): TUnicodeStringList;
 { Check a single word based on the selection of the popup }
 var
   tmpStr: TUnicodeStringList;
   Word: UnicodeString;
 begin
-  
+
   if not TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex]).Spell(WordToCheck) then
   begin
     tmpStr := TUnicodeStringList.create;
     TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
       .Suggest(WordToCheck, tmpStr);
-
     if tmpStr.Count = 0 then
     begin
       Word := 'No suggestions';
@@ -195,7 +244,8 @@ begin
   end
   else
   begin
-      Word := 'No suggestions';
+      Word := 'Word is Correct';
+      tmpStr := TUnicodeStringList.Create();
       tmpStr.Add(Word);
       Result := tmpStr;
   end;
@@ -239,7 +289,29 @@ begin
   Hunspell.ReadOXT
     ('C:\Development\Delphi\Twister\Dictionaries\nl-dict-v2.00g.oxt');
   UpdateDicts;
+  lbSpellDicts.CheckAll(cbChecked, False, true);
   CanSpellCheck:=true;
+  ActionSaveFile.Enabled:=False;
+  lbSpellDicts.CheckAll(cbChecked, False, true);
+  lbSpellDicts.Selected[0] := true;
+end;
+
+procedure TmainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+{ Save the window position and size to file}
+  var
+  SettingFile: TIniFile;
+  Result: Integer;
+begin
+
+  try
+    SettingFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.INI'));
+//    SettingFile := TFileStream.Create('window.ini', fmCreate);
+    SettingFile.WriteInteger('WindowSettings', 'Left', mainForm.Left);
+    SettingFile.WriteInteger('WindowSettings', 'Top', mainForm.Top);
+
+  finally
+    SettingFile.Free;
+  end;
 end;
 
 procedure TmainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -264,6 +336,7 @@ procedure TmainForm.MyEditorChange(Sender: TObject);
 { Text changes }
 begin
   IsDirty := true;
+  ActionSaveFile.Enabled := True;
 end;
 
 procedure TmainForm.MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
@@ -286,14 +359,15 @@ begin
     PopupItem.OnClick := MyClickEventHandler;
     PopupItem.Enabled:= False;
     PopupForEditor.Items.Add(PopupItem);
+    PopupItem.Free;
     exit;
   end
   else
   begin
     // We have a suggestion
-    mRes := CheckSingleWord(SelString);
+    mRes := CheckSingleWord(Trim(SelString));
     PopupForEditor.Items.Clear;
-    PopupForEditor.AutoHotkeys := maManual;    
+    PopupForEditor.AutoHotkeys := maManual;
     try
         for i := 0 to mRes.Count - 1 do
     begin
@@ -315,6 +389,8 @@ begin
   // Add code to handle the first menu item
   with Sender as TMenuItem do
   begin
+    if Caption='Word is Correct' then exit;
+
     acceptText := Caption.Substring(0, Caption.Length);
     MyEditor.SelText := acceptText +' ';
     // After accepting the corrections, check spelling again
@@ -336,6 +412,7 @@ begin
 
 end;
 
+
 procedure TmainForm.SpellTimerTimer(Sender: TObject);
 begin
   CheckWords();
@@ -343,19 +420,13 @@ end;
 
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
 begin
-  lbSpellDicts.CheckAll(cbChecked, False, true);
-  lbSpellDicts.Selected[0] := true;
+  //lbSpellDicts.CheckAll(cbChecked, False, true);
+  //lbSpellDicts.Selected[0] := true;
   Hunspell.SpellDictionaries[0].Active := lbSpellDicts.Checked[0];
   Hunspell.UpdateAndLoadDictionaries;
   // Indicate that the spell check routine can be run for the timer
   CanSpellCheck := true;
   CheckWords();
-end;
-
-procedure TmainForm.ToolButtonNewClick(Sender: TObject);
-{ When creating a new document, reset the edited flag }
-begin
-  IsDirty := False;
 end;
 
 procedure TmainForm.ToolButtonSelectFontClick(Sender: TObject);
