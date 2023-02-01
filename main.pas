@@ -107,8 +107,6 @@ type
     procedure FormResize(Sender: TObject);
     procedure lbSpellDictsClickCheck(Sender: TObject);
     procedure ToolButtenSpellCheckClick(Sender: TObject);
-    procedure SpellTimerTimer(Sender: TObject);
-
     procedure MyEditorContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
     procedure MyClickEventHandler(Sender: TObject);
@@ -129,15 +127,13 @@ type
     procedure UpdateDicts;
     procedure UpdateButtons;
     function CheckWords: Integer;
-    function CheckSingleWord(WordToCheck: String): TUnicodeStringList;
+    function CheckSingleWord(const WordToCheck: String): TUnicodeStringList;
   end;
 
 var
   mainForm: TmainForm;
 
 implementation
-
-
 
 {$R *.dfm}
 
@@ -200,8 +196,8 @@ begin
   end
   else
   begin
-//    FormNewDocument.Left := (Self.Width - FormNewDocument.Width) div 2;
-//    FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
+    // FormNewDocument.Left := (Self.Width - FormNewDocument.Width) div 2;
+    // FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
     FormNewDocument.Position := poOwnerFormCenter;
     FormNewDocument.ShowModal();
   end;
@@ -223,7 +219,7 @@ begin
   ShowMessage('Save File');
 end;
 
-function TmainForm.CheckSingleWord(WordToCheck: String): TUnicodeStringList;
+function TmainForm.CheckSingleWord(const WordToCheck: String): TUnicodeStringList;
 { Check a single word based on the selection of the popup }
 var
   tmpStr: TUnicodeStringList;
@@ -263,20 +259,6 @@ begin
   Application.Terminate;
 end;
 
-//procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
-{ Create an instance of the settings form }
-//var
-//  SettingsDialog: TFSettings;
-//begin
-//  SettingsDialog := TFSettings.create(self);
-//  try
-//    SettingsDialog.Position := poMainFormCenter;
-//    SettingsDialog.ShowModal;
-//  finally
-//    SettingsDialog.Free;
-//  end;
-//end;
-
 procedure TmainForm.FormCreate(Sender: TObject);
 { Creation details }
 var
@@ -288,7 +270,7 @@ begin
   // create an instance of the ruler
   MyRuler := TRuler.create(self);
   MyRuler.Parent := RulerHolder;
-  MyRuler.Width := RulerHolder.Width;
+  MyRuler.width := RulerHolder.width;
   MyRuler.RulerMeasure := 10;
   MyRuler.RulerColor := clWhite;
   Hunspell.ReadOXT
@@ -311,8 +293,8 @@ begin
     SettingFile := TIniFile.create(ChangeFileExt(Application.ExeName, '.INI'));
     SettingFile.WriteInteger('WindowPosition', 'Left', mainForm.Left);
     SettingFile.WriteInteger('WindowPosition', 'Top', mainForm.Top);
-    SettingFile.WriteInteger('WindowSize', 'Width', mainForm.Width);
-    SettingFile.WriteInteger('WindowSize', 'Height', mainForm.Height);
+    SettingFile.WriteInteger('WindowSize', 'Width', mainForm.width);
+    SettingFile.WriteInteger('WindowSize', 'Height', mainForm.height);
   finally
     SettingFile.Free;
   end;
@@ -333,7 +315,7 @@ end;
 procedure TmainForm.FormResize(Sender: TObject);
 { Resizeing the windows also resizes the ruler }
 begin
-  MyRuler.Width := RulerHolder.Width;
+  MyRuler.width := RulerHolder.width;
 end;
 
 procedure TmainForm.FormShow(Sender: TObject);
@@ -346,10 +328,12 @@ begin
   // it generates an exception in Width and height
   try
     SettingFile := TIniFile.create(ChangeFileExt(Application.ExeName, '.INI'));
-    mainForm.Left:=SettingFile.ReadInteger('WindowPosition', 'Left',0);
-    mainForm.Top := SettingFile.ReadInteger('WindowPosition', 'Top',0);
-    mainForm.Width := SettingFile.ReadInteger('WindowSize', 'Width', mainForm.Width);
-    mainForm.Height := SettingFile.ReadInteger('WindowSize', 'Height', mainForm.Width);
+    mainForm.Left := SettingFile.ReadInteger('WindowPosition', 'Left', 0);
+    mainForm.Top := SettingFile.ReadInteger('WindowPosition', 'Top', 0);
+    mainForm.width := SettingFile.ReadInteger('WindowSize', 'Width',
+      mainForm.width);
+    mainForm.height := SettingFile.ReadInteger('WindowSize', 'Height',
+      mainForm.width);
   finally
     SettingFile.Free;
   end;
@@ -437,10 +421,6 @@ begin
 
 end;
 
-procedure TmainForm.SpellTimerTimer(Sender: TObject);
-begin
-  CheckWords();
-end;
 
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
 begin

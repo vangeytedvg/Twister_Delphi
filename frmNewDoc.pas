@@ -63,7 +63,7 @@ procedure TFormNewDocument.LoadSenders();
 var
   qryString: string;
 begin
-  qryString := 'SELECT Id, Name, FirstName FROM senders';
+  qryString := 'SELECT Id, Name, FirstName FROM senders ORDER BY name ASC';
   with FDQryListOfSenders do
   begin
     Close;
@@ -84,9 +84,20 @@ procedure TFormNewDocument.SendersListChange(Sender: TObject);
 { Get the selected Item }
 var
   myItem: TCustomComboBoxItem;
+  qryString: string;
 begin
   myItem := TCustomComboBoxItem(SendersList.items.Objects[SendersList.ItemIndex]);
-  Label1.Caption := myItem.DisplayText;
+  qryString := 'SELECT * FROM senders WHERE id=' + myItem.Value.ToString;
+  with FDQryListOfSenders do
+  begin
+    Close;
+    SQL.Text := qryString;
+    Open
+  end;
+  if Not(FDQryListOfSenders.Eof) then
+  begin
+    ShowMessage(FDQryListOfSenders.FieldByName('address').AsString);
+  end;
 end;
 
 end.

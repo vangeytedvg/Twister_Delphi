@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2023/02/01 09:33:22.000.315,=rtl.dcp</Transaction>
+    <Transaction>2023/02/01 09:34:32.000.541,=C:\Development\Delphi\Twister\Ruler.pas</Transaction>
+    <Transaction>2023/02/01 09:35:26.000.145,C:\Development\Delphi\Twister\DenkaTechRuler.dproj=C:\Users\vange\OneDrive\Documents\Embarcadero\Studio\Projects\Package1.dproj</Transaction>
+    <Transaction>2023/02/01 09:35:47.000.138,=vcl.dcp</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -18,6 +18,7 @@ type
     property Value: integer read FValue write FValue;
     property DisplayText: string read FDisplayText write FDisplayText;
     constructor Create(AValue: integer; ADisplayText: string);
+    destructor Destroy; override;
   end;
 
 implementation
@@ -27,4 +28,10 @@ begin
   FValue := AValue;
   FDisplayText := ADisplayText;
 end;
+
+destructor TCustomComboBoxItem.Destroy;
+begin
+
+end;
+
 end.

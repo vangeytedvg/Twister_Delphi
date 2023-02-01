@@ -30,7 +30,7 @@ object FormNewDocument: TFormNewDocument
   object Label1: TLabel
     Left = 320
     Top = 51
-    Width = 121
+    Width = 31
     Height = 13
     Caption = 'Label1'
   end
