@@ -20,7 +20,6 @@ type
     lblSelectSender: TLabel;
     TwisterConnection: TFDConnection;
     DataSource1: TDataSource;
-
     FDQryListOfSenders: TFDQuery;
     SendersList: TComboBox;
     MemoFROM: TMemo;
@@ -30,9 +29,10 @@ type
     ButtonOK: TButton;
     ButtonCANCEL: TButton;
     Image1: TImage;
-    Subject: TLabeledEdit;
     CheckBox_SocialSecurityNr: TCheckBox;
     Label1: TLabel;
+    EditSubject: TEdit;
+    LabelSubject: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure SendersListChange(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
@@ -42,8 +42,7 @@ type
     FCancelled: Boolean;
     procedure LoadSenders;
   public
-    { Public declarations }
-    property UserClickedCancel: boolean read FCancelled write FCancelled;
+    property UserClickedCancel: Boolean read FCancelled write FCancelled;
   end;
 
 var
@@ -64,8 +63,9 @@ end;
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
 begin
   if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) then
-    ShowMessage('Niet alle velden zijn ingevuled!')
-  else Close;
+    ShowMessage('Niet alle velden zijn ingevuld!')
+  else
+    Close;
 end;
 
 procedure TFormNewDocument.FormCreate(Sender: TObject);
@@ -126,13 +126,18 @@ begin
   if Not(FDQryListOfSenders.Eof) then
   begin
     // Add the address to the FROM box
-    MemoFrom.Lines.Clear;
-    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('name').AsString + ' ' + FDQryListOfSenders.FieldByName('firstname').AsString);
+    MemoFROM.Lines.Clear;
+    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('name').AsString + ' ' +
+      FDQryListOfSenders.FieldByName('firstname').AsString);
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('address').AsString);
-    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('zipcode').AsString + ' ' + FDQryListOfSenders.FieldByName('city').AsString);
-    MemoFROM.Lines.Add('GSM ' + FDQryListOfSenders.FieldByName('phone').AsString);
-    MemoFROM.Lines.Add('email ' + FDQryListOfSenders.FieldByName('email').AsString);
-    CheckBox_SocialSecurityNr.Caption := FDQryListOfSenders.FieldByName('socialsecurity').AsString;
+    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('zipcode').AsString + ' '
+      + FDQryListOfSenders.FieldByName('city').AsString);
+    MemoFROM.Lines.Add('GSM ' + FDQryListOfSenders.FieldByName('phone')
+      .AsString);
+    MemoFROM.Lines.Add('email ' + FDQryListOfSenders.FieldByName('email')
+      .AsString);
+    CheckBox_SocialSecurityNr.Caption := FDQryListOfSenders.FieldByName
+      ('socialsecurity').AsString;
   end;
 end;
 

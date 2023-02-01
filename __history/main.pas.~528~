@@ -184,6 +184,7 @@ end;
 procedure TmainForm.ActionNewFileExecute(Sender: TObject);
 var
   currentDate: TDateTime;
+  cursorPosition: TPoint;
   localShortDate : string;
 begin
   if IsDirty then
@@ -201,16 +202,50 @@ begin
   // FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
   FormNewDocument.Position := poOwnerFormCenter;
   FormNewDocument.ShowModal();
-  MyEditor.SelectAll;
-  MyEditor.SelAttributes.Style := [fsBold];
-  MyEditor.Lines.Add(FormNewDocument.MemoFROM.Text);
-  currentDate := Now;
-  localShortDate:=FormatDateTime('ddddd', currentDate);
-  MyEditor.Lines.Add('');
-  MyEditor.Lines.Add('');
-  MyEditor.Lines.Add(localShortDate);
-  MyEditor.SelAttributes.Style := [];
+  if not FormNewDocument.UserClickedCancel then
+  begin
+    // Begin with the sender's details
+    MyEditor.SelectAll;
+    MyEditor.SelAttributes.Style := [fsBold];
+    MyEditor.Lines.Add(FormNewDocument.MemoFROM.Text);
+    currentDate := Now;
+    // If the social security checkbox is checked
+    if FormNewDocument.CheckBox_SocialSecurityNr.Checked then
+    begin
+      MyEditor.Lines.Add('Rijksregister: ' + FormNewDocument.CheckBox_SocialSecurityNr.Caption);
+    end;
+    localShortDate:=FormatDateTime('dddd, dd mmmm, yyyy', currentDate);
 
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+    // Add the current date
+    MyEditor.Lines.Add(localShortDate);
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    // The destineation of the letter
+    MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    if not FormNewDocument.EditSubject.Text = '' then
+    begin
+      MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
+    end;
+    MyEditor.Lines.Add('');
+
+
+
+    // Disable the bold characters
+    MyEditor.SelStart := MyEditor.GetTextLen;
+    MyEditor.SelLength := 10;
+
+    MyEditor.SelAttributes.Style := [];
+
+//    MyEditor.Lines.Add('<briefinhoud>');
+
+
+  end;
 end;
 
 procedure TmainForm.ActionOpenFileExecute(Sender: TObject);
@@ -236,7 +271,6 @@ var
   tmpStr: TUnicodeStringList;
   Word: UnicodeString;
 begin
-
   if not TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
     .Spell(WordToCheck) then
   begin
@@ -455,7 +489,7 @@ begin
 end;
 
 procedure TmainForm.UpdateDicts;
-{ Update the dictionary }
+{ Update the dictionary and initialize it }
 var
   intIndex: Integer;
 begin

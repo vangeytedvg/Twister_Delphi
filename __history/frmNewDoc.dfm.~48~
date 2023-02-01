@@ -2,24 +2,24 @@ object FormNewDocument: TFormNewDocument
   Left = 0
   Top = 0
   Caption = 'New Document Wizard'
-  ClientHeight = 449
-  ClientWidth = 524
+  ClientHeight = 427
+  ClientWidth = 590
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object lblSelectSender: TLabel
-    Left = 136
+    Left = 128
     Top = 8
-    Width = 170
+    Width = 233
     Height = 20
-    Caption = 'Select sender of the letter'
+    Caption = 'Selecteer de naam van de afzender'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
@@ -29,17 +29,29 @@ object FormNewDocument: TFormNewDocument
   end
   object LabelFROM: TLabel
     Left = 128
-    Top = 75
-    Width = 192
-    Height = 13
-    Caption = 'This will be the FROM part of your letter'
+    Top = 61
+    Width = 179
+    Height = 17
+    Caption = 'Dit is de hoofding van de brief'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
   end
   object LabelTO: TLabel
     Left = 128
-    Top = 175
-    Width = 115
-    Height = 13
-    Caption = 'Destination of the letter'
+    Top = 167
+    Width = 155
+    Height = 17
+    Caption = 'Bestemmeling van de brief'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
   end
   object Image1: TImage
     Left = 8
@@ -1969,21 +1981,36 @@ object FormNewDocument: TFormNewDocument
     Proportional = True
     Transparent = True
   end
+  object Label1: TLabel
+    Left = 128
+    Top = 329
+    Width = 449
+    Height = 17
+    Caption = 
+      'Vink dit veld aan als U uw rijksregisternummer wil toegoegen aan' +
+      ' uw adres'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+  end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 430
-    Width = 524
+    Top = 408
+    Width = 590
     Height = 19
     Panels = <
       item
         Width = 200
       end>
-    ExplicitTop = 358
-    ExplicitWidth = 578
+    ExplicitTop = 435
+    ExplicitWidth = 554
   end
   object SendersList: TComboBox
     Left = 128
-    Top = 48
+    Top = 34
     Width = 289
     Height = 21
     Style = csDropDownList
@@ -1993,7 +2020,7 @@ object FormNewDocument: TFormNewDocument
   end
   object MemoFROM: TMemo
     Left = 128
-    Top = 94
+    Top = 84
     Width = 289
     Height = 75
     Font.Charset = DEFAULT_CHARSET
@@ -2006,7 +2033,7 @@ object FormNewDocument: TFormNewDocument
   end
   object MemoTO: TMemo
     Left = 128
-    Top = 194
+    Top = 190
     Width = 289
     Height = 75
     Font.Charset = DEFAULT_CHARSET
@@ -2018,8 +2045,8 @@ object FormNewDocument: TFormNewDocument
     TabOrder = 3
   end
   object ButtonOK: TButton
-    Left = 263
-    Top = 387
+    Left = 414
+    Top = 373
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -2027,29 +2054,54 @@ object FormNewDocument: TFormNewDocument
     OnClick = ButtonOKClick
   end
   object ButtonCANCEL: TButton
-    Left = 342
-    Top = 387
+    Left = 493
+    Top = 373
     Width = 75
     Height = 25
     Caption = 'Cancel'
     TabOrder = 5
+    OnClick = ButtonCANCELClick
+  end
+  object Subject: TLabeledEdit
+    Left = 128
+    Top = 286
+    Width = 418
+    Height = 25
+    EditLabel.Width = 34
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Betreft'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 6
+  end
+  object CheckBox_SocialSecurityNr: TCheckBox
+    Left = 128
+    Top = 352
+    Width = 321
+    Height = 17
+    Caption = '...'
+    TabOrder = 7
   end
   object TwisterConnection: TFDConnection
     Params.Strings = (
       'ConnectionDef=Twister')
     Connected = True
     LoginPrompt = False
-    Left = 84
-    Top = 255
+    Left = 36
+    Top = 327
   end
   object DataSource1: TDataSource
     DataSet = FDQryListOfSenders
     Left = 32
-    Top = 288
+    Top = 376
   end
   object FDQryListOfSenders: TFDQuery
     Connection = TwisterConnection
-    Left = 24
-    Top = 232
+    Left = 40
+    Top = 264
   end
 end

@@ -184,7 +184,9 @@ end;
 procedure TmainForm.ActionNewFileExecute(Sender: TObject);
 var
   currentDate: TDateTime;
+  cursorPosition: TPoint;
   localShortDate : string;
+  subjecText : string;
 begin
   if IsDirty then
   begin
@@ -217,10 +219,36 @@ begin
 
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
-
     // Add the current date
     MyEditor.Lines.Add(localShortDate);
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    // The destineation of the letter
+    MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    if FormNewDocument.EditSubject.Text <> '' then
+    begin
+
+      MyEditor.SelAttributes.Style := [];
+      MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
+    end;
+
+    MyEditor.Lines.Add('');
+
+
+
+    // Disable the bold characters
+    MyEditor.SelStart := MyEditor.GetTextLen;
+    MyEditor.SelLength := 10;
+
     MyEditor.SelAttributes.Style := [];
+
+//    MyEditor.Lines.Add('<briefinhoud>');
+
+
   end;
 end;
 
@@ -247,7 +275,6 @@ var
   tmpStr: TUnicodeStringList;
   Word: UnicodeString;
 begin
-
   if not TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
     .Spell(WordToCheck) then
   begin
