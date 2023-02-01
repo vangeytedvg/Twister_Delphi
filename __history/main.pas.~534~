@@ -186,6 +186,7 @@ var
   currentDate: TDateTime;
   cursorPosition: TPoint;
   localShortDate : string;
+  subjecText : string;
 begin
   if IsDirty then
   begin
@@ -228,10 +229,13 @@ begin
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-    if not FormNewDocument.EditSubject.Text := '' then
+    if FormNewDocument.EditSubject.Text <> '' then
     begin
+
+      MyEditor.SelAttributes.Style := [];
       MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
     end;
+
     MyEditor.Lines.Add('');
 
 

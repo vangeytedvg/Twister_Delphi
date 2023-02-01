@@ -222,23 +222,22 @@ begin
     // Add the current date
     MyEditor.Lines.Add(localShortDate);
     MyEditor.Lines.Add('');
-    MyEditor.Lines.Add('');
+
 
     // The destineation of the letter
     MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
+    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
-
+      MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
+      MyEditor.Lines.Add('Betreft : ' + FormNewDocument.EditSubject.Text);
       MyEditor.SelAttributes.Style := [];
-      MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
     end;
 
     MyEditor.Lines.Add('');
-
-
 
     // Disable the bold characters
     MyEditor.SelStart := MyEditor.GetTextLen;

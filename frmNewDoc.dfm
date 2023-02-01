@@ -2,8 +2,8 @@ object FormNewDocument: TFormNewDocument
   Left = 0
   Top = 0
   Caption = 'New Document Wizard'
-  ClientHeight = 456
-  ClientWidth = 580
+  ClientHeight = 608
+  ClientWidth = 578
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -56,8 +56,9 @@ object FormNewDocument: TFormNewDocument
   object Image1: TImage
     Left = 8
     Top = 8
-    Width = 105
-    Height = 217
+    Width = 114
+    Height = 381
+    IncrementalDisplay = True
     Picture.Data = {
       0954506E67496D61676589504E470D0A1A0A0000000D49484452000000C80000
       017D0806000000412827EC00000185694343504943432070726F66696C650000
@@ -2011,14 +2012,15 @@ object FormNewDocument: TFormNewDocument
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 437
-    Width = 580
+    Top = 589
+    Width = 578
     Height = 19
     Panels = <
       item
         Width = 200
       end>
-    ExplicitTop = 408
+    ExplicitLeft = -6
+    ExplicitTop = 531
   end
   object SendersList: TComboBox
     Left = 128
@@ -2057,8 +2059,8 @@ object FormNewDocument: TFormNewDocument
     TabOrder = 3
   end
   object ButtonOK: TButton
-    Left = 418
-    Top = 406
+    Left = 416
+    Top = 558
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -2066,8 +2068,8 @@ object FormNewDocument: TFormNewDocument
     OnClick = ButtonOKClick
   end
   object ButtonCANCEL: TButton
-    Left = 497
-    Top = 406
+    Left = 495
+    Top = 558
     Width = 75
     Height = 25
     Caption = 'Cancel'
@@ -2088,6 +2090,59 @@ object FormNewDocument: TFormNewDocument
     Width = 440
     Height = 21
     TabOrder = 7
+  end
+  object GroupBox1: TGroupBox
+    Left = 130
+    Top = 399
+    Width = 440
+    Height = 66
+    Caption = 'Aanspreking'
+    TabOrder = 8
+    object rbGeachte: TRadioButton
+      Left = 17
+      Top = 24
+      Width = 73
+      Height = 17
+      Caption = 'Geachte'
+      TabOrder = 0
+      OnClick = SetSalutation
+    end
+    object rbMijnheer: TRadioButton
+      Left = 96
+      Top = 24
+      Width = 73
+      Height = 17
+      Caption = 'Mijnheer'
+      TabOrder = 1
+      OnClick = SetSalutation
+    end
+    object rbMevrouw: TRadioButton
+      Left = 175
+      Top = 24
+      Width = 73
+      Height = 17
+      Caption = 'Mevrouw'
+      TabOrder = 2
+      OnClick = SetSalutation
+    end
+    object rbBeste: TRadioButton
+      Left = 254
+      Top = 24
+      Width = 73
+      Height = 17
+      Caption = 'Beste'
+      TabOrder = 3
+      OnClick = SetSalutation
+    end
+    object rbNone: TRadioButton
+      Left = 318
+      Top = 24
+      Width = 73
+      Height = 17
+      Caption = 'Geen'
+      TabOrder = 4
+      OnClick = SetSalutation
+    end
   end
   object TwisterConnection: TFDConnection
     Params.Strings = (

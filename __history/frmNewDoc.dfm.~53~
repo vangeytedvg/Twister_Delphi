@@ -2,8 +2,8 @@ object FormNewDocument: TFormNewDocument
   Left = 0
   Top = 0
   Caption = 'New Document Wizard'
-  ClientHeight = 427
-  ClientWidth = 576
+  ClientHeight = 456
+  ClientWidth = 580
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object FormNewDocument: TFormNewDocument
   PixelsPerInch = 96
   TextHeight = 13
   object lblSelectSender: TLabel
-    Left = 136
+    Left = 128
     Top = 8
     Width = 233
     Height = 20
@@ -29,7 +29,7 @@ object FormNewDocument: TFormNewDocument
   end
   object LabelFROM: TLabel
     Left = 128
-    Top = 75
+    Top = 61
     Width = 179
     Height = 17
     Caption = 'Dit is de hoofding van de brief'
@@ -41,8 +41,8 @@ object FormNewDocument: TFormNewDocument
     ParentFont = False
   end
   object LabelTO: TLabel
-    Left = 128
-    Top = 175
+    Left = 132
+    Top = 183
     Width = 155
     Height = 17
     Caption = 'Bestemmeling van de brief'
@@ -1982,8 +1982,8 @@ object FormNewDocument: TFormNewDocument
     Transparent = True
   end
   object Label1: TLabel
-    Left = 128
-    Top = 333
+    Left = 130
+    Top = 353
     Width = 438
     Height = 17
     Caption = 
@@ -1996,22 +1996,34 @@ object FormNewDocument: TFormNewDocument
     Font.Style = []
     ParentFont = False
   end
+  object LabelSubject: TLabel
+    Left = 130
+    Top = 303
+    Width = 155
+    Height = 17
+    Caption = 'Bestemmeling van de brief'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+  end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 408
-    Width = 576
+    Top = 437
+    Width = 580
     Height = 19
     Panels = <
       item
         Width = 200
       end>
-    ExplicitTop = 435
-    ExplicitWidth = 554
+    ExplicitTop = 408
   end
   object SendersList: TComboBox
     Left = 128
-    Top = 48
-    Width = 289
+    Top = 34
+    Width = 440
     Height = 21
     Style = csDropDownList
     Sorted = True
@@ -2020,9 +2032,9 @@ object FormNewDocument: TFormNewDocument
   end
   object MemoFROM: TMemo
     Left = 128
-    Top = 94
-    Width = 289
-    Height = 75
+    Top = 84
+    Width = 440
+    Height = 93
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -2032,10 +2044,10 @@ object FormNewDocument: TFormNewDocument
     TabOrder = 2
   end
   object MemoTO: TMemo
-    Left = 128
-    Top = 194
-    Width = 289
-    Height = 75
+    Left = 132
+    Top = 206
+    Width = 440
+    Height = 91
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -2045,8 +2057,8 @@ object FormNewDocument: TFormNewDocument
     TabOrder = 3
   end
   object ButtonOK: TButton
-    Left = 414
-    Top = 373
+    Left = 418
+    Top = 406
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -2054,36 +2066,27 @@ object FormNewDocument: TFormNewDocument
     OnClick = ButtonOKClick
   end
   object ButtonCANCEL: TButton
-    Left = 493
-    Top = 373
+    Left = 497
+    Top = 406
     Width = 75
     Height = 25
     Caption = 'Cancel'
     TabOrder = 5
     OnClick = ButtonCANCELClick
   end
-  object Subject: TLabeledEdit
-    Left = 128
-    Top = 296
-    Width = 418
-    Height = 25
-    EditLabel.Width = 34
-    EditLabel.Height = 13
-    EditLabel.Caption = 'Betreft'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 6
-  end
   object CheckBox_SocialSecurityNr: TCheckBox
-    Left = 128
-    Top = 352
+    Left = 130
+    Top = 376
     Width = 321
     Height = 17
     Caption = '...'
+    TabOrder = 6
+  end
+  object EditSubject: TEdit
+    Left = 128
+    Top = 326
+    Width = 440
+    Height = 21
     TabOrder = 7
   end
   object TwisterConnection: TFDConnection

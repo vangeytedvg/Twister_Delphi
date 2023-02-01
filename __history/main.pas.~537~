@@ -186,6 +186,7 @@ var
   currentDate: TDateTime;
   cursorPosition: TPoint;
   localShortDate : string;
+  subjecText : string;
 begin
   if IsDirty then
   begin
@@ -221,18 +222,20 @@ begin
     // Add the current date
     MyEditor.Lines.Add(localShortDate);
     MyEditor.Lines.Add('');
-    MyEditor.Lines.Add('');
+
 
     // The destineation of the letter
     MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-////    if FormNewDocumen = '' then then
-////
-////    begin
-////      MyEditor.Lines.Add(FormNewDocument.Subject.Text);
-//    end;
+    // Handle the subject if any
+    if FormNewDocument.EditSubject.Text <> '' then
+    begin
+      MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
+      MyEditor.Lines.Add('Betreft : ' + FormNewDocument.EditSubject.Text);
+    end;
+
     MyEditor.Lines.Add('');
 
 
