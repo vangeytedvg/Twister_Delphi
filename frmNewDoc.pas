@@ -12,7 +12,7 @@ uses
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
   FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
-  FireDAC.Comp.DataSet, Vcl.ExtCtrls, CustomComboItem;
+  FireDAC.Comp.DataSet, Vcl.ExtCtrls, CustomComboItem, Vcl.Imaging.pngimage;
 
 type
   TFormNewDocument = class(TForm)
@@ -23,9 +23,16 @@ type
 
     FDQryListOfSenders: TFDQuery;
     SendersList: TComboBox;
-    Label1: TLabel;
+    MemoFROM: TMemo;
+    LabelFROM: TLabel;
+    LabelTO: TLabel;
+    MemoTO: TMemo;
+    ButtonOK: TButton;
+    ButtonCANCEL: TButton;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure SendersListChange(Sender: TObject);
+    procedure ButtonOKClick(Sender: TObject);
   private
     { Private declarations }
     procedure LoadSenders;
@@ -39,6 +46,13 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
+begin
+  if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) then
+    ShowMessage('Please complete the form or click cancel to quit')
+  else Close;
+end;
 
 procedure TFormNewDocument.FormCreate(Sender: TObject);
 { When form is created, load the senders from the database }
@@ -81,13 +95,13 @@ begin
 end;
 
 procedure TFormNewDocument.SendersListChange(Sender: TObject);
-{ Get the selected Item and fill the FROM box
-  And use this }
+{ Get the selected Item and fill the FROM box }
 var
   myItem: TCustomComboBoxItem;
   qryString: string;
 begin
-  myItem := TCustomComboBoxItem(SendersList.items.Objects[SendersList.ItemIndex]);
+  myItem := TCustomComboBoxItem(SendersList.items.Objects
+    [SendersList.ItemIndex]);
   qryString := 'SELECT * FROM senders WHERE id=' + myItem.Value.ToString;
   with FDQryListOfSenders do
   begin
@@ -97,7 +111,13 @@ begin
   end;
   if Not(FDQryListOfSenders.Eof) then
   begin
-    ShowMessage(FDQryListOfSenders.FieldByName('address').AsString);
+    // Add the address to the FROM box
+    MemoFrom.Lines.Clear;
+    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('name').AsString + ' ' + FDQryListOfSenders.FieldByName('firstname').AsString);
+    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('address').AsString);
+    MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('zipcode').AsString + ' ' + FDQryListOfSenders.FieldByName('city').AsString);
+    MemoFROM.Lines.Add('GSM ' + FDQryListOfSenders.FieldByName('phone').AsString);
+    MemoFROM.Lines.Add('email ' + FDQryListOfSenders.FieldByName('email').AsString);
   end;
 end;
 

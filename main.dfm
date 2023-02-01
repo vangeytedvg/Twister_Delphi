@@ -145,7 +145,7 @@ object mainForm: TmainForm
       Left = 400
       Top = 0
       Action = EditUndo
-      ImageIndex = 17
+      ImageIndex = 18
     end
     object ToolButtonSelectFont: TToolButton
       Left = 448

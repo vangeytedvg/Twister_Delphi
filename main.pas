@@ -193,14 +193,13 @@ begin
       IsDirty := False;
       MyEditor.Lines.Clear;
     end;
-  end
-  else
-  begin
-    // FormNewDocument.Left := (Self.Width - FormNewDocument.Width) div 2;
-    // FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
-    FormNewDocument.Position := poOwnerFormCenter;
-    FormNewDocument.ShowModal();
   end;
+  // FormNewDocument.Left := (Self.Width - FormNewDocument.Width) div 2;
+  // FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
+  FormNewDocument.Position := poOwnerFormCenter;
+  FormNewDocument.ShowModal();
+  MyEditor.Lines.Add(FormNewDocument.MemoFROM.Text);
+
 end;
 
 procedure TmainForm.ActionOpenFileExecute(Sender: TObject);
@@ -219,7 +218,8 @@ begin
   ShowMessage('Save File');
 end;
 
-function TmainForm.CheckSingleWord(const WordToCheck: String): TUnicodeStringList;
+function TmainForm.CheckSingleWord(const WordToCheck: String)
+  : TUnicodeStringList;
 { Check a single word based on the selection of the popup }
 var
   tmpStr: TUnicodeStringList;
@@ -420,7 +420,6 @@ begin
   Sb.Panels[3].Text := IntToStr(CursorPosition.X + 1);
 
 end;
-
 
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
 begin
