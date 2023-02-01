@@ -81,7 +81,7 @@ begin
 end;
 
 procedure TFormNewDocument.SendersListChange(Sender: TObject);
-{ Get the selected Item }
+{ Get the selected Item and fill the FROM box }
 var
   myItem: TCustomComboBoxItem;
   qryString: string;
