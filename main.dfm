@@ -150,6 +150,7 @@ object mainForm: TmainForm
     object ToolButtonSelectFont: TToolButton
       Left = 448
       Top = 0
+      Hint = 'Lettertype kiezen'
       Caption = 'ToolButtonSelectFont'
       ImageIndex = 11
       OnClick = ToolButtonSelectFontClick
@@ -273,17 +274,19 @@ object mainForm: TmainForm
     Left = 32
     Top = 488
     object N1: TMenuItem
-      Caption = '&File'
+      Caption = '&Brief'
       object MenuNewFile: TMenuItem
-        Caption = '&New File'
+        Caption = '&Nieuwe brief'
       end
       object MenuSaveFile: TMenuItem
         Action = ActionSaveFile
+        Caption = 'Bewaar dit bestand'
         SubMenuImages = MyImages
         ShortCut = 16467
       end
       object MenuOpenFile: TMenuItem
         Action = ActionOpenFile
+        Caption = 'Open een bestaande brief'
       end
       object N3: TMenuItem
         Caption = '-'
@@ -295,7 +298,7 @@ object mainForm: TmainForm
         Caption = '-'
       end
       object MenuFileExit: TMenuItem
-        Caption = 'E&xit'
+        Caption = 'Afsluiten'
         OnClick = MenuExitClick
       end
     end
@@ -3022,35 +3025,35 @@ object mainForm: TmainForm
     Top = 488
     object EditCut: TEditCut
       Category = 'Edit'
-      Caption = 'Cu&t'
+      Caption = 'Knippen'
       Hint = 'Cut|Cuts the selection and puts it on the Clipboard'
       ImageIndex = 0
       ShortCut = 16472
     end
     object EditCopy: TEditCopy
       Category = 'Edit'
-      Caption = '&Copy'
+      Caption = 'Copieer geslecteerde tekst'
       Hint = 'Copy|Copies the selection and puts it on the Clipboard'
       ImageIndex = 1
       ShortCut = 16451
     end
     object EditPaste: TEditPaste
       Category = 'Edit'
-      Caption = '&Paste'
+      Caption = 'Tekst Plakken'
       Hint = 'Paste|Inserts Clipboard contents'
       ImageIndex = 2
       ShortCut = 16470
     end
     object EditUndo: TEditUndo
       Category = 'Edit'
-      Caption = '&Undo'
+      Caption = '&Ongedaan maken'
       Hint = 'Undo|Reverts the last action'
       ImageIndex = 3
       ShortCut = 16474
     end
     object EditDelete: TEditDelete
       Category = 'Edit'
-      Caption = '&Delete'
+      Caption = '&Tekst wissen'
       Hint = 'Delete|Erases the selection'
       ImageIndex = 5
       ShortCut = 46
@@ -3151,21 +3154,25 @@ object mainForm: TmainForm
     object ActionSaveFile: TAction
       Category = 'Files'
       Caption = 'Save File'
+      Hint = 'Brief bewaren'
       OnExecute = ActionSaveFileExecute
     end
     object ActionNewFile: TAction
       Category = 'Files'
       Caption = 'ActionNewFile'
+      Hint = 'Nieuwe brief aanmaken'
       OnExecute = ActionNewFileExecute
     end
     object ActionOpenFile: TAction
       Category = 'Files'
       Caption = 'Open File'
+      Hint = 'Open een bestaande brief'
       OnExecute = ActionOpenFileExecute
     end
     object ActionPrint: TAction
       Category = 'Files'
       Caption = 'Print'
+      Hint = 'Brief afdrukken'
       OnExecute = ActionPrintExecute
     end
   end

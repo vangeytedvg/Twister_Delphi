@@ -30,14 +30,20 @@ type
     ButtonOK: TButton;
     ButtonCANCEL: TButton;
     Image1: TImage;
+    Subject: TLabeledEdit;
+    CheckBox_SocialSecurityNr: TCheckBox;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure SendersListChange(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
+    procedure ButtonCANCELClick(Sender: TObject);
   private
     { Private declarations }
+    FCancelled: Boolean;
     procedure LoadSenders;
   public
     { Public declarations }
+    property UserClickedCancel: boolean read FCancelled write FCancelled;
   end;
 
 var
@@ -47,10 +53,18 @@ implementation
 
 {$R *.dfm}
 
+procedure TFormNewDocument.ButtonCANCELClick(Sender: TObject);
+begin
+  // If the user clicks on this button, set the flag to true,
+  // this avoids inserting bad data in het main form
+  UserClickedCancel := True;
+  Close;
+end;
+
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
 begin
   if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) then
-    ShowMessage('Please complete the form or click cancel to quit')
+    ShowMessage('Niet alle velden zijn ingevuled!')
   else Close;
 end;
 
@@ -118,6 +132,7 @@ begin
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('zipcode').AsString + ' ' + FDQryListOfSenders.FieldByName('city').AsString);
     MemoFROM.Lines.Add('GSM ' + FDQryListOfSenders.FieldByName('phone').AsString);
     MemoFROM.Lines.Add('email ' + FDQryListOfSenders.FieldByName('email').AsString);
+    CheckBox_SocialSecurityNr.Caption := FDQryListOfSenders.FieldByName('socialsecurity').AsString;
   end;
 end;
 

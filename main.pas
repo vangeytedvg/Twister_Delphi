@@ -182,6 +182,9 @@ begin
 end;
 
 procedure TmainForm.ActionNewFileExecute(Sender: TObject);
+var
+  currentDate: TDateTime;
+  localShortDate : string;
 begin
   if IsDirty then
   begin
@@ -198,8 +201,27 @@ begin
   // FormNewDocument.Top := (Self.Height - FormNewDocument.Height) div 2
   FormNewDocument.Position := poOwnerFormCenter;
   FormNewDocument.ShowModal();
-  MyEditor.Lines.Add(FormNewDocument.MemoFROM.Text);
+  if not FormNewDocument.UserClickedCancel then
+  begin
+    // Begin with the sender's details
+    MyEditor.SelectAll;
+    MyEditor.SelAttributes.Style := [fsBold];
+    MyEditor.Lines.Add(FormNewDocument.MemoFROM.Text);
+    currentDate := Now;
+    // If the social security checkbox is checked
+    if FormNewDocument.CheckBox_SocialSecurityNr.Checked then
+    begin
+      MyEditor.Lines.Add('Rijksregister: ' + FormNewDocument.CheckBox_SocialSecurityNr.Caption);
+    end;
+    localShortDate:=FormatDateTime('dddd, dd mmmm, yyyy', currentDate);
 
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    // Add the current date
+    MyEditor.Lines.Add(localShortDate);
+    MyEditor.SelAttributes.Style := [];
+  end;
 end;
 
 procedure TmainForm.ActionOpenFileExecute(Sender: TObject);
@@ -444,7 +466,7 @@ begin
 end;
 
 procedure TmainForm.UpdateDicts;
-{ Update the dictionary }
+{ Update the dictionary and initialize it }
 var
   intIndex: Integer;
 begin

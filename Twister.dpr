@@ -18,7 +18,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Cyan Dusk');
+  TStyleManager.TrySetStyle('Cyan Night');
   Application.CreateForm(TmainForm, mainForm);
   Application.CreateForm(TFormSettings, FormSettings);
   Application.CreateForm(TFormNewDocument, FormNewDocument);
