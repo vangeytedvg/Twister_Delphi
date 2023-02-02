@@ -319,6 +319,8 @@ begin
     begin
       myFileName := saveFileDialog.fileName;
       SaveRichEdit(MyEditor, myFilename);
+      ActionSaveFile.ImageIndex := 16;
+      ToolButtonSave.ImageIndex := 16;
     end;
   finally
     saveFileDialog.Free;
@@ -455,6 +457,8 @@ begin
   IsDirty := true;
   ActionSaveFile.Enabled := true;
   ActionPrint.Enabled := true;
+  ActionSaveFile.ImageIndex := 1;
+  ToolButtonSave.ImageIndex := 1;
 end;
 
 procedure TmainForm.MyEditorContextPopup(Sender: TObject; MousePos: TPoint;

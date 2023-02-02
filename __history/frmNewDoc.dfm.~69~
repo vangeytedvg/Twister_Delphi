@@ -2000,9 +2000,9 @@ object FormNewDocument: TFormNewDocument
   object LabelSubject: TLabel
     Left = 130
     Top = 303
-    Width = 155
+    Width = 117
     Height = 17
-    Caption = 'Bestemmeling van de brief'
+    Caption = 'Onderwerp (betreft)'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -2019,8 +2019,6 @@ object FormNewDocument: TFormNewDocument
       item
         Width = 200
       end>
-    ExplicitLeft = -6
-    ExplicitTop = 531
   end
   object SendersList: TComboBox
     Left = 128

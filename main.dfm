@@ -64,6 +64,8 @@ object mainForm: TmainForm
     OnChange = myEditorChange
     OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
+    ExplicitLeft = 180
+    ExplicitTop = 136
   end
   object ToolBar1: TToolBar
     Left = 0
