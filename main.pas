@@ -284,7 +284,7 @@ begin
     if openFileDialog.Execute() then
     begin
       myFileName := openFileDialog.fileName;
-      SaveRichEdit(MyEditor, myFilename);
+      MyEditor.Lines.LoadFromFile(myFilename);
     end;
   finally
     openFileDialog.Free;
