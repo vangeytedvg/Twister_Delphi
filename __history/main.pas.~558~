@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList,
-  Vcl.Menus, System.IniFiles,
+  Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
   EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc;
@@ -97,6 +97,7 @@ type
     N4: TMenuItem;
     ActionPrint: TAction;
     ToolButtonPrint: TToolButton;
+    SaveFileDialog: TSaveDialog;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -117,7 +118,8 @@ type
     procedure ActionPrintExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
-
+      const PrinterMargin: Integer);
+    procedure SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -186,8 +188,8 @@ procedure TmainForm.ActionNewFileExecute(Sender: TObject);
 var
   currentDate: TDateTime;
   cursorPosition: TPoint;
-  localShortDate : string;
-  subjecText : string;
+  localShortDate: string;
+  subjecText: string;
 begin
   if IsDirty then
   begin
@@ -214,16 +216,16 @@ begin
     // If the social security checkbox is checked
     if FormNewDocument.CheckBox_SocialSecurityNr.Checked then
     begin
-      MyEditor.Lines.Add('Rijksregister: ' + FormNewDocument.CheckBox_SocialSecurityNr.Caption);
+      MyEditor.Lines.Add('Rijksregister: ' +
+        FormNewDocument.CheckBox_SocialSecurityNr.Caption);
     end;
-    localShortDate:=FormatDateTime('dddd, dd mmmm, yyyy', currentDate);
+    localShortDate := FormatDateTime('dddd, dd mmmm, yyyy', currentDate);
 
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
     // Add the current date
     MyEditor.Lines.Add(localShortDate);
     MyEditor.Lines.Add('');
-
 
     // The destineation of the letter
     MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
@@ -261,7 +263,6 @@ begin
 
     MyEditor.Lines.Add(FormNewDocument.SenderFullName);
 
-
   end;
 end;
 
@@ -273,14 +274,14 @@ end;
 procedure TmainForm.ActionPrintExecute(Sender: TObject);
 begin
   if IsDirty then
-    If MessageDlg('Bent U zeker dat U het document wilt afdrukken?', mtConfirmation, [mbYes, mbNo],
-      0) = mrYes then
-      MyEditor.Print('');
+    If MessageDlg('Bent U zeker dat U het document wilt afdrukken?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      PrintRichEdit(MyEditor, '', 20)
 end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
 begin
-  ShowMessage('Save File');
+  SaveFileDialog.Execute();
 end;
 
 function TmainForm.CheckSingleWord(const WordToCheck: String)
@@ -332,7 +333,7 @@ begin
   // Read the position of the form
   IsDirty := False;
   // Can not print an empty form
-  ActionPrint.Enabled := false;
+  ActionPrint.Enabled := False;
   // create an instance of the ruler
   MyRuler := TRuler.create(self);
   MyRuler.Parent := RulerHolder;
@@ -478,13 +479,13 @@ end;
 procedure TmainForm.MyEditorSelectionChange(Sender: TObject);
 { Selection changed, inform the position }
 var
-  CursorPosition: TPoint;
+  cursorPosition: TPoint;
 begin
   // Get the cursor position
-  CursorPosition := MyEditor.CaretPos;
+  cursorPosition := MyEditor.CaretPos;
   // Show in the statusbar
-  Sb.Panels[2].Text := IntToStr(CursorPosition.Y + 1);
-  Sb.Panels[3].Text := IntToStr(CursorPosition.X + 1);
+  Sb.Panels[2].Text := IntToStr(cursorPosition.Y + 1);
+  Sb.Panels[3].Text := IntToStr(cursorPosition.X + 1);
 
 end;
 
@@ -536,7 +537,6 @@ begin
   ToolButtenSpellCheck.Enabled := (lbSpellDicts.Itemindex > -1) and
     TNHSpellDictionary(lbSpellDicts.Items.Objects
     [lbSpellDicts.Itemindex]).Loaded;
-  // btnHyphenate.Enabled := (lbHyphenDicts.ItemIndex > -1) and TNHHyphenDictionary(lbHyphenDicts.Items.Objects[lbHyphenDicts.ItemIndex]).Loaded;
 end;
 
 procedure TmainForm.lbSpellDictsClickCheck(Sender: TObject);
@@ -548,10 +548,9 @@ begin
   UpdateButtons;
 end;
 
-
 procedure TmainForm.PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
   const PrinterMargin: Integer);
-//the units of TRichEdit.PageRect are pixels, units of PrinterMargin are mm
+{ Print the document with correct margin settings }
 var
   PrinterHeight, PrinterWidth: Integer;
   LogPixels, PrinterTopLeft: TPoint;
@@ -559,24 +558,45 @@ var
   Handle: HDC;
   Printer: TPrinter;
 begin
-  Handle := Printer.Handle;
-  LogPixels := Point(GetDeviceCaps(Handle, LOGPIXELSX),
-    GetDeviceCaps(Handle, LOGPIXELSY));
-  PrinterTopLeft := Point(GetDeviceCaps(Handle, PHYSICALOFFSETX),
-    GetDeviceCaps(Handle, PHYSICALOFFSETY));
-  PrinterWidth := Printer.PageWidth;
-  PrinterHeight := Printer.PageHeight;
-  PageRect.Left := Max(0, Round(PrinterMargin*LogPixels.X/25.4)
-    - PrinterTopLeft.X);
-  PageRect.Top := Max(0, Round(PrinterMargin*LogPixels.Y/25.4)
-    - PrinterTopLeft.Y);
-  PageRect.Right := PrinterWidth-PageRect.Left;
-  PageRect.Bottom := PrinterHeight-PageRect.Top;
-  if (PageRect.Left>=PageRect.Right) or (PageRect.Top>=PageRect.Bottom) then
-    //the margins are too big
-    PageRect := Rect(0, 0, 0, 0);
-  RichEdit.PageRect := PageRect;
-  RichEdit.Print(Caption);
+  try
+    // Create an instance of the printer
+    Printer := TPrinter.create;
+    Handle := Printer.Handle;
+    LogPixels := Point(GetDeviceCaps(Handle, LOGPIXELSX),
+      GetDeviceCaps(Handle, LOGPIXELSY));
+    PrinterTopLeft := Point(GetDeviceCaps(Handle, PHYSICALOFFSETX),
+      GetDeviceCaps(Handle, PHYSICALOFFSETY));
+    PrinterWidth := Printer.PageWidth;
+    PrinterHeight := Printer.PageHeight;
+    PageRect.Left := Max(0, Round(PrinterMargin * LogPixels.X / 25.4) -
+      PrinterTopLeft.X);
+    PageRect.Top := Max(0, Round(PrinterMargin * LogPixels.Y / 25.4) -
+      PrinterTopLeft.Y);
+    PageRect.Right := PrinterWidth - PageRect.Left;
+    PageRect.Bottom := PrinterHeight - PageRect.Top;
+    if (PageRect.Left >= PageRect.Right) or (PageRect.Top >= PageRect.Bottom)
+    then
+      // the margins are too big
+      PageRect := Rect(0, 0, 0, 0);
+      RichEdit.PageRect := PageRect;
+  finally
+    // Always be sure to free the printer instance
+    Printer.Free;
+  end;
+end;
+
+procedure TmainForm.SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
+{ Write the contents of the editor to disk }
+var
+  RichEditStream: TMemoryStream;
+begin
+  RichEditStream := TMemoryStream.Create;
+  try
+    MyEditor.Lines.SaveToStream(RichEditStream);
+    RichEditStream.SaveToFile(fileName);
+  finally
+    RichEditStream.Free;
+  end;
 end;
 
 end.

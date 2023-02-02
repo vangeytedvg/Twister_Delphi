@@ -118,7 +118,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
       const PrinterMargin: Integer);
-
+    procedure SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -275,12 +275,24 @@ begin
   if IsDirty then
     If MessageDlg('Bent U zeker dat U het document wilt afdrukken?',
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-      PrintRichEdit(MyEditor, '', 10)
+      PrintRichEdit(MyEditor, '', 20)
 end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
+var
+  myFileName: string;
+  saveFileDialog: TSaveDialog;
 begin
-  ShowMessage('Save File');
+  try
+        if SaveFileDialog.Execute() then
+  begin
+    myFileName := SaveFileDialog.FileName;
+    showMessage(myFilename);
+  end;
+  finally
+
+  end;
+
 end;
 
 function TmainForm.CheckSingleWord(const WordToCheck: String)
@@ -536,7 +548,6 @@ begin
   ToolButtenSpellCheck.Enabled := (lbSpellDicts.Itemindex > -1) and
     TNHSpellDictionary(lbSpellDicts.Items.Objects
     [lbSpellDicts.Itemindex]).Loaded;
-  // btnHyphenate.Enabled := (lbHyphenDicts.ItemIndex > -1) and TNHHyphenDictionary(lbHyphenDicts.Items.Objects[lbHyphenDicts.ItemIndex]).Loaded;
 end;
 
 procedure TmainForm.lbSpellDictsClickCheck(Sender: TObject);
@@ -550,6 +561,7 @@ end;
 
 procedure TmainForm.PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
   const PrinterMargin: Integer);
+{ Print the document with correct margin settings }
 var
   PrinterHeight, PrinterWidth: Integer;
   LogPixels, PrinterTopLeft: TPoint;
@@ -557,24 +569,45 @@ var
   Handle: HDC;
   Printer: TPrinter;
 begin
-  Handle := Printer.Handle;
-  LogPixels := Point(GetDeviceCaps(Handle, LOGPIXELSX),
-    GetDeviceCaps(Handle, LOGPIXELSY));
-  PrinterTopLeft := Point(GetDeviceCaps(Handle, PHYSICALOFFSETX),
-    GetDeviceCaps(Handle, PHYSICALOFFSETY));
-  PrinterWidth := Printer.PageWidth;
-  PrinterHeight := Printer.PageHeight;
-  PageRect.Left := Max(0, Round(PrinterMargin * LogPixels.X / 25.4) -
-    PrinterTopLeft.X);
-  PageRect.Top := Max(0, Round(PrinterMargin * LogPixels.Y / 25.4) -
-    PrinterTopLeft.Y);
-  PageRect.Right := PrinterWidth - PageRect.Left;
-  PageRect.Bottom := PrinterHeight - PageRect.Top;
-  if (PageRect.Left >= PageRect.Right) or (PageRect.Top >= PageRect.Bottom) then
-    // the margins are too big
-    PageRect := Rect(0, 0, 0, 0);
-  RichEdit.PageRect := PageRect;
-  RichEdit.Print(Caption);
+  try
+    // Create an instance of the printer
+    Printer := TPrinter.create;
+    Handle := Printer.Handle;
+    LogPixels := Point(GetDeviceCaps(Handle, LOGPIXELSX),
+      GetDeviceCaps(Handle, LOGPIXELSY));
+    PrinterTopLeft := Point(GetDeviceCaps(Handle, PHYSICALOFFSETX),
+      GetDeviceCaps(Handle, PHYSICALOFFSETY));
+    PrinterWidth := Printer.PageWidth;
+    PrinterHeight := Printer.PageHeight;
+    PageRect.Left := Max(0, Round(PrinterMargin * LogPixels.X / 25.4) -
+      PrinterTopLeft.X);
+    PageRect.Top := Max(0, Round(PrinterMargin * LogPixels.Y / 25.4) -
+      PrinterTopLeft.Y);
+    PageRect.Right := PrinterWidth - PageRect.Left;
+    PageRect.Bottom := PrinterHeight - PageRect.Top;
+    if (PageRect.Left >= PageRect.Right) or (PageRect.Top >= PageRect.Bottom)
+    then
+      // the margins are too big
+      PageRect := Rect(0, 0, 0, 0);
+      RichEdit.PageRect := PageRect;
+  finally
+    // Always be sure to free the printer instance
+    Printer.Free;
+  end;
+end;
+
+procedure TmainForm.SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
+{ Write the contents of the editor to disk }
+var
+  RichEditStream: TMemoryStream;
+begin
+  RichEditStream := TMemoryStream.Create;
+  try
+    MyEditor.Lines.SaveToStream(RichEditStream);
+    RichEditStream.SaveToFile(fileName);
+  finally
+    RichEditStream.Free;
+  end;
 end;
 
 end.

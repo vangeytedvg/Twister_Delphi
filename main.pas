@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
+  System.Classes, Vcl.Graphics, Winapi.ShlObj,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList,
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
@@ -266,8 +266,29 @@ begin
 end;
 
 procedure TmainForm.ActionOpenFileExecute(Sender: TObject);
+var
+  myFileName: string;
+  openFileDialog: TOpenDialog;
+  Path: array[0..MAX_PATH] of Char;
 begin
-  ShowMessage('Open File');
+  try
+    openFileDialog := TOpenDialog.Create(self);
+    openFileDialog.Title := 'Open een bestaand bestand';
+    // This is tricky, but ChatGPT gave me the correct answer to get the
+    // user's Documents folder
+    if SUCCEEDED(SHGetFolderPath(0, CSIDL_PERSONAL, 0, 0, @Path[0])) then
+      openFileDialog.InitialDir := ExpandFileName(Path);
+    openFileDialog.Filter := 'Twister Document|*.twister';
+    openFileDialog.DefaultExt := 'twister';
+    openFileDialog.FilterIndex := 1;
+    if openFileDialog.Execute() then
+    begin
+      myFileName := openFileDialog.fileName;
+      SaveRichEdit(MyEditor, myFilename);
+    end;
+  finally
+    openFileDialog.Free;
+  end;
 end;
 
 procedure TmainForm.ActionPrintExecute(Sender: TObject);
@@ -280,15 +301,29 @@ end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
 var
-  RichEditStream: TMemoryStream;
+  myFileName: string;
+  saveFileDialog: TSaveDialog;
+  Path: array[0..MAX_PATH] of Char;
 begin
-  RichEditStream := TMemoryStream.Create;
   try
-    MyEditor.Lines.SaveToStream(RichEditStream);
-    RichEditStream.SaveToFile('file.rtf');
+    saveFileDialog := TSaveDialog.Create(self);
+    saveFileDialog.Title := 'Geef een naam voor dit bestand';
+    // This is tricky, but ChatGPT gave me the correct answer to get the
+    // user's Documents folder
+    if SUCCEEDED(SHGetFolderPath(0, CSIDL_PERSONAL, 0, 0, @Path[0])) then
+      SaveFileDialog.InitialDir := ExpandFileName(Path);
+    saveFileDialog.Filter := 'Twister Document|*.twister';
+    saveFileDialog.DefaultExt := 'twister';
+    saveFileDialog.FilterIndex := 1;
+    if saveFileDialog.Execute() then
+    begin
+      myFileName := saveFileDialog.fileName;
+      SaveRichEdit(MyEditor, myFilename);
+    end;
   finally
-    RichEditStream.Free;
+    saveFileDialog.Free;
   end;
+
 end;
 
 function TmainForm.CheckSingleWord(const WordToCheck: String)
@@ -585,7 +620,7 @@ begin
     then
       // the margins are too big
       PageRect := Rect(0, 0, 0, 0);
-      RichEdit.PageRect := PageRect;
+    RichEdit.PageRect := PageRect;
   finally
     // Always be sure to free the printer instance
     Printer.Free;
@@ -597,7 +632,7 @@ procedure TmainForm.SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
 var
   RichEditStream: TMemoryStream;
 begin
-  RichEditStream := TMemoryStream.Create;
+  RichEditStream := TMemoryStream.create;
   try
     MyEditor.Lines.SaveToStream(RichEditStream);
     RichEditStream.SaveToFile(fileName);

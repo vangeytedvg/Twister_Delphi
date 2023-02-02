@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
+  System.Classes, Vcl.Graphics, Winapi.ShlObj,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList,
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
@@ -118,7 +118,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
       const PrinterMargin: Integer);
-
+    procedure SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -279,8 +279,29 @@ begin
 end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
+var
+  myFileName: string;
+  saveFileDialog: TSaveDialog;
+  Path: array[0..MAX_PATH] of Char;
 begin
-  ShowMessage('Save File');
+  try
+    saveFileDialog := TSaveDialog.Create(self);
+    saveFileDialog.Title := 'Geef een naam voor dit bestand';
+    if SUCCEEDED(SHGetFolderPath(0, CSIDL_PERSONAL, 0, 0, @Path[0])) then
+      SaveFileDialog.InitialDir := ExpandFileName(Path);
+    saveFileDialog.Filter := 'Twister Document|*.twister';
+    saveFileDialog.DefaultExt := 'twister';
+    saveFileDialog.FilterIndex := 1;
+
+    if saveFileDialog.Execute() then
+    begin
+      myFileName := saveFileDialog.fileName;
+      ShowMessage(myFileName);
+    end;
+  finally
+    saveFileDialog.Free;
+  end;
+
 end;
 
 function TmainForm.CheckSingleWord(const WordToCheck: String)
@@ -578,12 +599,24 @@ begin
       // the margins are too big
       PageRect := Rect(0, 0, 0, 0);
     RichEdit.PageRect := PageRect;
-    RichEdit.Print(Caption);
   finally
     // Always be sure to free the printer instance
     Printer.Free;
   end;
+end;
 
+procedure TmainForm.SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
+{ Write the contents of the editor to disk }
+var
+  RichEditStream: TMemoryStream;
+begin
+  RichEditStream := TMemoryStream.create;
+  try
+    MyEditor.Lines.SaveToStream(RichEditStream);
+    RichEditStream.SaveToFile(fileName);
+  finally
+    RichEditStream.Free;
+  end;
 end;
 
 end.
