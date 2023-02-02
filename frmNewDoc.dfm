@@ -2,7 +2,7 @@ object FormNewDocument: TFormNewDocument
   Left = 0
   Top = 0
   Caption = 'New Document Wizard'
-  ClientHeight = 608
+  ClientHeight = 593
   ClientWidth = 578
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -2012,7 +2012,7 @@ object FormNewDocument: TFormNewDocument
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 589
+    Top = 574
     Width = 578
     Height = 19
     Panels = <
@@ -2059,8 +2059,8 @@ object FormNewDocument: TFormNewDocument
     TabOrder = 3
   end
   object ButtonOK: TButton
-    Left = 416
-    Top = 558
+    Left = 414
+    Top = 543
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -2069,7 +2069,7 @@ object FormNewDocument: TFormNewDocument
   end
   object ButtonCANCEL: TButton
     Left = 495
-    Top = 558
+    Top = 543
     Width = 75
     Height = 25
     Caption = 'Cancel'
@@ -2128,20 +2128,55 @@ object FormNewDocument: TFormNewDocument
     object rbBeste: TRadioButton
       Left = 254
       Top = 24
-      Width = 73
+      Width = 51
       Height = 17
       Caption = 'Beste'
       TabOrder = 3
       OnClick = SetSalutation
     end
     object rbNone: TRadioButton
-      Left = 318
+      Left = 311
       Top = 24
       Width = 73
       Height = 17
       Caption = 'Geen'
       TabOrder = 4
       OnClick = SetSalutation
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 130
+    Top = 471
+    Width = 440
+    Height = 66
+    Caption = 'Afsluiting'
+    TabOrder = 9
+    object rbMetAchting: TRadioButton
+      Left = 17
+      Top = 24
+      Width = 80
+      Height = 17
+      Caption = 'Met achting,'
+      TabOrder = 0
+      OnClick = SetSignature
+    end
+    object rbHoogachtend: TRadioButton
+      Left = 112
+      Top = 24
+      Width = 97
+      Height = 17
+      Caption = 'Hoogachtend,'
+      TabOrder = 1
+      OnClick = SetSignature
+    end
+    object rbMetVriendelijkegroeten: TRadioButton
+      Left = 215
+      Top = 24
+      Width = 146
+      Height = 17
+      Caption = 'Met vriendelijke groeten,'
+      TabOrder = 2
+      OnClick = SetSignature
     end
   end
   object TwisterConnection: TFDConnection

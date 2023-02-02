@@ -39,19 +39,26 @@ type
     rbMevrouw: TRadioButton;
     rbBeste: TRadioButton;
     rbNone: TRadioButton;
+    GroupBox2: TGroupBox;
+    rbMetAchting: TRadioButton;
+    rbHoogachtend: TRadioButton;
+    rbMetVriendelijkegroeten: TRadioButton;
     procedure FormCreate(Sender: TObject);
     procedure SendersListChange(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
     procedure ButtonCANCELClick(Sender: TObject);
     procedure SetSalutation(Sender: TObject);
+    procedure SetSignature(Sender: TObject);
   private
     { Private declarations }
     FCancelled: Boolean;
     FSalutation: string;
+    FSignature: string;
     procedure LoadSenders;
   public
     property UserClickedCancel: Boolean read FCancelled write FCancelled;
-    property Salute: Boolean read FSalutation write FSalutation;
+    property Salutation: string read FSalutation write FSalutation;
+    property Signature: string read FSignature write FSignature;
   end;
 
 var
@@ -155,9 +162,17 @@ procedure TFormNewDocument.SetSalutation(Sender: TObject);
 begin
   with sender as TRadioButton do
   begin
-    ShowMessage(Caption);
+    Salutation := Caption;
   end;
 
+end;
+
+procedure TFormNewDocument.SetSignature(Sender: TObject);
+begin
+  with sender as TRadioButton do
+  begin
+    Signature := Caption;
+  end;
 end;
 
 end.

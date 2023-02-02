@@ -29,20 +29,29 @@ type
     ButtonOK: TButton;
     ButtonCANCEL: TButton;
     Image1: TImage;
-    Subject: TLabeledEdit;
     CheckBox_SocialSecurityNr: TCheckBox;
     Label1: TLabel;
+    EditSubject: TEdit;
+    LabelSubject: TLabel;
+    GroupBox1: TGroupBox;
+    rbGeachte: TRadioButton;
+    rbMijnheer: TRadioButton;
+    rbMevrouw: TRadioButton;
+    rbBeste: TRadioButton;
+    rbNone: TRadioButton;
     procedure FormCreate(Sender: TObject);
     procedure SendersListChange(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
     procedure ButtonCANCELClick(Sender: TObject);
+    procedure SetSalutation(Sender: TObject);
   private
     { Private declarations }
     FCancelled: Boolean;
+    FSalutation: string;
     procedure LoadSenders;
   public
-    { Public declarations }
     property UserClickedCancel: Boolean read FCancelled write FCancelled;
+    property Salutation: string read FSalutation write FSalutation;
   end;
 
 var
@@ -61,9 +70,10 @@ begin
 end;
 
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
+{ Close the form, but warn if some fields not filled in}
 begin
   if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) then
-    ShowMessage('Niet alle velden zijn ingevuled!')
+    ShowMessage('Niet alle velden zijn ingevuld!')
   else
     Close;
 end;
@@ -139,6 +149,15 @@ begin
     CheckBox_SocialSecurityNr.Caption := FDQryListOfSenders.FieldByName
       ('socialsecurity').AsString;
   end;
+end;
+
+procedure TFormNewDocument.SetSalutation(Sender: TObject);
+begin
+  with sender as TRadioButton do
+  begin
+    ShowMessage(Caption);
+  end;
+
 end;
 
 end.
