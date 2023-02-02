@@ -229,16 +229,15 @@ begin
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
+    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
-
+      MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
+      MyEditor.Lines.Add('Betreft : ' + FormNewDocument.EditSubject.Text);
       MyEditor.SelAttributes.Style := [];
-      MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
     end;
 
     MyEditor.Lines.Add('');
-
-
 
     // Disable the bold characters
     MyEditor.SelStart := MyEditor.GetTextLen;
@@ -246,8 +245,15 @@ begin
 
     MyEditor.SelAttributes.Style := [];
 
-//    MyEditor.Lines.Add('<briefinhoud>');
+    // Salutation
+    MyEditor.Lines.Add(FormNewDocument.Salutation);
 
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    // Signature
+    MyEditor.Lines.Add(FormNewDocument.Signature);
 
   end;
 end;

@@ -222,23 +222,22 @@ begin
     // Add the current date
     MyEditor.Lines.Add(localShortDate);
     MyEditor.Lines.Add('');
-    MyEditor.Lines.Add('');
+
 
     // The destineation of the letter
     MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
+    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
-
+      MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
+      MyEditor.Lines.Add('Betreft: ' + FormNewDocument.EditSubject.Text);
       MyEditor.SelAttributes.Style := [];
-      MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
     end;
 
     MyEditor.Lines.Add('');
-
-
 
     // Disable the bold characters
     MyEditor.SelStart := MyEditor.GetTextLen;
@@ -246,7 +245,20 @@ begin
 
     MyEditor.SelAttributes.Style := [];
 
-//    MyEditor.Lines.Add('<briefinhoud>');
+    // Salutation
+    MyEditor.Lines.Add(FormNewDocument.Salutation);
+
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    // Signature
+    MyEditor.Lines.Add(FormNewDocument.Signature);
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    MyEditor.Lines.Add(FormNewDocument.SenderFullName);
 
 
   end;
@@ -259,8 +271,10 @@ end;
 
 procedure TmainForm.ActionPrintExecute(Sender: TObject);
 begin
-  ShowMessage('Print');
-  // MyEditor.Print('My New Document');
+  if IsDirty then
+    If MessageDlg('Bent U zeker dat U het document wilt afdrukken?', mtConfirmation, [mbYes, mbNo],
+      0) = mrYes then
+      MyEditor.Print('');
 end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);

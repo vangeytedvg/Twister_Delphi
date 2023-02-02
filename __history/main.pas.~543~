@@ -186,6 +186,7 @@ var
   currentDate: TDateTime;
   cursorPosition: TPoint;
   localShortDate : string;
+  subjecText : string;
 begin
   if IsDirty then
   begin
@@ -221,23 +222,22 @@ begin
     // Add the current date
     MyEditor.Lines.Add(localShortDate);
     MyEditor.Lines.Add('');
-    MyEditor.Lines.Add('');
+
 
     // The destineation of the letter
     MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-    if not (FormNewDocument.EditSubject.Text) = ''  then
+    // Handle the subject if any
+    if FormNewDocument.EditSubject.Text <> '' then
     begin
-
+      MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
+      MyEditor.Lines.Add('Betreft: ' + FormNewDocument.EditSubject.Text);
+      MyEditor.SelAttributes.Style := [];
     end;
 
-    MyEditor.Lines.Add(FormNewDocument.EditSubject.Text);
-
     MyEditor.Lines.Add('');
-
-
 
     // Disable the bold characters
     MyEditor.SelStart := MyEditor.GetTextLen;
@@ -245,8 +245,15 @@ begin
 
     MyEditor.SelAttributes.Style := [];
 
-//    MyEditor.Lines.Add('<briefinhoud>');
+    // Salutation
+    MyEditor.Lines.Add(FormNewDocument.Salutation);
 
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+    MyEditor.Lines.Add('');
+
+    // Signature
+    MyEditor.Lines.Add(FormNewDocument.Signature);
 
   end;
 end;
