@@ -79,12 +79,17 @@ begin
   // If the user clicks on this button, set the flag to true,
   // this avoids inserting bad data in het main form
   if IsDirty then
-    If MessageDlg('Wijzigingen vergeten?', mtConfirmation, [mbYes, mbNo],
-      0) = mrYes then
+  begin
+    If MessageDlg('Wijzigingen vergeten?', mtConfirmation, [mbYes, mbNo], 0) = mrYes
+    then
     begin
       UserClickedCancel := True;
       Close;
-  end;
+    end
+  end
+    else
+      UserClickedCancel := True;
+      Close;
 end;
 
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);

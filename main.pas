@@ -9,7 +9,7 @@ uses
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
-  EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc;
+  EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc, frmSplash;
 
 type
   TmainForm = class(TForm)
@@ -192,8 +192,8 @@ var
 begin
   if IsDirty then
   begin
-    If MessageDlg('Wilt U de wijzigingen oplsaan?', mtConfirmation, [mbYes, mbNo],
-      0) = mrYes then
+    If MessageDlg('Wilt U de wijzigingen oplsaan?', mtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
       // Save the file
     else
     begin
@@ -269,7 +269,7 @@ procedure TmainForm.ActionOpenFileExecute(Sender: TObject);
 var
   myFileName: string;
   openFileDialog: TOpenDialog;
-  Path: array[0..MAX_PATH] of Char;
+  Path: array [0 .. MAX_PATH] of Char;
 begin
   try
     openFileDialog := TOpenDialog.Create(self);
@@ -284,7 +284,7 @@ begin
     if openFileDialog.Execute() then
     begin
       myFileName := openFileDialog.fileName;
-      MyEditor.Lines.LoadFromFile(myFilename);
+      MyEditor.Lines.LoadFromFile(myFileName);
     end;
   finally
     openFileDialog.Free;
@@ -303,7 +303,7 @@ procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
 var
   myFileName: string;
   saveFileDialog: TSaveDialog;
-  Path: array[0..MAX_PATH] of Char;
+  Path: array [0 .. MAX_PATH] of Char;
 begin
   try
     saveFileDialog := TSaveDialog.Create(self);
@@ -311,14 +311,14 @@ begin
     // This is tricky, but ChatGPT gave me the correct answer to get the
     // user's Documents folder
     if SUCCEEDED(SHGetFolderPath(0, CSIDL_PERSONAL, 0, 0, @Path[0])) then
-      SaveFileDialog.InitialDir := ExpandFileName(Path);
+      saveFileDialog.InitialDir := ExpandFileName(Path);
     saveFileDialog.Filter := 'Twister Document|*.twister';
     saveFileDialog.DefaultExt := 'twister';
     saveFileDialog.FilterIndex := 1;
     if saveFileDialog.Execute() then
     begin
       myFileName := saveFileDialog.fileName;
-      SaveRichEdit(MyEditor, myFilename);
+      SaveRichEdit(MyEditor, myFileName);
       ActionSaveFile.ImageIndex := 16;
       ToolButtonSave.ImageIndex := 16;
     end;
@@ -338,7 +338,7 @@ begin
   if not TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
     .Spell(WordToCheck) then
   begin
-    tmpStr := TUnicodeStringList.create;
+    tmpStr := TUnicodeStringList.Create;
     TNHSpellDictionary(lbSpellDicts.Items.Objects[lbSpellDicts.Itemindex])
       .Suggest(WordToCheck, tmpStr);
     if tmpStr.Count = 0 then
@@ -353,7 +353,7 @@ begin
   else
   begin
     Word := 'Word is Correct';
-    tmpStr := TUnicodeStringList.create();
+    tmpStr := TUnicodeStringList.Create();
     tmpStr.Add(Word);
     Result := tmpStr;
   end;
@@ -373,25 +373,36 @@ procedure TmainForm.FormCreate(Sender: TObject);
 var
   i: Integer;
   width, height: LongInt;
+  spellFile: string;
+  SplashScreen: TFormSplash;
 begin
   // Read the position of the form
+  SplashScreen := TFormSplash.Create(nil);
+  SplashScreen.ShowModal;
+  SplashScreen.Free;
   IsDirty := False;
   // Can not print an empty form
   ActionPrint.Enabled := False;
   // create an instance of the ruler
-  MyRuler := TRuler.create(self);
+  MyRuler := TRuler.Create(self);
   MyRuler.Parent := RulerHolder;
   MyRuler.width := RulerHolder.width;
   MyRuler.RulerMeasure := 10;
   MyRuler.RulerColor := clWhite;
-  Hunspell.ReadOXT
-    ('C:\Development\Delphi\Twister\Dictionaries\nl-dict-v2.00g.oxt');
-  UpdateDicts;
-  lbSpellDicts.CheckAll(cbChecked, False, true);
-  CanSpellCheck := true;
-  ActionSaveFile.Enabled := False;
-  lbSpellDicts.CheckAll(cbChecked, False, true);
-  lbSpellDicts.Selected[0] := true;
+  spellFile := '.\Dictionaries\nl-dict-v2.00g.oxt';
+  if FileExists(spellFile) then
+  begin
+    Hunspell.ReadOXT(spellFile);
+    UpdateDicts;
+    lbSpellDicts.CheckAll(cbChecked, False, true);
+    CanSpellCheck := true;
+    ActionSaveFile.Enabled := False;
+    lbSpellDicts.CheckAll(cbChecked, False, true);
+    lbSpellDicts.Selected[0] := true;
+  end
+  else
+    ShowMessage('Vertaling niet aanwezig');
+
 end;
 
 procedure TmainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -401,7 +412,7 @@ var
 begin
 
   try
-    SettingFile := TIniFile.create(ChangeFileExt(Application.ExeName, '.INI'));
+    SettingFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.INI'));
     SettingFile.WriteInteger('WindowPosition', 'Left', mainForm.Left);
     SettingFile.WriteInteger('WindowPosition', 'Top', mainForm.Top);
     SettingFile.WriteInteger('WindowSize', 'Width', mainForm.width);
@@ -438,7 +449,7 @@ begin
   // Read the position of the form, if this code is ran in the Create method,
   // it generates an exception in Width and height
   try
-    SettingFile := TIniFile.create(ChangeFileExt(Application.ExeName, '.INI'));
+    SettingFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.INI'));
     mainForm.Left := SettingFile.ReadInteger('WindowPosition', 'Left', 0);
     mainForm.Top := SettingFile.ReadInteger('WindowPosition', 'Top', 0);
     mainForm.width := SettingFile.ReadInteger('WindowSize', 'Width',
@@ -476,7 +487,7 @@ begin
   if SelString = '' then
   begin
     PopupForEditor.Items.Clear;
-    PopupItem := TMenuItem.create(PopupForEditor);
+    PopupItem := TMenuItem.Create(PopupForEditor);
     PopupItem.Caption := 'Nothing Selected';
     PopupItem.OnClick := MyClickEventHandler;
     PopupItem.Enabled := False;
@@ -493,7 +504,7 @@ begin
     try
       for i := 0 to mRes.Count - 1 do
       begin
-        PopupItem := TMenuItem.create(PopupForEditor);
+        PopupItem := TMenuItem.Create(PopupForEditor);
         PopupItem.Caption := mRes[i];
         PopupItem.OnClick := MyClickEventHandler;
         PopupForEditor.Items.Add(PopupItem);
@@ -606,7 +617,7 @@ var
 begin
   try
     // Create an instance of the printer
-    Printer := TPrinter.create;
+    Printer := TPrinter.Create;
     Handle := Printer.Handle;
     LogPixels := Point(GetDeviceCaps(Handle, LOGPIXELSX),
       GetDeviceCaps(Handle, LOGPIXELSY));
@@ -636,7 +647,7 @@ procedure TmainForm.SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
 var
   RichEditStream: TMemoryStream;
 begin
-  RichEditStream := TMemoryStream.create;
+  RichEditStream := TMemoryStream.Create;
   try
     MyEditor.Lines.SaveToStream(RichEditStream);
     RichEditStream.SaveToFile(fileName);

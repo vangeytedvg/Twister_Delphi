@@ -146,6 +146,10 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="CustomComboItem.pas"/>
+        <DCCReference Include="frmSplash.pas">
+            <Form>FormSplash</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Twister.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

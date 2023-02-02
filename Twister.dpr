@@ -11,18 +11,18 @@ uses
   PasZip in 'PasZip.pas',
   frmSettings in 'frmSettings.pas' {FormSettings},
   frmNewDoc in 'frmNewDoc.pas' {FormNewDocument},
-  CustomComboItem in 'CustomComboItem.pas';
+  CustomComboItem in 'CustomComboItem.pas',
+  frmSplash in 'frmSplash.pas' {FormSplash};
 
 {$R *.res}
+
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Cyan Night');
   Application.CreateForm(TmainForm, mainForm);
-  Application.CreateForm(TFormSettings, FormSettings);
   Application.CreateForm(TFormNewDocument, FormNewDocument);
   Application.Run;
-
 end.
 
