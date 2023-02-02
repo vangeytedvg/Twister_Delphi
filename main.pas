@@ -275,7 +275,7 @@ begin
   if IsDirty then
     If MessageDlg('Bent U zeker dat U het document wilt afdrukken?',
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-      PrintRichEdit(MyEditor, '', 10)
+      PrintRichEdit(MyEditor, '', 20)
 end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
