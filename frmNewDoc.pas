@@ -50,12 +50,14 @@ type
     procedure SetSalutation(Sender: TObject);
     procedure SetSignature(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure OptionsChanged(Sender: TObject);
   private
     { Private declarations }
     FCancelled: Boolean;
     FSalutation: string;
     FSignature: string;
     FSenderFullName: string;
+    IsDirty: Boolean;
     procedure LoadSenders;
   public
     property UserClickedCancel: Boolean read FCancelled write FCancelled;
@@ -76,8 +78,13 @@ procedure TFormNewDocument.ButtonCANCELClick(Sender: TObject);
 begin
   // If the user clicks on this button, set the flag to true,
   // this avoids inserting bad data in het main form
-  UserClickedCancel := True;
-  Close;
+  if IsDirty then
+    If MessageDlg('Wijzigingen vergeten?', mtConfirmation, [mbYes, mbNo],
+      0) = mrYes then
+    begin
+      UserClickedCancel := True;
+      Close;
+  end;
 end;
 
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
@@ -87,7 +94,8 @@ var
 begin
   t1 := Signature;
   t2 := Signature;
-  if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) or (t1.Length = 0) or (t2.length = 0) then
+  if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) or (t1.Length = 0)
+    or (t2.Length = 0) then
     ShowMessage('Niet alle velden zijn ingevuld!')
   else
     Close;
@@ -102,6 +110,7 @@ begin
   // TwisterConnection.da
   try
     TwisterConnection.Open(dbName);
+    IsDirty := False;
     ClearFields;
     LoadSenders;
   except
@@ -114,8 +123,9 @@ end;
 
 procedure TFormNewDocument.FormShow(Sender: TObject);
 begin
-    ClearFields;
-    LoadSenders;
+  ClearFields;
+  LoadSenders;
+  IsDirty := False;
 end;
 
 procedure TFormNewDocument.LoadSenders();
@@ -138,6 +148,11 @@ begin
       FDQryListOfSenders.FieldByName('Name').AsString));
     FDQryListOfSenders.Next;
   end;
+end;
+
+procedure TFormNewDocument.OptionsChanged(Sender: TObject);
+begin
+  IsDirty := True;
 end;
 
 procedure TFormNewDocument.SendersListChange(Sender: TObject);
@@ -177,28 +192,33 @@ begin
 end;
 
 procedure TFormNewDocument.SetSalutation(Sender: TObject);
+{ Property handler }
 begin
   with Sender as TRadioButton do
   begin
     Salutation := Caption;
+    IsDirty := True;
   end;
 
 end;
 
 procedure TFormNewDocument.SetSignature(Sender: TObject);
+{ Property handler }
 begin
   with Sender as TRadioButton do
   begin
     Signature := Caption;
+    IsDirty := True;
   end;
 end;
 
 procedure TFormNewDocument.ClearFields;
+{ Clear all the fields }
 begin
-  MemoFrom.Text := '';
-  MemoTo.Text := '';
+  MemoFROM.Text := '';
+  MemoTO.Text := '';
   EditSubject.Text := '';
-  SendersList.Items.Clear;
+  SendersList.items.Clear;
 end;
 
 end.

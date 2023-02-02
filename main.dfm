@@ -64,8 +64,6 @@ object mainForm: TmainForm
     OnChange = myEditorChange
     OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
-    ExplicitLeft = 180
-    ExplicitTop = 136
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -79,7 +77,6 @@ object mainForm: TmainForm
     ShowHint = True
     TabOrder = 2
     StyleElements = []
-    ExplicitTop = -3
     object ToolButtonNew: TToolButton
       Left = 0
       Top = 0

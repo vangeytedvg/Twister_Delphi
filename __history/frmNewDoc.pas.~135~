@@ -49,18 +49,22 @@ type
     procedure ButtonCANCELClick(Sender: TObject);
     procedure SetSalutation(Sender: TObject);
     procedure SetSignature(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure OptionsChanged(Sender: TObject);
   private
     { Private declarations }
     FCancelled: Boolean;
     FSalutation: string;
     FSignature: string;
     FSenderFullName: string;
+    IsDirty : boolean;
     procedure LoadSenders;
   public
     property UserClickedCancel: Boolean read FCancelled write FCancelled;
     property Salutation: string read FSalutation write FSalutation;
     property Signature: string read FSignature write FSignature;
     property SenderFullName: string read FSenderFullName write FSenderFullName;
+    procedure ClearFields;
   end;
 
 var
@@ -80,8 +84,12 @@ end;
 
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
 { Close the form, but warn if some fields not filled in }
+var
+  t1, t2: string;
 begin
-  if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) or Salutation.Length := 0 or Signature.Length := 0 then
+  t1 := Signature;
+  t2 := Signature;
+  if (MemoFROM.Lines.Count = 0) or (MemoTO.Lines.Count = 0) or (t1.Length = 0) or (t2.length = 0) then
     ShowMessage('Niet alle velden zijn ingevuld!')
   else
     Close;
@@ -96,6 +104,8 @@ begin
   // TwisterConnection.da
   try
     TwisterConnection.Open(dbName);
+    IsDirty := False;
+    ClearFields;
     LoadSenders;
   except
     on E: Exception do
@@ -103,6 +113,13 @@ begin
       ShowMessage(E.Message);
     end;
   end;
+end;
+
+procedure TFormNewDocument.FormShow(Sender: TObject);
+begin
+    ClearFields;
+    LoadSenders;
+    IsDirty := False;
 end;
 
 procedure TFormNewDocument.LoadSenders();
@@ -127,6 +144,11 @@ begin
   end;
 end;
 
+procedure TFormNewDocument.OptionsChanged(Sender: TObject);
+begin
+  ISDirty := true;
+end;
+
 procedure TFormNewDocument.SendersListChange(Sender: TObject);
 { Get the selected Item and fill the FROM box }
 var
@@ -145,7 +167,8 @@ begin
   if Not(FDQryListOfSenders.Eof) then
   begin
     // Store sender name and firstname for later use
-    SenderFullName := FDQryListOfSenders.FieldByName('name').AsString + ' ' + FDQryListOfSenders.FieldByName('firstname').AsString;
+    SenderFullName := FDQryListOfSenders.FieldByName('name').AsString + ' ' +
+      FDQryListOfSenders.FieldByName('firstname').AsString;
     // Add the address to the FROM box
     MemoFROM.Lines.Clear;
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('name').AsString + ' ' +
@@ -167,6 +190,7 @@ begin
   with Sender as TRadioButton do
   begin
     Salutation := Caption;
+    IsDirty := True;
   end;
 
 end;
@@ -176,7 +200,16 @@ begin
   with Sender as TRadioButton do
   begin
     Signature := Caption;
+    IsDirty:=True;
   end;
+end;
+
+procedure TFormNewDocument.ClearFields;
+begin
+  MemoFrom.Text := '';
+  MemoTo.Text := '';
+  EditSubject.Text := '';
+  SendersList.Items.Clear;
 end;
 
 end.

@@ -1,10 +1,9 @@
 object FormNewDocument: TFormNewDocument
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
   Caption = 'New Document Wizard'
-  ClientHeight = 603
-  ClientWidth = 588
+  ClientHeight = 593
+  ClientWidth = 578
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +12,7 @@ object FormNewDocument: TFormNewDocument
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object lblSelectSender: TLabel
@@ -2001,9 +2001,9 @@ object FormNewDocument: TFormNewDocument
   object LabelSubject: TLabel
     Left = 130
     Top = 303
-    Width = 155
+    Width = 117
     Height = 17
-    Caption = 'Bestemmeling van de brief'
+    Caption = 'Onderwerp (betreft)'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -2013,16 +2013,13 @@ object FormNewDocument: TFormNewDocument
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 584
-    Width = 588
+    Top = 574
+    Width = 578
     Height = 19
     Panels = <
       item
         Width = 200
       end>
-    ExplicitLeft = -6
-    ExplicitTop = 531
-    ExplicitWidth = 578
   end
   object SendersList: TComboBox
     Left = 128
@@ -2046,6 +2043,7 @@ object FormNewDocument: TFormNewDocument
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
+    OnChange = OptionsChanged
   end
   object MemoTO: TMemo
     Left = 132
@@ -2059,6 +2057,7 @@ object FormNewDocument: TFormNewDocument
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    OnChange = OptionsChanged
   end
   object ButtonOK: TButton
     Left = 414
@@ -2085,6 +2084,7 @@ object FormNewDocument: TFormNewDocument
     Height = 17
     Caption = '...'
     TabOrder = 6
+    OnClick = OptionsChanged
   end
   object EditSubject: TEdit
     Left = 128
@@ -2092,6 +2092,7 @@ object FormNewDocument: TFormNewDocument
     Width = 440
     Height = 21
     TabOrder = 7
+    OnChange = OptionsChanged
   end
   object GroupBox1: TGroupBox
     Left = 130
@@ -2106,9 +2107,7 @@ object FormNewDocument: TFormNewDocument
       Width = 73
       Height = 17
       Caption = 'Geachte'
-      Checked = True
       TabOrder = 0
-      TabStop = True
       OnClick = SetSalutation
     end
     object rbMijnheer: TRadioButton
@@ -2161,9 +2160,7 @@ object FormNewDocument: TFormNewDocument
       Width = 80
       Height = 17
       Caption = 'Met achting,'
-      Checked = True
       TabOrder = 0
-      TabStop = True
       OnClick = SetSignature
     end
     object rbHoogachtend: TRadioButton

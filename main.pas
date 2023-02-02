@@ -192,7 +192,7 @@ var
 begin
   if IsDirty then
   begin
-    If MessageDlg('Do you want to save changes?', mtConfirmation, [mbYes, mbNo],
+    If MessageDlg('Wilt U de wijzigingen oplsaan?', mtConfirmation, [mbYes, mbNo],
       0) = mrYes then
       // Save the file
     else

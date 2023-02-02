@@ -12,6 +12,7 @@ object FormNewDocument: TFormNewDocument
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object lblSelectSender: TLabel
@@ -2000,9 +2001,9 @@ object FormNewDocument: TFormNewDocument
   object LabelSubject: TLabel
     Left = 130
     Top = 303
-    Width = 155
+    Width = 117
     Height = 17
-    Caption = 'Bestemmeling van de brief'
+    Caption = 'Onderwerp (betreft)'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -2019,8 +2020,6 @@ object FormNewDocument: TFormNewDocument
       item
         Width = 200
       end>
-    ExplicitLeft = -6
-    ExplicitTop = 531
   end
   object SendersList: TComboBox
     Left = 128
@@ -2104,9 +2103,7 @@ object FormNewDocument: TFormNewDocument
       Width = 73
       Height = 17
       Caption = 'Geachte'
-      Checked = True
       TabOrder = 0
-      TabStop = True
       OnClick = SetSalutation
     end
     object rbMijnheer: TRadioButton
@@ -2159,9 +2156,7 @@ object FormNewDocument: TFormNewDocument
       Width = 80
       Height = 17
       Caption = 'Met achting,'
-      Checked = True
       TabOrder = 0
-      TabStop = True
       OnClick = SetSignature
     end
     object rbHoogachtend: TRadioButton

@@ -2043,6 +2043,7 @@ object FormNewDocument: TFormNewDocument
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
+    OnChange = OptionsChanged
   end
   object MemoTO: TMemo
     Left = 132
@@ -2056,6 +2057,7 @@ object FormNewDocument: TFormNewDocument
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    OnChange = OptionsChanged
   end
   object ButtonOK: TButton
     Left = 414
@@ -2082,6 +2084,7 @@ object FormNewDocument: TFormNewDocument
     Height = 17
     Caption = '...'
     TabOrder = 6
+    OnClick = OptionsChanged
   end
   object EditSubject: TEdit
     Left = 128
@@ -2089,6 +2092,7 @@ object FormNewDocument: TFormNewDocument
     Width = 440
     Height = 21
     TabOrder = 7
+    OnChange = OptionsChanged
   end
   object GroupBox1: TGroupBox
     Left = 130
