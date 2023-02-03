@@ -21,6 +21,7 @@ type
     Image1: TImage;
     procedure btnCancelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btnOpenTwisterDBPathClick(Sender: TObject);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -41,6 +42,18 @@ begin
   Close;
 end;
 
+procedure TFormSettings.btnOpenTwisterDBPathClick(Sender: TObject);
+{ Get the path to the Twister.db file }
+var
+  openPathToDBDialog: TOpenDialog;
+  path: string;
+begin
+  path:=ExtractFilePath(ParamStr(0));
+  openPathToDBDialog := TOpenDialog.Create(self);
+  openPathToDBDialog.InitialDir := path;
+  openPathToDBDialog.Execute()
+end;
+
 procedure TFormSettings.FormCreate(Sender: TObject);
 begin
   IsDirty := false;
@@ -52,12 +65,12 @@ var
 begin
 
   try
-//    SettingFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.INI'));
+    // SettingFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.INI'));
 
-//    mainForm.height := SettingFile.ReadInteger('WindowSize', 'Height',
-//      mainForm.width)
+    // mainForm.height := SettingFile.ReadInteger('WindowSize', 'Height',
+    // mainForm.width)
   finally
-///    SettingFile.Free;
+    /// SettingFile.Free;
   end;
 end;
 

@@ -36,6 +36,7 @@ object FormSettings: TFormSettings
     Width = 23
     Height = 22
     Caption = '...'
+    OnClick = btnOpenTwisterDBPathClick
   end
   object btnOpenOXTPath: TSpeedButton
     Left = 495
