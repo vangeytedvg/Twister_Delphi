@@ -1,9 +1,11 @@
 object frmSenderList: TfrmSenderList
   Left = 0
   Top = 0
+  BorderIcons = []
+  BorderStyle = bsDialog
   Caption = 'Lijst van Afzenders'
-  ClientHeight = 507
-  ClientWidth = 370
+  ClientHeight = 517
+  ClientWidth = 380
   Color = clBtnFace
   CustomTitleBar.Height = 31
   CustomTitleBar.SystemHeight = False
@@ -182,6 +184,7 @@ object frmSenderList: TfrmSenderList
     Height = 25
     Caption = 'Sluit'
     TabOrder = 9
+    OnClick = Button1Click
   end
   object SenderDataSource: TDataSource
     DataSet = FDSendersQRY

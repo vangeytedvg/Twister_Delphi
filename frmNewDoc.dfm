@@ -1,9 +1,11 @@
 object FormNewDocument: TFormNewDocument
   Left = 0
   Top = 0
+  BorderIcons = []
+  BorderStyle = bsDialog
   Caption = 'New Document Wizard'
-  ClientHeight = 593
-  ClientWidth = 578
+  ClientHeight = 603
+  ClientWidth = 588
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -4676,13 +4678,15 @@ object FormNewDocument: TFormNewDocument
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 574
-    Width = 578
+    Top = 584
+    Width = 588
     Height = 19
     Panels = <
       item
         Width = 200
       end>
+    ExplicitTop = 574
+    ExplicitWidth = 578
   end
   object SendersList: TComboBox
     Left = 128
@@ -4728,7 +4732,7 @@ object FormNewDocument: TFormNewDocument
     Width = 75
     Height = 25
     Caption = 'Ok'
-    TabOrder = 4
+    TabOrder = 8
     OnClick = ButtonOKClick
   end
   object ButtonCANCEL: TButton
@@ -4737,7 +4741,7 @@ object FormNewDocument: TFormNewDocument
     Width = 75
     Height = 25
     Caption = 'Sluit'
-    TabOrder = 5
+    TabOrder = 9
     OnClick = ButtonCANCELClick
   end
   object CheckBox_SocialSecurityNr: TCheckBox
@@ -4746,7 +4750,7 @@ object FormNewDocument: TFormNewDocument
     Width = 321
     Height = 17
     Caption = '...'
-    TabOrder = 6
+    TabOrder = 5
     OnClick = OptionsChanged
   end
   object EditSubject: TEdit
@@ -4754,7 +4758,7 @@ object FormNewDocument: TFormNewDocument
     Top = 326
     Width = 440
     Height = 21
-    TabOrder = 7
+    TabOrder = 4
     OnChange = OptionsChanged
   end
   object GroupBox1: TGroupBox
@@ -4763,7 +4767,7 @@ object FormNewDocument: TFormNewDocument
     Width = 440
     Height = 66
     Caption = 'Aanspreking'
-    TabOrder = 8
+    TabOrder = 6
     object rbGeachte: TRadioButton
       Left = 17
       Top = 24
@@ -4771,6 +4775,7 @@ object FormNewDocument: TFormNewDocument
       Height = 17
       Caption = 'Geachte,'
       TabOrder = 0
+      TabStop = True
       OnClick = SetSalutation
     end
     object rbMijnheer: TRadioButton
@@ -4816,7 +4821,7 @@ object FormNewDocument: TFormNewDocument
     Width = 440
     Height = 66
     Caption = 'Afsluiting'
-    TabOrder = 9
+    TabOrder = 7
     object rbMetAchting: TRadioButton
       Left = 17
       Top = 24

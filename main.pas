@@ -383,6 +383,7 @@ begin
   MyRuler.width := RulerHolder.width;
   MyRuler.RulerMeasure := 10;
   MyRuler.RulerColor := clWhite;
+  Sb.Panels[1].Text := 'Geen naam';
   spellFile := '.\Dictionaries\nl-dict-v2.00g.oxt';
   if FileExists(spellFile) then
   begin
