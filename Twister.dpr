@@ -11,8 +11,8 @@ uses
   PasZip in 'PasZip.pas',
   frmNewDoc in 'frmNewDoc.pas' {FormNewDocument},
   CustomComboItem in 'CustomComboItem.pas',
-  frmSplash in 'frmSplash.pas' {FormSplash};
-
+  frmSplash in 'frmSplash.pas' {FormSplash},
+  frmAppSettings in 'frmAppSettings.pas' {FormSettings};
 
 {$R *.res}
 

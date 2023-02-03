@@ -4,8 +4,8 @@ object frmSenderList: TfrmSenderList
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Lijst van Afzenders'
-  ClientHeight = 517
-  ClientWidth = 380
+  ClientHeight = 483
+  ClientWidth = 345
   Color = clBtnFace
   CustomTitleBar.Height = 31
   CustomTitleBar.SystemHeight = False
@@ -34,72 +34,72 @@ object frmSenderList: TfrmSenderList
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 24
-    Top = 24
+    Left = 8
+    Top = 8
     Width = 27
     Height = 13
-    Caption = 'Name'
+    Caption = 'Naam'
     FocusControl = DBMemo1
   end
   object Label2: TLabel
-    Left = 24
-    Top = 71
+    Left = 8
+    Top = 55
     Width = 48
     Height = 13
-    Caption = 'FirstName'
+    Caption = 'Voornaam'
     FocusControl = DBMemo2
   end
   object Label3: TLabel
-    Left = 24
-    Top = 119
-    Width = 39
+    Left = 8
+    Top = 103
+    Width = 28
     Height = 13
-    Caption = 'Address'
+    Caption = 'Adres'
     FocusControl = DBMemo3
   end
   object Label4: TLabel
-    Left = 24
-    Top = 167
-    Width = 19
+    Left = 8
+    Top = 151
+    Width = 49
     Height = 13
-    Caption = 'City'
+    Caption = 'Gemeente'
     FocusControl = DBMemo4
   end
-  object Label5: TLabel
-    Left = 24
-    Top = 215
-    Width = 39
+  object Postcode: TLabel
+    Left = 8
+    Top = 199
+    Width = 44
     Height = 13
-    Caption = 'ZipCode'
+    Caption = 'Postcode'
     FocusControl = DBMemo5
   end
   object Label6: TLabel
-    Left = 24
-    Top = 263
-    Width = 30
+    Left = 8
+    Top = 247
+    Width = 67
     Height = 13
-    Caption = 'Phone'
+    Caption = 'Telefoon/GSM'
     FocusControl = DBMemo6
   end
   object Label7: TLabel
-    Left = 24
-    Top = 311
+    Left = 8
+    Top = 295
     Width = 24
     Height = 13
     Caption = 'Email'
     FocusControl = DBMemo7
   end
   object Label8: TLabel
-    Left = 24
-    Top = 360
-    Width = 64
+    Left = 8
+    Top = 344
+    Width = 73
     Height = 13
-    Caption = 'socialsecurity'
+    Caption = 'Rijksregister Nr'
     FocusControl = DBEdit1
   end
   object DBMemo1: TDBMemo
-    Left = 24
-    Top = 40
+    Left = 8
+    Top = 24
     Width = 329
     Height = 25
     DataField = 'Name'
@@ -107,8 +107,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 0
   end
   object DBMemo2: TDBMemo
-    Left = 24
-    Top = 90
+    Left = 8
+    Top = 74
     Width = 329
     Height = 23
     DataField = 'FirstName'
@@ -116,8 +116,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 1
   end
   object DBMemo3: TDBMemo
-    Left = 24
-    Top = 138
+    Left = 8
+    Top = 122
     Width = 329
     Height = 23
     DataField = 'Address'
@@ -125,8 +125,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 2
   end
   object DBMemo4: TDBMemo
-    Left = 24
-    Top = 186
+    Left = 8
+    Top = 170
     Width = 329
     Height = 23
     DataField = 'City'
@@ -134,8 +134,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 3
   end
   object DBMemo5: TDBMemo
-    Left = 24
-    Top = 234
+    Left = 8
+    Top = 218
     Width = 137
     Height = 23
     DataField = 'ZipCode'
@@ -143,8 +143,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 4
   end
   object DBMemo6: TDBMemo
-    Left = 24
-    Top = 282
+    Left = 8
+    Top = 266
     Width = 217
     Height = 23
     DataField = 'Phone'
@@ -152,8 +152,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 5
   end
   object DBMemo7: TDBMemo
-    Left = 24
-    Top = 330
+    Left = 8
+    Top = 314
     Width = 329
     Height = 23
     DataField = 'Email'
@@ -161,8 +161,8 @@ object frmSenderList: TfrmSenderList
     TabOrder = 6
   end
   object DBEdit1: TDBEdit
-    Left = 24
-    Top = 376
+    Left = 8
+    Top = 360
     Width = 329
     Height = 21
     DataField = 'socialsecurity'
@@ -170,16 +170,16 @@ object frmSenderList: TfrmSenderList
     TabOrder = 7
   end
   object DBNavigator1: TDBNavigator
-    Left = 23
-    Top = 419
+    Left = 7
+    Top = 403
     Width = 330
     Height = 25
     DataSource = SenderDataSource
     TabOrder = 8
   end
   object Button1: TButton
-    Left = 278
-    Top = 464
+    Left = 262
+    Top = 448
     Width = 75
     Height = 25
     Caption = 'Sluit'
@@ -189,7 +189,7 @@ object frmSenderList: TfrmSenderList
   object SenderDataSource: TDataSource
     DataSet = FDSendersQRY
     Left = 104
-    Top = 456
+    Top = 432
   end
   object FDSendersQRY: TFDQuery
     DetailFields = 'Name;FirstName;Address;City;ZipCode;Phone;Email;socialsecurity'
@@ -199,7 +199,7 @@ object frmSenderList: TfrmSenderList
     SQL.Strings = (
       'select * from senders')
     Left = 192
-    Top = 456
+    Top = 432
     object FDSendersQRYName: TWideMemoField
       FieldName = 'Name'
       Origin = 'Name'
@@ -250,6 +250,6 @@ object frmSenderList: TfrmSenderList
     Params.Strings = (
       'ConnectionDef=Twister')
     Left = 32
-    Top = 456
+    Top = 432
   end
 end

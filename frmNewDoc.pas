@@ -87,9 +87,9 @@ begin
       Close;
     end
   end
-    else
-      UserClickedCancel := True;
-      Close;
+  else
+    UserClickedCancel := True;
+  Close;
 end;
 
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
@@ -137,6 +137,7 @@ procedure TFormNewDocument.LoadSenders();
 { Load the list of senders }
 var
   qryString: string;
+
 begin
   qryString := 'SELECT Id, Name, FirstName FROM senders ORDER BY name ASC';
   with FDQryListOfSenders do
@@ -148,7 +149,9 @@ begin
   // Fill The ComboBox
   while Not FDQryListOfSenders.Eof do
   begin
-    SendersList.items.AddObject(FDQryListOfSenders.FieldByName('Name').AsString,
+
+    SendersList.items.AddObject(FDQryListOfSenders.FieldByName('Name').AsString
+      + ' ' + FDQryListOfSenders.FieldByName('firstname').AsString,
       TCustomComboBoxItem.Create(FDQryListOfSenders.FieldByName('id').AsInteger,
       FDQryListOfSenders.FieldByName('Name').AsString));
     FDQryListOfSenders.Next;

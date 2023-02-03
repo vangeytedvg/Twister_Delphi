@@ -147,6 +147,10 @@
             <Form>FormSplash</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="frmAppSettings.pas">
+            <Form>FormSettings</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Twister.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

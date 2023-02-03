@@ -3028,10 +3028,14 @@ object mainForm: TmainForm
       end
     end
     object ools1: TMenuItem
-      Caption = '&Tools'
+      Caption = '&Instellingen'
       object mnuToolsOptions: TMenuItem
-        Caption = 'Op&tions'
+        Caption = 'Beheer afzenders'
         OnClick = mnuToolsOptionsClick
+      end
+      object Opties1: TMenuItem
+        Caption = '&Opties'
+        OnClick = Opties1Click
       end
     end
   end

@@ -34,7 +34,7 @@ type
     DBMemo3: TDBMemo;
     Label4: TLabel;
     DBMemo4: TDBMemo;
-    Label5: TLabel;
+    Postcode: TLabel;
     DBMemo5: TDBMemo;
     Label6: TLabel;
     DBMemo6: TDBMemo;

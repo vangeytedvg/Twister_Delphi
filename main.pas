@@ -9,7 +9,8 @@ uses
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
-  EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc, frmSplash, frmSenders;
+  EsBase, EsCalc, Vcl.Printers, frmNewDoc, frmSplash, frmSenders,
+  frmAppSettings;
 
 type
   TmainForm = class(TForm)
@@ -98,6 +99,7 @@ type
     ActionPrint: TAction;
     ToolButtonPrint: TToolButton;
     NewNormalFile: TMenuItem;
+    Opties1: TMenuItem;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -123,6 +125,7 @@ type
     procedure NewNormalFileClick(Sender: TObject);
     procedure SaveFileToDisk();
     procedure mnuToolsOptionsClick(Sender: TObject);
+    procedure Opties1Click(Sender: TObject);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -350,12 +353,10 @@ begin
   Application.Terminate;
 end;
 
-
 procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
 var
   frmSenders: TfrmSenderList;
 begin
-
 
   frmSenders := TfrmSenderList.Create(self);
   frmSenders.Position := poOwnerFormCenter;
@@ -557,6 +558,15 @@ begin
   end;
 end;
 
+procedure TmainForm.Opties1Click(Sender: TObject);
+var
+  FormSettings: TFormSettings;
+begin
+  // Settings for the path to the database and dictionaries
+  FormSettings := TFormSettings.Create(self);
+  FormSettings.ShowModal;
+end;
+
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
 begin
   // lbSpellDicts.CheckAll(cbChecked, False, true);
@@ -676,7 +686,7 @@ begin
       SaveRichEdit(MyEditor, myFileName);
       ActionSaveFile.ImageIndex := 16;
       ToolButtonSave.ImageIndex := 16;
-      IsDirty:=False;
+      IsDirty := False;
     end;
   finally
     saveFileDialog.Free;
