@@ -2727,6 +2727,8 @@ object mainForm: TmainForm
     OnChange = myEditorChange
     OnContextPopup = MyEditorContextPopup
     OnSelectionChange = MyEditorSelectionChange
+    ExplicitLeft = 180
+    ExplicitTop = 136
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -2934,22 +2936,26 @@ object mainForm: TmainForm
     TabOrder = 6
   end
   object MainAppMenu: TMainMenu
-    Left = 32
-    Top = 488
+    Left = 24
+    Top = 496
     object N1: TMenuItem
-      Caption = '&Brief'
+      Caption = '&Bestand'
+      object NewNormalFile: TMenuItem
+        Caption = 'Nieuw &document'
+        OnClick = NewNormalFileClick
+      end
       object MenuNewFile: TMenuItem
         Caption = '&Nieuwe brief'
       end
       object MenuSaveFile: TMenuItem
         Action = ActionSaveFile
-        Caption = 'Bewaar dit bestand'
+        Caption = 'Be&waar dit bestand'
         SubMenuImages = MyImages
         ShortCut = 16467
       end
       object MenuOpenFile: TMenuItem
         Action = ActionOpenFile
-        Caption = 'Open een bestaande brief'
+        Caption = '&Open een bestaande brief'
       end
       object N3: TMenuItem
         Caption = '-'
@@ -2961,7 +2967,7 @@ object mainForm: TmainForm
         Caption = '-'
       end
       object MenuFileExit: TMenuItem
-        Caption = 'Afsluiten'
+        Caption = '&Afsluiten'
         OnClick = MenuExitClick
       end
     end
@@ -3025,6 +3031,7 @@ object mainForm: TmainForm
       Caption = '&Tools'
       object mnuToolsOptions: TMenuItem
         Caption = 'Op&tions'
+        OnClick = mnuToolsOptionsClick
       end
     end
   end
@@ -3034,7 +3041,7 @@ object mainForm: TmainForm
     Height = 32
     Width = 32
     Left = 112
-    Top = 488
+    Top = 496
     Bitmap = {
       494C010114001800040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000C000000001002000000000000080
@@ -6212,8 +6219,8 @@ object mainForm: TmainForm
       000000000000}
   end
   object EditorActions: TActionList
-    Left = 176
-    Top = 488
+    Left = 184
+    Top = 496
     object EditCut: TEditCut
       Category = 'Edit'
       Caption = 'Knippen'
@@ -6324,16 +6331,16 @@ object mainForm: TmainForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    Left = 256
-    Top = 488
+    Left = 264
+    Top = 496
   end
   object dlgLoadDictionary: TOpenDialog
     Left = 360
-    Top = 488
+    Top = 496
   end
   object PopupForEditor: TPopupMenu
     Left = 448
-    Top = 488
+    Top = 496
     object Edit2: TMenuItem
       Caption = 'Nothing Selected'
       Enabled = False
@@ -6341,7 +6348,7 @@ object mainForm: TmainForm
   end
   object ActionList1: TActionList
     Left = 536
-    Top = 488
+    Top = 496
     object ActionSaveFile: TAction
       Category = 'Files'
       Caption = 'Save File'

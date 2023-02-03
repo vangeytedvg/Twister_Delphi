@@ -104,6 +104,7 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>Twister_Icon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -137,10 +138,6 @@
         <DCCReference Include="NHunspell.pas"/>
         <DCCReference Include="NHunXml.pas"/>
         <DCCReference Include="PasZip.pas"/>
-        <DCCReference Include="frmSettings.pas">
-            <Form>FormSettings</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="frmNewDoc.pas">
             <Form>FormNewDocument</Form>
             <FormType>dfm</FormType>

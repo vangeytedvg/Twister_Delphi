@@ -4736,7 +4736,7 @@ object FormNewDocument: TFormNewDocument
     Top = 543
     Width = 75
     Height = 25
-    Caption = 'Cancel'
+    Caption = 'Sluit'
     TabOrder = 5
     OnClick = ButtonCANCELClick
   end
@@ -4769,7 +4769,7 @@ object FormNewDocument: TFormNewDocument
       Top = 24
       Width = 73
       Height = 17
-      Caption = 'Geachte'
+      Caption = 'Geachte,'
       TabOrder = 0
       OnClick = SetSalutation
     end
@@ -4778,7 +4778,7 @@ object FormNewDocument: TFormNewDocument
       Top = 24
       Width = 73
       Height = 17
-      Caption = 'Mijnheer'
+      Caption = 'Mijnheer,'
       TabOrder = 1
       OnClick = SetSalutation
     end
@@ -4787,7 +4787,7 @@ object FormNewDocument: TFormNewDocument
       Top = 24
       Width = 73
       Height = 17
-      Caption = 'Mevrouw'
+      Caption = 'Mevrouw,'
       TabOrder = 2
       OnClick = SetSalutation
     end
@@ -4796,7 +4796,7 @@ object FormNewDocument: TFormNewDocument
       Top = 24
       Width = 51
       Height = 17
-      Caption = 'Beste'
+      Caption = 'Beste,'
       TabOrder = 3
       OnClick = SetSalutation
     end
@@ -4848,19 +4848,18 @@ object FormNewDocument: TFormNewDocument
   object TwisterConnection: TFDConnection
     Params.Strings = (
       'ConnectionDef=Twister')
-    Connected = True
     LoginPrompt = False
-    Left = 36
-    Top = 327
+    Left = 44
+    Top = 399
   end
   object DataSource1: TDataSource
     DataSet = FDQryListOfSenders
-    Left = 32
-    Top = 376
+    Left = 40
+    Top = 456
   end
   object FDQryListOfSenders: TFDQuery
     Connection = TwisterConnection
     Left = 40
-    Top = 264
+    Top = 520
   end
 end

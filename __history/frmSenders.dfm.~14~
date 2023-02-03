@@ -1,0 +1,246 @@
+object frmSenderList: TfrmSenderList
+  Left = 0
+  Top = 0
+  Caption = 'Lijst van Afzenders'
+  ClientHeight = 507
+  ClientWidth = 370
+  Color = clBtnFace
+  CustomTitleBar.Height = 31
+  CustomTitleBar.SystemHeight = False
+  CustomTitleBar.ShowIcon = False
+  CustomTitleBar.SystemColors = False
+  CustomTitleBar.SystemButtons = False
+  CustomTitleBar.BackgroundColor = clGreen
+  CustomTitleBar.ForegroundColor = 65793
+  CustomTitleBar.InactiveBackgroundColor = clWhite
+  CustomTitleBar.InactiveForegroundColor = 10066329
+  CustomTitleBar.ButtonForegroundColor = 65793
+  CustomTitleBar.ButtonBackgroundColor = clMenuHighlight
+  CustomTitleBar.ButtonHoverForegroundColor = 65793
+  CustomTitleBar.ButtonHoverBackgroundColor = 16053492
+  CustomTitleBar.ButtonPressedForegroundColor = 65793
+  CustomTitleBar.ButtonPressedBackgroundColor = clRed
+  CustomTitleBar.ButtonInactiveForegroundColor = 10066329
+  CustomTitleBar.ButtonInactiveBackgroundColor = clYellow
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  StyleElements = [seFont, seClient]
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 24
+    Top = 24
+    Width = 27
+    Height = 13
+    Caption = 'Name'
+    FocusControl = DBMemo1
+  end
+  object Label2: TLabel
+    Left = 24
+    Top = 71
+    Width = 48
+    Height = 13
+    Caption = 'FirstName'
+    FocusControl = DBMemo2
+  end
+  object Label3: TLabel
+    Left = 24
+    Top = 119
+    Width = 39
+    Height = 13
+    Caption = 'Address'
+    FocusControl = DBMemo3
+  end
+  object Label4: TLabel
+    Left = 24
+    Top = 167
+    Width = 19
+    Height = 13
+    Caption = 'City'
+    FocusControl = DBMemo4
+  end
+  object Label5: TLabel
+    Left = 24
+    Top = 215
+    Width = 39
+    Height = 13
+    Caption = 'ZipCode'
+    FocusControl = DBMemo5
+  end
+  object Label6: TLabel
+    Left = 24
+    Top = 263
+    Width = 30
+    Height = 13
+    Caption = 'Phone'
+    FocusControl = DBMemo6
+  end
+  object Label7: TLabel
+    Left = 24
+    Top = 311
+    Width = 24
+    Height = 13
+    Caption = 'Email'
+    FocusControl = DBMemo7
+  end
+  object Label8: TLabel
+    Left = 24
+    Top = 360
+    Width = 64
+    Height = 13
+    Caption = 'socialsecurity'
+    FocusControl = DBEdit1
+  end
+  object DBMemo1: TDBMemo
+    Left = 24
+    Top = 40
+    Width = 329
+    Height = 25
+    DataField = 'Name'
+    DataSource = SenderDataSource
+    TabOrder = 0
+  end
+  object DBMemo2: TDBMemo
+    Left = 24
+    Top = 90
+    Width = 329
+    Height = 23
+    DataField = 'FirstName'
+    DataSource = SenderDataSource
+    TabOrder = 1
+  end
+  object DBMemo3: TDBMemo
+    Left = 24
+    Top = 138
+    Width = 329
+    Height = 23
+    DataField = 'Address'
+    DataSource = SenderDataSource
+    TabOrder = 2
+  end
+  object DBMemo4: TDBMemo
+    Left = 24
+    Top = 186
+    Width = 329
+    Height = 23
+    DataField = 'City'
+    DataSource = SenderDataSource
+    TabOrder = 3
+  end
+  object DBMemo5: TDBMemo
+    Left = 24
+    Top = 234
+    Width = 137
+    Height = 23
+    DataField = 'ZipCode'
+    DataSource = SenderDataSource
+    TabOrder = 4
+  end
+  object DBMemo6: TDBMemo
+    Left = 24
+    Top = 282
+    Width = 217
+    Height = 23
+    DataField = 'Phone'
+    DataSource = SenderDataSource
+    TabOrder = 5
+  end
+  object DBMemo7: TDBMemo
+    Left = 24
+    Top = 330
+    Width = 329
+    Height = 23
+    DataField = 'Email'
+    DataSource = SenderDataSource
+    TabOrder = 6
+  end
+  object DBEdit1: TDBEdit
+    Left = 24
+    Top = 376
+    Width = 329
+    Height = 21
+    DataField = 'socialsecurity'
+    DataSource = SenderDataSource
+    TabOrder = 7
+  end
+  object DBNavigator1: TDBNavigator
+    Left = 23
+    Top = 419
+    Width = 330
+    Height = 25
+    DataSource = SenderDataSource
+    TabOrder = 8
+  end
+  object TwisterConnection: TFDConnection
+    Params.Strings = (
+      'ConnectionDef=Twister')
+    Connected = True
+    LoginPrompt = False
+    Left = 36
+    Top = 447
+  end
+  object SenderDataSource: TDataSource
+    AutoEdit = False
+    DataSet = FDSendersQRY
+    Left = 144
+    Top = 448
+  end
+  object FDSendersQRY: TFDQuery
+    DetailFields = 'Name;FirstName;Address;City;ZipCode;Phone;Email;socialsecurity'
+    Connection = TwisterConnection
+    SQL.Strings = (
+      'select * from senders')
+    Left = 248
+    Top = 448
+    object FDSendersQRYName: TWideMemoField
+      FieldName = 'Name'
+      Origin = 'Name'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYFirstName: TWideMemoField
+      FieldName = 'FirstName'
+      Origin = 'FirstName'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYAddress: TWideMemoField
+      FieldName = 'Address'
+      Origin = 'Address'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYCity: TWideMemoField
+      FieldName = 'City'
+      Origin = 'City'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYZipCode: TWideMemoField
+      FieldName = 'ZipCode'
+      Origin = 'ZipCode'
+      Required = True
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYPhone: TWideMemoField
+      FieldName = 'Phone'
+      Origin = 'Phone'
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYEmail: TWideMemoField
+      FieldName = 'Email'
+      Origin = 'Email'
+      BlobType = ftWideMemo
+    end
+    object FDSendersQRYsocialsecurity: TWideStringField
+      FieldName = 'socialsecurity'
+      Origin = 'socialsecurity'
+      Size = 25
+    end
+  end
+end

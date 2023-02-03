@@ -9,7 +9,7 @@ uses
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
-  EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc, frmSplash;
+  EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc, frmSplash, frmSenders;
 
 type
   TmainForm = class(TForm)
@@ -97,6 +97,7 @@ type
     N4: TMenuItem;
     ActionPrint: TAction;
     ToolButtonPrint: TToolButton;
+    NewNormalFile: TMenuItem;
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -119,6 +120,9 @@ type
     procedure PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
       const PrinterMargin: Integer);
     procedure SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
+    procedure NewNormalFileClick(Sender: TObject);
+    procedure SaveFileToDisk();
+    procedure mnuToolsOptionsClick(Sender: TObject);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -195,6 +199,7 @@ begin
     If MessageDlg('Wilt U de wijzigingen oplsaan?', mtConfirmation,
       [mbYes, mbNo], 0) = mrYes then
       // Save the file
+      SaveFileToDisk
     else
     begin
       IsDirty := False;
@@ -227,6 +232,7 @@ begin
     MyEditor.Lines.Add('');
 
     // The destineation of the letter
+    MyEditor.SelAttributes.Style := [fsBold];
     MyEditor.Lines.Add(FormNewDocument.MemoTO.Text);
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
@@ -300,32 +306,8 @@ begin
 end;
 
 procedure TmainForm.ActionSaveFileExecute(Sender: TObject);
-var
-  myFileName: string;
-  saveFileDialog: TSaveDialog;
-  Path: array [0 .. MAX_PATH] of Char;
 begin
-  try
-    saveFileDialog := TSaveDialog.Create(self);
-    saveFileDialog.Title := 'Geef een naam voor dit bestand';
-    // This is tricky, but ChatGPT gave me the correct answer to get the
-    // user's Documents folder
-    if SUCCEEDED(SHGetFolderPath(0, CSIDL_PERSONAL, 0, 0, @Path[0])) then
-      saveFileDialog.InitialDir := ExpandFileName(Path);
-    saveFileDialog.Filter := 'Twister Document|*.twister';
-    saveFileDialog.DefaultExt := 'twister';
-    saveFileDialog.FilterIndex := 1;
-    if saveFileDialog.Execute() then
-    begin
-      myFileName := saveFileDialog.fileName;
-      SaveRichEdit(MyEditor, myFileName);
-      ActionSaveFile.ImageIndex := 16;
-      ToolButtonSave.ImageIndex := 16;
-    end;
-  finally
-    saveFileDialog.Free;
-  end;
-
+  SaveFileToDisk;
 end;
 
 function TmainForm.CheckSingleWord(const WordToCheck: String)
@@ -366,6 +348,18 @@ procedure TmainForm.MenuExitClick(Sender: TObject);
 }
 begin
   Application.Terminate;
+end;
+
+
+procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
+var
+  frmSenders: TfrmSenderList;
+begin
+
+
+  frmSenders := TfrmSenderList.Create(self);
+  frmSenders.Position := poOwnerFormCenter;
+  frmSenders.ShowModal;
 end;
 
 procedure TmainForm.FormCreate(Sender: TObject);
@@ -546,6 +540,22 @@ begin
 
 end;
 
+procedure TmainForm.NewNormalFileClick(Sender: TObject);
+begin
+  if IsDirty then
+  begin
+    If MessageDlg('Wilt U de wijzigingen oplsaan?', mtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
+      // Save the file
+      SaveFileToDisk
+    else
+    begin
+      IsDirty := False;
+      MyEditor.Lines.Clear;
+    end;
+  end;
+end;
+
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);
 begin
   // lbSpellDicts.CheckAll(cbChecked, False, true);
@@ -639,6 +649,36 @@ begin
   finally
     // Always be sure to free the printer instance
     Printer.Free;
+  end;
+end;
+
+procedure TmainForm.SaveFileToDisk;
+{ Show save file dialog }
+var
+  myFileName: string;
+  saveFileDialog: TSaveDialog;
+  Path: array [0 .. MAX_PATH] of Char;
+begin
+  try
+    saveFileDialog := TSaveDialog.Create(self);
+    saveFileDialog.Title := 'Geef een naam voor dit bestand';
+    // This is tricky, but ChatGPT gave me the correct answer to get the
+    // user's Documents folder
+    if SUCCEEDED(SHGetFolderPath(0, CSIDL_PERSONAL, 0, 0, @Path[0])) then
+      saveFileDialog.InitialDir := ExpandFileName(Path);
+    saveFileDialog.Filter := 'Twister Document|*.twister';
+    saveFileDialog.DefaultExt := 'twister';
+    saveFileDialog.FilterIndex := 1;
+    if saveFileDialog.Execute() then
+    begin
+      myFileName := saveFileDialog.fileName;
+      SaveRichEdit(MyEditor, myFileName);
+      ActionSaveFile.ImageIndex := 16;
+      ToolButtonSave.ImageIndex := 16;
+      IsDirty:=False;
+    end;
+  finally
+    saveFileDialog.Free;
   end;
 end;
 

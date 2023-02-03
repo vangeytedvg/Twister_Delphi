@@ -177,11 +177,10 @@ begin
   end;
   if Not(FDQryListOfSenders.Eof) then
   begin
-    // Store sender name and firstname for later use
-    SenderFullName := FDQryListOfSenders.FieldByName('name').AsString + ' ' +
-      FDQryListOfSenders.FieldByName('firstname').AsString;
     // Add the address to the FROM box
     MemoFROM.Lines.Clear;
+    SenderFullName := FDQryListOfSenders.FieldByName('name').AsString + ' ' +
+      FDQryListOfSenders.FieldByName('firstname').AsString;
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('name').AsString + ' ' +
       FDQryListOfSenders.FieldByName('firstname').AsString);
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('address').AsString);

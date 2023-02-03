@@ -9,10 +9,10 @@ uses
   NHunspell in 'NHunspell.pas',
   NHunXml in 'NHunXml.pas',
   PasZip in 'PasZip.pas',
-  frmSettings in 'frmSettings.pas' {FormSettings},
   frmNewDoc in 'frmNewDoc.pas' {FormNewDocument},
   CustomComboItem in 'CustomComboItem.pas',
   frmSplash in 'frmSplash.pas' {FormSplash};
+
 
 {$R *.res}
 

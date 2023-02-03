@@ -1,0 +1,13 @@
+program SenderManager;
+
+uses
+  Vcl.Forms,
+  frmSenders in 'frmSenders.pas' {frmSenderList};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.Run;
+end.

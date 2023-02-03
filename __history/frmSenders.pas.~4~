@@ -1,0 +1,26 @@
+unit frmSenders;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.TitleBarCtrls;
+
+type
+  TfrmSenderList = class(TForm)
+    Label1: TLabel;
+    TitleBarPanel1: TTitleBarPanel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormSenderList: TfrmSenderList;
+
+implementation
+
+{$R *.dfm}
+
+end.
