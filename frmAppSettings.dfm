@@ -44,6 +44,7 @@ object FormSettings: TFormSettings
     Width = 23
     Height = 22
     Caption = '...'
+    OnClick = btnOpenOXTPathClick
   end
   object Image1: TImage
     Left = 8
@@ -162,6 +163,7 @@ object FormSettings: TFormSettings
     Height = 25
     Caption = 'Opslaan'
     TabOrder = 0
+    OnClick = btnSaveClick
   end
   object btnCancel: TButton
     Left = 443
@@ -178,6 +180,7 @@ object FormSettings: TFormSettings
     Width = 305
     Height = 21
     TabOrder = 2
+    OnChange = EditDBPathChange
   end
   object EditPathOXT: TEdit
     Left = 186
@@ -185,5 +188,6 @@ object FormSettings: TFormSettings
     Width = 305
     Height = 21
     TabOrder = 3
+    OnChange = EditPathOXTChange
   end
 end

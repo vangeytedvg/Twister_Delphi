@@ -22,6 +22,10 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnOpenTwisterDBPathClick(Sender: TObject);
+    procedure btnOpenOXTPathClick(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
+    procedure EditDBPathChange(Sender: TObject);
+    procedure EditPathOXTChange(Sender: TObject);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -39,7 +43,33 @@ implementation
 
 procedure TFormSettings.btnCancelClick(Sender: TObject);
 begin
-  Close;
+  if IsDirty then
+  begin
+    If MessageDlg('Wilt U de wijzigingen oplsaan?', mtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
+      Close;
+  end
+  else
+    Close;
+end;
+
+procedure TFormSettings.btnOpenOXTPathClick(Sender: TObject);
+var
+  openPathToDBDialog: TOpenDialog;
+  path: string;
+  myFilename: string;
+begin
+  path := ExtractFilePath(ParamStr(0));
+  openPathToDBDialog := TOpenDialog.Create(self);
+  openPathToDBDialog.InitialDir := path;
+  openPathToDBDialog.Filter := 'Twister Translation|*.oxt';
+  openPathToDBDialog.DefaultExt := 'oxt';
+  openPathToDBDialog.FilterIndex := 1;
+
+  if openPathToDBDialog.Execute() then
+  begin
+    EditPathOXT.Text := openPathToDBDialog.fileName;
+  end;
 end;
 
 procedure TFormSettings.btnOpenTwisterDBPathClick(Sender: TObject);
@@ -47,30 +77,69 @@ procedure TFormSettings.btnOpenTwisterDBPathClick(Sender: TObject);
 var
   openPathToDBDialog: TOpenDialog;
   path: string;
+  myFilename: string;
 begin
-  path:=ExtractFilePath(ParamStr(0));
+  path := ExtractFilePath(ParamStr(0));
   openPathToDBDialog := TOpenDialog.Create(self);
   openPathToDBDialog.InitialDir := path;
-  openPathToDBDialog.Execute()
+  openPathToDBDialog.Filter := 'Twister Database|*.db';
+  openPathToDBDialog.DefaultExt := 'db';
+  openPathToDBDialog.FilterIndex := 1;
+
+  if openPathToDBDialog.Execute() then
+  begin
+    EditDBPath.Text := openPathToDBDialog.fileName;
+  end;
+
+end;
+
+procedure TFormSettings.btnSaveClick(Sender: TObject);
+var
+  SettingFile: TInifile;
+  width, height: LongInt;
+begin
+  // Read the position of the form, if this code is ran in the Create method,
+  // it generates an exception in Width and height
+  try
+    SettingFile := TInifile.Create(ChangeFileExt(Application.ExeName, '.INI'));
+    SettingFile.WriteString('Database', 'pathtotwisterdb', EditDBPath.Text);
+    SettingFile.WriteString('Spelling', 'dictionarypath', EditPathOXT.Text);
+  finally
+    SettingFile.Free;
+  end;
+  Close;
+
+end;
+
+procedure TFormSettings.EditDBPathChange(Sender: TObject);
+begin
+  IsDirty := True;
+end;
+
+procedure TFormSettings.EditPathOXTChange(Sender: TObject);
+begin
+  IsDirty := True;
 end;
 
 procedure TFormSettings.FormCreate(Sender: TObject);
 begin
+  LoadInitData;
   IsDirty := false;
 end;
 
 procedure TFormSettings.LoadInitData;
 var
-  SettingFile: TIniFile;
+  SettingFile: TInifile;
 begin
 
   try
-    // SettingFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.INI'));
-
-    // mainForm.height := SettingFile.ReadInteger('WindowSize', 'Height',
-    // mainForm.width)
+    SettingFile := TInifile.Create(ChangeFileExt(Application.ExeName, '.INI'));
+    EditDBPath.Text := SettingFile.ReadString('Database', 'pathtotwisterdb',
+      'not set');
+    EditPathOXT.Text := SettingFile.ReadString('Spelling', 'dictionarypath',
+      'not set');
   finally
-    /// SettingFile.Free;
+    SettingFile.Free;
   end;
 end;
 
