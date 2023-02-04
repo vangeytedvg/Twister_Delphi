@@ -662,11 +662,13 @@ begin
       PrinterTopLeft.Y);
     PageRect.Right := PrinterWidth - PageRect.Left;
     PageRect.Bottom := PrinterHeight - PageRect.Top;
+    MyEditor.PageRect := PageRect;
+    MyEditor.Print('');
     if (PageRect.Left >= PageRect.Right) or (PageRect.Top >= PageRect.Bottom)
     then
       // the margins are too big
       PageRect := Rect(0, 0, 0, 0);
-    RichEdit.PageRect := PageRect;
+      RichEdit.PageRect := PageRect;
   finally
     // Always be sure to free the printer instance
     Printer.Free;

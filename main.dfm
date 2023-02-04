@@ -2925,8 +2925,6 @@ object mainForm: TmainForm
     Height = 407
     Align = alLeft
     TabOrder = 5
-    ExplicitLeft = -56
-    ExplicitTop = 325
   end
   object Panel2: TPanel
     Left = 880

@@ -2721,6 +2721,7 @@ object mainForm: TmainForm
     Font.Style = []
     ParentFont = False
     PopupMenu = PopupForEditor
+    ScrollBars = ssVertical
     TabOrder = 1
     StyleElements = []
     Zoom = 100
@@ -2924,6 +2925,8 @@ object mainForm: TmainForm
     Height = 407
     Align = alLeft
     TabOrder = 5
+    ExplicitLeft = -56
+    ExplicitTop = 325
   end
   object Panel2: TPanel
     Left = 880
@@ -2944,7 +2947,6 @@ object mainForm: TmainForm
       end
       object MenuNewFile: TMenuItem
         Caption = '&Nieuwe brief'
-        OnClick = MenuNewFileClick
       end
       object MenuSaveFile: TMenuItem
         Action = ActionSaveFile
@@ -3027,10 +3029,21 @@ object mainForm: TmainForm
       end
     end
     object ools1: TMenuItem
-      Caption = '&Tools'
+      Caption = '&Instellingen'
       object mnuToolsOptions: TMenuItem
-        Caption = 'Op&tions'
+        Caption = 'Beheer afzenders'
         OnClick = mnuToolsOptionsClick
+      end
+      object Opties1: TMenuItem
+        Caption = '&Opties'
+        OnClick = Opties1Click
+      end
+    end
+    object mnuHelp: TMenuItem
+      Caption = '&Help'
+      object About1: TMenuItem
+        Caption = 'About'
+        OnClick = About1Click
       end
     end
   end
@@ -3040,7 +3053,7 @@ object mainForm: TmainForm
     Height = 32
     Width = 32
     Left = 112
-    Top = 488
+    Top = 496
     Bitmap = {
       494C010114001800040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000C000000001002000000000000080
@@ -6218,8 +6231,8 @@ object mainForm: TmainForm
       000000000000}
   end
   object EditorActions: TActionList
-    Left = 176
-    Top = 488
+    Left = 184
+    Top = 496
     object EditCut: TEditCut
       Category = 'Edit'
       Caption = 'Knippen'
@@ -6330,16 +6343,16 @@ object mainForm: TmainForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    Left = 256
-    Top = 488
+    Left = 264
+    Top = 496
   end
   object dlgLoadDictionary: TOpenDialog
     Left = 360
-    Top = 488
+    Top = 496
   end
   object PopupForEditor: TPopupMenu
     Left = 448
-    Top = 488
+    Top = 496
     object Edit2: TMenuItem
       Caption = 'Nothing Selected'
       Enabled = False
@@ -6347,7 +6360,7 @@ object mainForm: TmainForm
   end
   object ActionList1: TActionList
     Left = 536
-    Top = 488
+    Top = 496
     object ActionSaveFile: TAction
       Category = 'Files'
       Caption = 'Save File'
