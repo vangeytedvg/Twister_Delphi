@@ -12,7 +12,8 @@ uses
   frmNewDoc in 'frmNewDoc.pas' {FormNewDocument},
   CustomComboItem in 'CustomComboItem.pas',
   frmSplash in 'frmSplash.pas' {FormSplash},
-  frmAppSettings in 'frmAppSettings.pas' {FormSettings};
+  frmAppSettings in 'frmAppSettings.pas' {FormSettings},
+  ABOUT in 'ABOUT.pas' {AboutBox};
 
 {$R *.res}
 

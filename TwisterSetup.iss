@@ -16,6 +16,7 @@
 AppId={{35C3A0AB-4200-4D99-BC15-796E81AD2A0F}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+AppCopyright=Copyright (c) 2023 DenkTech Software
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -41,7 +42,8 @@ Name: "dutch"; MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Development\Delphi\Twister\Win32\Debug\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Development\Delphi\Twister\Win32\Debug\{#MyAppExeName}"; DestDir: "{app}";
+Source: "C:\Development\Delphi\Twister\Win32\Debug\README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "C:\Development\Delphi\Twister\Dictionaries\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Development\Delphi\Twister\Win32\Debug\Hunspellx86.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Development\Delphi\Twister\Win32\Debug\Twister.db"; DestDir: "{app}"; Flags: ignoreversion

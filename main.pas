@@ -9,7 +9,7 @@ uses
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
-  EsBase, EsCalc, Vcl.Printers, frmNewDoc, frmSplash, frmSenders,
+  EsBase, EsCalc, Vcl.Printers, frmNewDoc, frmSplash, frmSenders, ABOUT,
   frmAppSettings;
 
 type
@@ -195,8 +195,11 @@ begin
 end;
 
 procedure TmainForm.About1Click(Sender: TObject);
+var
+  myAboutBox: TAboutBox;
 begin
-  ShowMessage('Twister Editor by DenkaTech');
+  myAboutBox := TAboutBox.Create(self);
+  myAboutBox.ShowModal;
 end;
 
 procedure TmainForm.ActionNewFileExecute(Sender: TObject);
