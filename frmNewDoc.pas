@@ -12,6 +12,7 @@ uses
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
   FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
+  System.IniFiles,
   FireDAC.Comp.DataSet, Vcl.ExtCtrls, CustomComboItem, Vcl.Imaging.pngimage;
 
 type
@@ -57,6 +58,7 @@ type
     FSalutation: string;
     FSignature: string;
     FSenderFullName: string;
+    FDBPath: string;
     IsDirty: Boolean;
     procedure LoadSenders;
   public
@@ -64,7 +66,9 @@ type
     property Salutation: string read FSalutation write FSalutation;
     property Signature: string read FSignature write FSignature;
     property SenderFullName: string read FSenderFullName write FSenderFullName;
+    property DBPath: string read FDBPath write FDBPath;
     procedure ClearFields;
+    procedure LoadInitData;
   end;
 
 var
@@ -88,8 +92,8 @@ begin
     end
   end
   else
-    UserClickedCancel := True;
-  Close;
+    UserClickedCancel := False;
+
 end;
 
 procedure TFormNewDocument.ButtonOKClick(Sender: TObject);
@@ -108,13 +112,10 @@ end;
 
 procedure TFormNewDocument.FormCreate(Sender: TObject);
 { When form is created, load the senders from the database }
-var
-  dbName: String;
 begin
-  dbName := 'Twister';
-  // TwisterConnection.da
   try
-    TwisterConnection.Open(dbName);
+    TwisterConnection.Params.Database := DBPath;
+    TwisterConnection.Connected :=  True;
     IsDirty := False;
     ClearFields;
     LoadSenders;
@@ -226,6 +227,19 @@ begin
   MemoTO.Text := '';
   EditSubject.Text := '';
   SendersList.items.Clear;
+end;
+
+procedure TFormNewDocument.LoadInitData;
+var
+  SettingFile: TInifile;
+begin
+
+  try
+    SettingFile := TInifile.Create(ChangeFileExt(Application.ExeName, '.INI'));
+    DBPath := SettingFile.ReadString('Database', 'pathtotwisterdb', '');
+  finally
+    SettingFile.Free;
+  end;
 end;
 
 end.

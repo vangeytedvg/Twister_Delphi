@@ -240,7 +240,7 @@ begin
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-    // Handle the subject if any
+//    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
       MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];

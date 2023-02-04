@@ -2721,6 +2721,7 @@ object mainForm: TmainForm
     Font.Style = []
     ParentFont = False
     PopupMenu = PopupForEditor
+    ScrollBars = ssVertical
     TabOrder = 1
     StyleElements = []
     Zoom = 100
@@ -2924,6 +2925,8 @@ object mainForm: TmainForm
     Height = 407
     Align = alLeft
     TabOrder = 5
+    ExplicitLeft = -56
+    ExplicitTop = 325
   end
   object Panel2: TPanel
     Left = 880
@@ -2934,8 +2937,8 @@ object mainForm: TmainForm
     TabOrder = 6
   end
   object MainAppMenu: TMainMenu
-    Left = 24
-    Top = 496
+    Left = 32
+    Top = 488
     object N1: TMenuItem
       Caption = '&Bestand'
       object NewNormalFile: TMenuItem
@@ -3034,6 +3037,13 @@ object mainForm: TmainForm
       object Opties1: TMenuItem
         Caption = '&Opties'
         OnClick = Opties1Click
+      end
+    end
+    object mnuHelp: TMenuItem
+      Caption = '&Help'
+      object About1: TMenuItem
+        Caption = 'About'
+        OnClick = About1Click
       end
     end
   end

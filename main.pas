@@ -100,6 +100,9 @@ type
     ToolButtonPrint: TToolButton;
     NewNormalFile: TMenuItem;
     Opties1: TMenuItem;
+    mnuHelp: TMenuItem;
+    About1: TMenuItem;
+
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -126,6 +129,7 @@ type
     procedure SaveFileToDisk();
     procedure mnuToolsOptionsClick(Sender: TObject);
     procedure Opties1Click(Sender: TObject);
+    procedure About1Click(Sender: TObject);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -190,6 +194,11 @@ begin
   end;
 end;
 
+procedure TmainForm.About1Click(Sender: TObject);
+begin
+  ShowMessage('Twister Editor by DenkaTech');
+end;
+
 procedure TmainForm.ActionNewFileExecute(Sender: TObject);
 var
   currentDate: TDateTime;
@@ -240,7 +249,7 @@ begin
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-    // Handle the subject if any
+//    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
       MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
@@ -350,7 +359,8 @@ procedure TmainForm.MenuExitClick(Sender: TObject);
   the editor is 'dirty'
 }
 begin
-  Application.Terminate;
+//  Application.Terminate;
+  Close;
 end;
 
 procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
@@ -423,7 +433,7 @@ procedure TmainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   // If the form is dirty, ask the user if he wants to loose the changes
   if IsDirty then
-    if Application.MessageBox('Are you sure you want to quit?', 'Confirmation',
+    if Application.MessageBox('Bent u zeker dat U wil afsluiten? Bestand is niet opgeslagen', 'Confirmation',
       MB_YESNO) = IDYES then
       CanClose := true
     else

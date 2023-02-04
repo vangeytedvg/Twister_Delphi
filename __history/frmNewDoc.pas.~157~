@@ -111,8 +111,10 @@ procedure TFormNewDocument.FormCreate(Sender: TObject);
 var
   dbName: String;
 begin
-  dbName := 'Twister';
-  // TwisterConnection.da
+//  dbName := 'Twister';
+  TwisterConnection.DriverName := 'SQLite';
+  TwisterConnection.Params.Values['Database'] := 'Twister.db';
+
   try
     TwisterConnection.Open(dbName);
     IsDirty := False;
@@ -137,7 +139,7 @@ procedure TFormNewDocument.LoadSenders();
 { Load the list of senders }
 var
   qryString: string;
-  fullName: string;
+
 begin
   qryString := 'SELECT Id, Name, FirstName FROM senders ORDER BY name ASC';
   with FDQryListOfSenders do
@@ -151,7 +153,7 @@ begin
   begin
 
     SendersList.items.AddObject(FDQryListOfSenders.FieldByName('Name').AsString
-      + ' ' + FDQryListOfSenders.FieldByName('firstname').AsString;
+      + ' ' + FDQryListOfSenders.FieldByName('firstname').AsString,
       TCustomComboBoxItem.Create(FDQryListOfSenders.FieldByName('id').AsInteger,
       FDQryListOfSenders.FieldByName('Name').AsString));
     FDQryListOfSenders.Next;
@@ -183,7 +185,7 @@ begin
     // Add the address to the FROM box
     MemoFROM.Lines.Clear;
     SenderFullName := FDQryListOfSenders.FieldByName('name').AsString + ' ' +
-      FDQryListOfSenders.FieldByName('firstname').AsString,
+      FDQryListOfSenders.FieldByName('firstname').AsString;
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('name').AsString + ' ' +
       FDQryListOfSenders.FieldByName('firstname').AsString);
     MemoFROM.Lines.Add(FDQryListOfSenders.FieldByName('address').AsString);

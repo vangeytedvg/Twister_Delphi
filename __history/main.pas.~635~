@@ -101,6 +101,7 @@ type
     NewNormalFile: TMenuItem;
     Opties1: TMenuItem;
 
+
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuExitClick(Sender: TObject);
@@ -240,7 +241,7 @@ begin
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-    // Handle the subject if any
+//    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
       MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
@@ -564,7 +565,7 @@ var
 begin
   // Settings for the path to the database and dictionaries
   FormSettings := TFormSettings.Create(self);
-  FormSettings.Show;
+  FormSettings.ShowModal;
 end;
 
 procedure TmainForm.ToolButtenSpellCheckClick(Sender: TObject);

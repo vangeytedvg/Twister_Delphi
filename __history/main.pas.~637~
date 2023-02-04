@@ -9,7 +9,8 @@ uses
   Vcl.Menus, System.IniFiles, Math,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.StdActns, System.Actions,
   Vcl.ActnList, Vcl.ExtActns, Vcl.ExtCtrls, Ruler, NHunspell, Vcl.CheckLst,
-  EsBase, EsCalc, frmSettings, Vcl.Printers, frmNewDoc, frmSplash, frmSenders;
+  EsBase, EsCalc, Vcl.Printers, frmNewDoc, frmSplash, frmSenders,
+  frmAppSettings;
 
 type
   TmainForm = class(TForm)
@@ -99,6 +100,9 @@ type
     ToolButtonPrint: TToolButton;
     NewNormalFile: TMenuItem;
     Opties1: TMenuItem;
+    mnuHelp: TMenuItem;
+    About1: TMenuItem;
+
 
     procedure MyEditorSelectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -125,6 +129,7 @@ type
     procedure SaveFileToDisk();
     procedure mnuToolsOptionsClick(Sender: TObject);
     procedure Opties1Click(Sender: TObject);
+    procedure About1Click(Sender: TObject);
   private
     { Private declarations }
     IsDirty: Boolean;
@@ -189,6 +194,11 @@ begin
   end;
 end;
 
+procedure TmainForm.About1Click(Sender: TObject);
+begin
+  ShowMessage('Twister Editor by DenkaTech');
+end;
+
 procedure TmainForm.ActionNewFileExecute(Sender: TObject);
 var
   currentDate: TDateTime;
@@ -239,7 +249,7 @@ begin
     MyEditor.Lines.Add('');
     MyEditor.Lines.Add('');
 
-    // Handle the subject if any
+//    // Handle the subject if any
     if FormNewDocument.EditSubject.Text <> '' then
     begin
       MyEditor.SelAttributes.Style := [fsBold, fsUnderLine];
@@ -352,12 +362,10 @@ begin
   Application.Terminate;
 end;
 
-
 procedure TmainForm.mnuToolsOptionsClick(Sender: TObject);
 var
   frmSenders: TfrmSenderList;
 begin
-
 
   frmSenders := TfrmSenderList.Create(self);
   frmSenders.Position := poOwnerFormCenter;
@@ -560,8 +568,11 @@ begin
 end;
 
 procedure TmainForm.Opties1Click(Sender: TObject);
+var
+  FormSettings: TFormSettings;
 begin
   // Settings for the path to the database and dictionaries
+  FormSettings := TFormSettings.Create(self);
   FormSettings.ShowModal;
 end;
 
@@ -684,7 +695,7 @@ begin
       SaveRichEdit(MyEditor, myFileName);
       ActionSaveFile.ImageIndex := 16;
       ToolButtonSave.ImageIndex := 16;
-      IsDirty:=False;
+      IsDirty := False;
     end;
   finally
     saveFileDialog.Free;

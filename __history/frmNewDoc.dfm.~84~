@@ -4685,6 +4685,8 @@ object FormNewDocument: TFormNewDocument
       item
         Width = 200
       end>
+    ExplicitTop = 574
+    ExplicitWidth = 578
   end
   object SendersList: TComboBox
     Left = 128
@@ -4850,7 +4852,6 @@ object FormNewDocument: TFormNewDocument
   end
   object TwisterConnection: TFDConnection
     Params.Strings = (
-      'Database=Twister.db'
       'ConnectionDef=Twister')
     LoginPrompt = False
     Left = 44

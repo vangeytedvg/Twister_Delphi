@@ -130,6 +130,7 @@ type
     { Private declarations }
     IsDirty: Boolean;
     CanSpellCheck: Boolean;
+    SpellingPath: string;
   public
     { Public declarations }
     MyRuler: TRuler;
@@ -452,6 +453,7 @@ begin
       mainForm.width);
     mainForm.height := SettingFile.ReadInteger('WindowSize', 'Height',
       mainForm.width);
+
   finally
     SettingFile.Free;
   end;

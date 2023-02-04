@@ -118,7 +118,7 @@ type
     procedure ActionSaveFileExecute(Sender: TObject);
     procedure ActionOpenFileExecute(Sender: TObject);
     procedure ActionPrintExecute(Sender: TObject);
-    procedure FormShow(Sender: TObject);
+
     procedure PrintRichEdit(RichEdit: TRichEdit; const Caption: string;
       const PrinterMargin: Integer);
     procedure SaveRichEdit(RichEdit: TRichEdit; const fileName: string);
@@ -130,6 +130,8 @@ type
     { Private declarations }
     IsDirty: Boolean;
     CanSpellCheck: Boolean;
+    SpellingPath: string;
+    procedure GetSetings;
   public
     { Public declarations }
     MyRuler: TRuler;
@@ -372,6 +374,7 @@ var
   SplashScreen: TFormSplash;
 begin
   // Read the position of the form
+  GetSetings;
   SplashScreen := TFormSplash.Create(nil);
   SplashScreen.ShowModal;
   SplashScreen.Free;
@@ -436,7 +439,7 @@ begin
   MyRuler.width := RulerHolder.width;
 end;
 
-procedure TmainForm.FormShow(Sender: TObject);
+procedure TmainForm.GetSetings;
 var
   i: Integer;
   SettingFile: TIniFile;
@@ -452,6 +455,7 @@ begin
       mainForm.width);
     mainForm.height := SettingFile.ReadInteger('WindowSize', 'Height',
       mainForm.width);
+    SpellingPath := SettingFile.ReadString('Spelling', 'dictionarypath','');
   finally
     SettingFile.Free;
   end;
